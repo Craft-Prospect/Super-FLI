@@ -3,7 +3,7 @@ Creating content:
 -Before any changes are made, an issue should be created describing the planned changes and why the changes are being made. Ensure issue is assgined to someone, milestone is set and due date added, where possible
 -All changes made should be done on a new branch
 -Before pushing, master should be pulled
--Resolve any merge issues
+-Resolve any merge conflicts
 -Then create merge request, with someone else reading and aprroving code, before branch is merged
 
 

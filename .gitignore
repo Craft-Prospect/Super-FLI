@@ -1,0 +1,7 @@
+
+#Ignore non-configuration items that can be created by LaTeX
+*.aux
+*.bbl
+*.log
+
+

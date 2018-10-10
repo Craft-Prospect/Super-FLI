@@ -6,3 +6,4 @@ Team Memebers
 Andrew Ritchie
 Conor Begley
 Ibrahim Javed
+Vishrut Singh

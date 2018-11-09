@@ -8,13 +8,12 @@ import random
 SPRITE_SCALING_PLAYER = 0.25
 SPRITE_SCALING_FIRE = 0.01
 FIRE_COUNT = 1
-
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
 MOVEMENT_SPEED = 2
 
-CPU_SPEED = 1.5 
+CPU_SPEED = 1.225 
 CPU_TRACK_SPEED = 0.5
 
 class Satellite(arcade.Sprite):
@@ -89,6 +88,7 @@ class Fire(arcade.Sprite):
         if self.left < 0:
             self.reset_pos()
 
+ 
 class MyGame(arcade.Window):
     """
     Main application class.
@@ -111,7 +111,6 @@ class MyGame(arcade.Window):
         self.player_list = None
         self.fire_sprite_list=None
         self.cpu_list = None 
-
         # Set up the player info
         self.player_sprite = None
         self.player_score = 0
@@ -200,12 +199,11 @@ class MyGame(arcade.Window):
         # example though.)
         self.player_list.update()
         self.fire_sprite_list.update()
-        
         #Update cpu satellite
         self.cpu_list[0].cpu_update(self.fire_sprite_list[0],self.player_list[0])
         self.cpu_list.update()
 
-        # Generate a list of all sprites that collided with the player.
+        # Generate a list of all emergencies that collided with the satellite.
         hit_list = arcade.check_for_collision_with_list(self.cpu_sprite,self.fire_sprite_list)
 
         # Loop through each colliding sprite, remove it, and add to the player_score.

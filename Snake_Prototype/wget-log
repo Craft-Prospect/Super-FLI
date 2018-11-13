@@ -1,0 +1,15 @@
+--2018-11-13 19:37:29--  https://www.google.com/imgres?imgurl=http://emap-int.com/wp-content/uploads/2016/06/Honolulu-HI-USA-RE-740x470.jpg
+Resolving www.google.com (www.google.com)... 216.58.210.36, 2a00:1450:400e:80a::2004
+Connecting to www.google.com (www.google.com)|216.58.210.36|:443... connected.
+HTTP request sent, awaiting response... 301 Moved Permanently
+Location: https://www.google.com/imghp [following]
+--2018-11-13 19:37:29--  https://www.google.com/imghp
+Reusing existing connection to www.google.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: ‘imgres?imgurl=http:%2F%2Femap-int.com%2Fwp-content%2Fuploads%2F2016%2F06%2FHonolulu-HI-USA-RE-740x470.jpg’
+
+                    imgres?imgurl=http:%     [<=>                                                                             ]       0  --.-KB/s               imgres?imgurl=http:%2F%2Femap-int.com%2F     [ <=>                                                                            ]  11.09K  --.-KB/s    in 0.002s  
+
+2018-11-13 19:37:29 (4.83 MB/s) - ‘imgres?imgurl=http:%2F%2Femap-int.com%2Fwp-content%2Fuploads%2F2016%2F06%2FHonolulu-HI-USA-RE-740x470.jpg’ saved [11354]
+

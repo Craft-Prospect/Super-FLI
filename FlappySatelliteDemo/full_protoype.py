@@ -10,12 +10,12 @@ SPRITE_SCALING_FIRE = 0.01
 SPRITE_SCALING_CLOUD = 0.05
 FIRE_COUNT = 1
 CLOUD_COUNT = 3
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1100
+SCREEN_HEIGHT = 900
 
 MOVEMENT_SPEED = 2
 
-CPU_SPEED = 1.4444 
+CPU_SPEED = 1.25 
 CPU_TRACK_SPEED = 0.5
 
 SCROLL_SPEED = 1
@@ -227,7 +227,7 @@ class MyGame(arcade.Window):
 
         #CPU Score   
         score_cpu= f"CPU Score: {self.cpu_score}"
-        arcade.draw_text(score_cpu, SCREEN_WIDTH-150, 20, arcade.color.RED, 14)
+        arcade.draw_text(score_cpu, SCREEN_WIDTH-155, 20, arcade.color.RED, 14)
 
         # Player Scor
         player_health = int(self.player_health)
@@ -237,7 +237,7 @@ class MyGame(arcade.Window):
         #CPU Score   
         cpu_health = int(self.cpu_health)
         health_cpu= f"CPU Health: {cpu_health}"
-        arcade.draw_text(health_cpu, SCREEN_WIDTH-150, 50, arcade.color.RED, 14)
+        arcade.draw_text(health_cpu, SCREEN_WIDTH-155, 50, arcade.color.RED, 14)
 
 
 

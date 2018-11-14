@@ -3,5 +3,5 @@
 *.aux
 *.bbl
 *.log
-
+*.~lock
 

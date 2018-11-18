@@ -3,5 +3,10 @@
 *.aux
 *.bbl
 *.log
+
+#Removes locks created by Libre office
 *.~lock
+
+#Remove pycache binaries
+__pycache__/
 

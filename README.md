@@ -29,7 +29,7 @@ cd Game
 python3 main.py
 ```
 
-**Team Memebers**
+**Team Members**
 * Andrew Ritchie - 07803770733 - 2253409r@student.gla.ac.uk
 
 * Ibrahim Javed -  07949499709 - 2265799j@student.gla.ac.uk

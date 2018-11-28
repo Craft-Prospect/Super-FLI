@@ -1,8 +1,0 @@
-Fire Rescue Game
-
-
-Description
-This game is based on forest fires and airel fire fighter planes. User 1 will spread the fires across the earths surface and user 2 will be in control of the plane. Both the neural network and the human user can undertake either role in the game. The plane will be controled by a joy stick and buttons where it has to reload watter from lakes/seas and dump the watter on the fire before its spread even more. The other user will try and spread the fire as much as he/she/it can.
-
-User 1 wins by making the fire go out of control.
-User 2 wins by putting all of the fire out.

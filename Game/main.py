@@ -8,6 +8,7 @@ import random
 SPRITE_SCALING_PLAYER = 0.25
 SPRITE_SCALING_FIRE = 0.01
 SPRITE_SCALING_CLOUD = 0.05
+BACKGROUND_SCALING = 1 
 
 #Set number of elements to appear on screen (This will be removed when sprites are generated from co-ordinates)
 FIRE_COUNT = 1
@@ -15,13 +16,15 @@ CLOUD_COUNT = 3
 
 #Window size
 SCREEN_WIDTH = 1100
-SCREEN_HEIGHT = 900
+SCREEN_HEIGHT = 587 
 
 #Sprite Speeds
 MOVEMENT_SPEED = 2  #Player speeds
 CPU_SPEED = 1.25  #Normal CPU speed
 CPU_TRACK_SPEED = 0.5 #CPU speed when no emergency on screen and is tracking player movement
 SCROLL_SPEED = 1  #Speed of background, clouds and fire sprites
+
+
 
 #PLayer and CPU sprite class
 class Satellite(arcade.Sprite):
@@ -71,6 +74,16 @@ class Satellite(arcade.Sprite):
             else:
                 self.center_y -= CPU_TRACK_SPEED
 
+
+class Background(arcade.Sprite):
+    def update(self):
+
+        # Move the fire
+        self.center_x -= SCROLL_SPEED 
+
+        if self.left < 0:
+            pass
+           #Game will end here 
 
 #Fire sprite for satellites to capture (Will be replaced by emergencies)
 class Fire(arcade.Sprite):
@@ -172,10 +185,10 @@ class MyGame(arcade.Window):
         self.cpu_sprite.center_x = SCREEN_WIDTH - 50
         self.cpu_sprite.center_y = SCREEN_HEIGHT - 50
         self.cpu_list.append(self.cpu_sprite)
-        
-        # Load the background image. Do this in the setup so we don't keep reloading it all the time.
-        self.background = arcade.load_texture("images/fire.jpg")
-
+       
+        #Set up background
+        self.background=Background("images/fire_long.jpg", BACKGROUND_SCALING)
+        self.background.center_y=SCREEN_HEIGHT/2
         # Create the fires
         for i in range(FIRE_COUNT):
 
@@ -208,10 +221,9 @@ class MyGame(arcade.Window):
         # This command has to happen before we start drawing
         arcade.start_render()
         
-        # Draw the background texture
-        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
-                                      SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
-
+        #Draw background
+        self.background.draw()
+        
         # Draw all the sprites.
         self.fire_sprite_list.draw()
         self.player_list.draw()
@@ -249,6 +261,7 @@ class MyGame(arcade.Window):
         #Update sprites and clouds
         self.fire_sprite_list.update()
         self.clouds_list.update()
+        self.background.update()
 
         #Update CPU satellite
         if self.cpu:

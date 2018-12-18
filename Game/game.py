@@ -134,7 +134,7 @@ class MyGame(arcade.Window):
         # Variables that will hold the sprite lists
         self.player_list = None
 
-        self.fire_sprite_list=None
+        self.fire_list=None
         self.cpu_list = None 
 
         self.clouds_list = None
@@ -155,7 +155,7 @@ class MyGame(arcade.Window):
         
         # Sprite lists
         self.player_list = arcade.SpriteList()
-        self.fire_sprite_list = arcade.SpriteList()
+        self.fire_list = arcade.SpriteList()
         self.cpu_list = arcade.SpriteList()
         self.clouds_list = arcade.SpriteList()
 
@@ -202,7 +202,7 @@ class MyGame(arcade.Window):
             detected.center_y = item[1][1]
                        
             if item[0] == "fire":     
-                self.fire_sprite_list.append(detected)
+                self.fire_list.append(detected)
             else:
                 self.clouds_list.append(detected)
 
@@ -216,7 +216,7 @@ class MyGame(arcade.Window):
         self.background.draw()
         
         # Draw all the sprites.
-        self.fire_sprite_list.draw()
+        self.fire_list.draw()
         self.player_list.draw()
         self.cpu_list.draw()
         self.clouds_list.draw()
@@ -249,7 +249,7 @@ class MyGame(arcade.Window):
             self.player_list.update()
         
         #Update sprites and clouds
-        self.fire_sprite_list.update()
+        self.fire_list.update()
         
         self.clouds_list.update()
         self.background.update()
@@ -259,11 +259,11 @@ class MyGame(arcade.Window):
         if self.cpu:
             for cpu in self.cpu_list:
                 if FIRE_COUNT > 1:
-                    cpu.cpu_update(self.fire_sprite_list[0],self.player_list[0])
+                    cpu.cpu_update(self.fire_list[0],self.player_list[0])
             self.cpu_list.update()
 
             # Generate a list of all emergencies that collided with the satellite.
-            hit_list = arcade.check_for_collision_with_list(self.cpu_sprite,self.fire_sprite_list)
+            hit_list = arcade.check_for_collision_with_list(self.cpu_sprite,self.fire_list)
 
             # Loop through each colliding fire, remove it, and add to the cpu_score.
             for fire in hit_list:
@@ -319,7 +319,7 @@ class MyGame(arcade.Window):
         elif key == arcade.key.SPACE:
 
             # Generate a list of all sprites that collided with the player.
-            hit_list = arcade.check_for_collision_with_list(self.player_sprite,self.fire_sprite_list)
+            hit_list = arcade.check_for_collision_with_list(self.player_sprite,self.fire_list)
             global FIRE_COUNT
             # Loop through each colliding sprite, remove it, and add to the player_score.
             for fire in hit_list:

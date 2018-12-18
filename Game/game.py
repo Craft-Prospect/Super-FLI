@@ -11,9 +11,8 @@ SPRITE_SCALING_CLOUD = 0.05
 BACKGROUND_SCALING = 1 
 
 #Set number of elements to appear on screen (This will be removed when sprites are generated from co-ordinates)
-FIRE_COUNT = 1
 CLOUD_COUNT = 3
-
+FIRE_COUNT = 0
 #Window size
 SCREEN_WIDTH = 1100
 SCREEN_HEIGHT = 587 
@@ -24,8 +23,9 @@ CPU_SPEED = 1.25  #Normal CPU speed
 CPU_TRACK_SPEED = 0.5 #CPU speed when no emergency on screen and is tracking player movement
 SCROLL_SPEED = 1  #Speed of background, clouds and fire sprites
 
-
-
+#Sprite co-ordinates
+points = [("fire", (0,150)),("fire", (120,12)),("fire", (170,800)),("fire", (1200,13)),("fire", (1500,450)),("fire", (1740,12)),("cloud", (0,0)),("cloud", (20,300)),("cloud", (100,342)),("cloud", (500,200)),("cloud", (1000,10)),("cloud", (1300,200)),("cloud", (1600,0)),("cloud", (1653,500)),("cloud", (1800,0))]
+ 
 #PLayer and CPU sprite class
 class Satellite(arcade.Sprite):
 
@@ -88,14 +88,6 @@ class Background(arcade.Sprite):
 #Fire sprite for satellites to capture (Will be replaced by emergencies)
 class Fire(arcade.Sprite):
 
-    #If the fire goes off the screen or is captured, move to a new location off the screen
-    def reset_pos(self):
-
-        # Reset the fire to a random spot to the right of the screen
-        self.center_y = random.randrange(0,SCREEN_HEIGHT )
-        self.center_x = SCREEN_WIDTH + random.randrange(0,SCREEN_WIDTH/2) #
-
-
     #Refresh the sprite movement
     def update(self):
 
@@ -104,18 +96,14 @@ class Fire(arcade.Sprite):
 
         # See if the fire has movded off the side of the screen.
         # If so, reset it
+
+        global FIRE_COUNT
         if self.left < 0:
-            self.reset_pos()
+            self.kill()
+            FIRE_COUNT -=1
 
-#Cloud sprite for satellites to avoid
+
 class Cloud(arcade.Sprite):
-
-    #If the cloud goes off the right of the screen, move it to another location to the left off the screen 
-    def reset_pos(self):
-
-        # Reset the fire to a random spot to the right of the screen
-        self.center_y = random.randrange(0,SCREEN_HEIGHT )
-        self.center_x = SCREEN_WIDTH + random.randrange(0,SCREEN_WIDTH) #
 
     #Scroll the clouds to the left
     def update(self):
@@ -125,12 +113,13 @@ class Cloud(arcade.Sprite):
 
         # See if the cloud has fallen off the left of the screen.
         # If so, reset it.
+        global CLOUD_COUNT
         if self.left < 0:
-            self.reset_pos()       
+            self.kill()    
+            CLOUD_COUNT -=1
 
 #Main window
 class MyGame(arcade.Window):
-    
     #Initalise game variables and window
     def __init__(self, width, height):
 
@@ -144,8 +133,10 @@ class MyGame(arcade.Window):
 
         # Variables that will hold the sprite lists
         self.player_list = None
+
         self.fire_sprite_list=None
         self.cpu_list = None 
+
         self.clouds_list = None
         
         # Set up the player info
@@ -190,31 +181,31 @@ class MyGame(arcade.Window):
         self.background=Background("images/fire_long.jpg", BACKGROUND_SCALING)
         self.background.center_y=SCREEN_HEIGHT/2
         # Create the fires
-        for i in range(FIRE_COUNT):
-
-            # Create the fire instance
-            fire = Fire("images/fire.png", SPRITE_SCALING_FIRE)
-
-            # Position the fire
-            fire.center_x = random.randrange(SCREEN_WIDTH)
-            fire.center_y = random.randrange(SCREEN_HEIGHT)
-
-            # Add the fire to the lists
-            self.fire_sprite_list.append(fire)
         
-        # Create the clouds
-        for i in range(CLOUD_COUNT):
+        global FIRE_COUNT
+        global CLOUD_COUNT
 
-            # Create the fire instance
-            cloud=Cloud("images/clouds.png", SPRITE_SCALING_CLOUD)
+        for item in points:
+            detected = None 
+            if item[0] == "fire":
+                # Create the fire instance
+                detected = Fire("images/fire.png", SPRITE_SCALING_FIRE)
+                FIRE_COUNT += 1
+
+            else:
+                #Create cloud instance
+                detected=Cloud("images/clouds.png", SPRITE_SCALING_CLOUD)
+
 
             # Position the fire
-            cloud.center_x = random.randrange(SCREEN_WIDTH)
-            cloud.center_y = random.randrange(SCREEN_HEIGHT)
+            detected.center_x = item[1][0] 
+            detected.center_y = item[1][1]
+                       
+            if item[0] == "fire":     
+                self.fire_sprite_list.append(detected)
+            else:
+                self.clouds_list.append(detected)
 
-            # Add the fire to the lists
-            self.clouds_list.append(cloud)
-    
     #Generate sprites and load window
     def on_draw(self):
 
@@ -253,20 +244,22 @@ class MyGame(arcade.Window):
 
     #Refresh the screen
     def update(self, delta_time):
-
         #If player is alive, update 
         if self.player:
             self.player_list.update()
         
         #Update sprites and clouds
         self.fire_sprite_list.update()
+        
         self.clouds_list.update()
         self.background.update()
 
         #Update CPU satellite
+        global FIRE_COUNT
         if self.cpu:
             for cpu in self.cpu_list:
-                cpu.cpu_update(self.fire_sprite_list[0],self.player_list[0])
+                if FIRE_COUNT > 1:
+                    cpu.cpu_update(self.fire_sprite_list[0],self.player_list[0])
             self.cpu_list.update()
 
             # Generate a list of all emergencies that collided with the satellite.
@@ -274,7 +267,8 @@ class MyGame(arcade.Window):
 
             # Loop through each colliding fire, remove it, and add to the cpu_score.
             for fire in hit_list:
-                fire.reset_pos()
+                fire.kill()
+                FIRE_COUNT -= 1
                 self.cpu_score += 1
 
             # Generate a list of all clouds that collided with the CPU.
@@ -326,10 +320,11 @@ class MyGame(arcade.Window):
 
             # Generate a list of all sprites that collided with the player.
             hit_list = arcade.check_for_collision_with_list(self.player_sprite,self.fire_sprite_list)
-
+            global FIRE_COUNT
             # Loop through each colliding sprite, remove it, and add to the player_score.
             for fire in hit_list:
-                fire.reset_pos()
+                fire.kill()
+                FIRE_COUNT -= 1
                 self.player_score += 1
 
 

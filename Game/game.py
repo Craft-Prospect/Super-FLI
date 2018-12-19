@@ -186,7 +186,13 @@ class MyGame(arcade.Window):
         global CLOUD_COUNT
 
         for item in points:
-            detected = None 
+            detected = None
+
+            #Check for in valid values
+            if item[1][0] < 0 or item[1][1] < 0 or item[1][1] > SCREEN_HEIGHT:
+                break
+
+
             if item[0] == "fire":
                 # Create the fire instance
                 detected = Fire("images/fire.png", SPRITE_SCALING_FIRE)
@@ -196,11 +202,11 @@ class MyGame(arcade.Window):
                 #Create cloud instance
                 detected=Cloud("images/clouds.png", SPRITE_SCALING_CLOUD)
 
-
+            
             # Position the fire
             detected.center_x = item[1][0] 
             detected.center_y = item[1][1]
-                       
+            
             if item[0] == "fire":     
                 self.fire_list.append(detected)
             else:

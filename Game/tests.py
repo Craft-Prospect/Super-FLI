@@ -60,6 +60,29 @@ class TestSetupMethods(unittest.TestCase):
         self.assertEqual((len(window.fire_list)+len(window.clouds_list)),len(game.points))
         arcade.window_commands.close_window()
 
+class TestErrorHandlingSetupt(unittest.TestCase):
+    def test_negative_coOrdinates(self):
+        window = init() 
+        game.points = [("fire", (0,-150)),("fire", (-500,350)),("fire", (-2000,-550))]
+    
+        window.setup()
+
+        self.assertEqual((len(window.fire_list)),0)
+        arcade.window_commands.close_window()
+
+    def test_topBigY(self):
+        window = init() 
+        game.points = [("fire", (50,(game.SCREEN_HEIGHT+10)))]
+    
+        window.setup()
+
+        self.assertEqual((len(window.fire_list)),0)
+        arcade.window_commands.close_window()
+
+
+
+
+
 
         
 

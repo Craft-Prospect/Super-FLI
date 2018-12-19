@@ -24,7 +24,7 @@ CPU_TRACK_SPEED = 0.5 #CPU speed when no emergency on screen and is tracking pla
 SCROLL_SPEED = 1  #Speed of background, clouds and fire sprites
 
 #Sprite co-ordinates
-points = [("fire", (0,150)),("fire", (120,12)),("fire", (170,800)),("fire", (1200,13)),("fire", (1500,450)),("fire", (1740,12)),("cloud", (0,0)),("cloud", (20,300)),("cloud", (100,342)),("cloud", (500,200)),("cloud", (1000,10)),("cloud", (1300,200)),("cloud", (1600,0)),("cloud", (1653,500)),("cloud", (1800,0))]
+points = [("cloud", (0,150)),("fire", (120,12)),("fire", (170,800)),("fire", (1200,13)),("fire", (1500,450)),("fire", (1740,12)),("cloud", (0,0)),("cloud", (20,300)),("cloud", (100,342)),("cloud", (500,200)),("cloud", (1000,10)),("cloud", (1300,200)),("cloud", (1600,0)),("cloud", (1653,500)),("cloud", (1800,0))]
  
 #PLayer and CPU sprite class
 class Satellite(arcade.Sprite):
@@ -185,34 +185,31 @@ class MyGame(arcade.Window):
         global FIRE_COUNT
         global CLOUD_COUNT
 
-        for item in points:
+        for i in range (0,len(points)):
+            item = points[i]
+
             detected = None
-
             #Check for in valid values
-            if item[1][0] < 0 or item[1][1] < 0 or item[1][1] > SCREEN_HEIGHT:
-                break
+            if item[1][0] >= 0 and item[1][1] >=0 and item[1][1] < SCREEN_HEIGHT:
 
+                if item[0] == "fire":
+                    # Create the fire instance
+                    detected = Fire("images/fire.png", SPRITE_SCALING_FIRE)
+                    FIRE_COUNT += 1
 
-            if item[0] == "fire":
-                # Create the fire instance
-                detected = Fire("images/fire.png", SPRITE_SCALING_FIRE)
-                FIRE_COUNT += 1
-
-            else:
-                #Create cloud instance
-                detected=Cloud("images/clouds.png", SPRITE_SCALING_CLOUD)
+                else:
+                    #Create cloud instance
+                    detected=Cloud("images/clouds.png", SPRITE_SCALING_CLOUD)
 
             
-            # Position the fire
-            detected.center_x = item[1][0] 
-            detected.center_y = item[1][1]
+                # Position the fire
+                detected.center_x = item[1][0] 
+                detected.center_y = item[1][1]
             
-            if item[0] == "fire":     
-                self.fire_list.append(detected)
-            else:
-                self.clouds_list.append(detected)
-
-    #Generate sprites and load window
+                if item[0] == "fire":     
+                    self.fire_list.append(detected)
+                else:
+                    self.clouds_list.append(detected)
     def on_draw(self):
 
         # This command has to happen before we start drawing
@@ -302,10 +299,6 @@ class MyGame(arcade.Window):
                 if self.player_health <0:
                     self.player_sprite.kill()
                     self.player = False
-
-
-
-
 
     #Player controls
     def on_key_press(self, key, modifiers):

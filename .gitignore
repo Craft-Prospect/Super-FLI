@@ -10,3 +10,5 @@
 #Remove pycache binaries
 __pycache__/
 
+Game/data
+

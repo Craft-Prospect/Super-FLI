@@ -62,14 +62,35 @@ class TestErrorHandlingSetupt(unittest.TestCase):
         self.assertEqual(((len(window.fire_list))+(len(window.clouds_list))),2)
         arcade.window_commands.close_window()
 
+class TestEventsCPU(unittest.TestCase):
+    def test_fireCapture(self):
+        window = init([("fire", (100,150))])
+        game.CPU_SPEED = 1 
+        for i in range(game.SCREEN_HEIGHT + 100):
+            if (window.fire_list):
+                window.cpu_sprite.cpu_update(window.player_sprite,window.fire_list[0])
+        self.assertEqual(round(window.cpu_sprite.center_x+window.cpu_sprite.center_y), (250))
 
+    def test_tracking(self):
+        window = init([])
+        game.CPU_TRACK_SPEED = 1 
+        for i in range(game.SCREEN_HEIGHT+100):
+            window.cpu_sprite.cpu_update(window.player_sprite)
+        self.assertEqual((round((window.cpu_sprite.center_x)+ window.cpu_sprite.center_y)), (window.player_sprite.center_x + window.player_sprite.center_y))
 
+    def test_cloudDamage(self):
+        window = init([("cloud",(50,game.SCREEN_HEIGHT-50))])
+        game.CPU_TRACK_SPEED = 0 #Keep CPU stationary to cause damage
+        for i in range(100):
+                window.update(1)
+        self.assertNotEqual(window.cpu_sprite.health, game.HEALTH)
         
 
 #Helper Functions
-def init(points):
+def init(points,source="images/fire.jpg"): 
     window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT)
     game.points = points
+    game.SOURCE = source
     window.setup()
     return window
 

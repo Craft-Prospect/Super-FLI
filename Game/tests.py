@@ -64,12 +64,10 @@ class TestErrorHandlingSetupt(unittest.TestCase):
 
 class TestEventsCPU(unittest.TestCase):
     def test_fireCapture(self):
-        window = init([("fire", (100,150))])
-        game.CPU_SPEED = 1 
-        for i in range(game.SCREEN_HEIGHT + 100):
-            if (window.fire_list):
-                window.cpu_sprite.cpu_update(window.player_sprite,window.fire_list[0])
-        self.assertEqual(round(window.cpu_sprite.center_x+window.cpu_sprite.center_y), (250))
+        window = init([("fire", (100,game.SCREEN_HEIGHT-80))])
+        for i in range(330):
+            window.update(1)
+        self.assertEqual(window.cpu_sprite.score, 1)
 
     def test_tracking(self):
         window = init([])

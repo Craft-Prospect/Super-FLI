@@ -26,7 +26,7 @@ pip install -r requirements.txt
 
 ```
 cd Game
-python3 main.py
+python3 game.py
 ```
 
 **Team Members**

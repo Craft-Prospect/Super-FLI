@@ -12,7 +12,7 @@ BACKGROUND_SCALING = 1
 
 #Set number of elements to appear on screen (This will be removed when sprites are generated from co-ordinates)
 #Window size
-SCREEN_WIDTH = 1100
+SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 587 
 
 #Sprite Speeds
@@ -27,6 +27,8 @@ HEALTH = 100
 points = [("cloud", (0,150)),("fire", (120,12)),("fire", (170,800)),("fire", (1200,13)),("fire", (1500,450)),("fire", (1740,12)),("cloud", (0,0)),("cloud", (20,300)),("cloud", (100,342)),("cloud", (500,200)),("cloud", (1000,10)),("cloud", (1300,200)),("cloud", (1600,0)),("cloud", (1653,500)),("cloud", (1800,0)),("cloud", (1900,150)),("fire", (1920,12)),("fire", (2100,800)),("fire", (2400,13)),("fire", (2750,450)),("fire", (3000,12)),("cloud", (2400,400)),("cloud", (2420,100)),("cloud", (2600,342)),("cloud", (2700,200)),("cloud", (3000,10)),("cloud", (3100,200)),("cloud", (3400,0)),("cloud", (3653,500)),("cloud", (3800,0))]
  
 SOURCE="images/fire_long.jpg"
+
+Final_score = 0
 
 #PLayer and CPU sprite class
 class Satellite(arcade.Sprite):
@@ -139,11 +141,9 @@ class MyGame(arcade.Window):
         
         # Set up the player info
         self.player_sprite = None
-        self.player_score = 0
 
         #Set up CPU sprite
         self.cpu_sprite = None
-        self.cpu_score = 0
 
         # Background image will be stored in this variable
         self.background = None
@@ -177,9 +177,9 @@ class MyGame(arcade.Window):
         #Set up background
         self.background=Background(SOURCE, BACKGROUND_SCALING)
         self.background.center_y=SCREEN_HEIGHT/2
-        # Create the fires
         
-
+        
+        # Create the fires and clouds
         for i in range (0,len(points)):
             item = points[i]
 
@@ -203,21 +203,21 @@ class MyGame(arcade.Window):
         # Put the text on the screen.
          
         # Player Score
-        score_player= f"Player Score: {self.player_sprite.score}"
+        score_player= f"Player Score: £{self.player_sprite.score}"
         arcade.draw_text(score_player, 10, 20, arcade.color.WHITE, 14)
 
         #CPU Score   
-        score_cpu= f"CPU Score: {self.cpu_sprite.score}"
+        score_cpu= f"CPU Money: £{self.cpu_sprite.score}"
         arcade.draw_text(score_cpu, SCREEN_WIDTH-155, 20, arcade.color.RED, 14)
 
         # Player Health
-        player_health = self.player_sprite.health
-        health_player= f"Player Health: {player_health}"
+        player_health = round(self.player_sprite.health,1)
+        health_player= f"Player Power: {player_health}"
         arcade.draw_text((health_player), 10, 50, arcade.color.WHITE, 14)
 
         #CPU Health   
-        cpu_health = self.cpu_sprite.health
-        health_cpu= f"CPU Health: {cpu_health}"
+        cpu_health = round(self.cpu_sprite.health, 1)
+        health_cpu= f"CPU Power: {cpu_health}"
         arcade.draw_text(health_cpu, SCREEN_WIDTH-155, 50, arcade.color.RED, 14)
 
 
@@ -246,7 +246,8 @@ class MyGame(arcade.Window):
             # Loop through each colliding fire, remove it, and add to the cpu_score.
             for fire in hit_list:
                 fire.kill()
-                self.cpu_sprite.score += 1
+                self.cpu_sprite.score += 100
+              
 
             # Generate a list of all clouds that collided with the CPU.
             hit_list = arcade.check_for_collision_with_list(self.cpu_sprite,self.clouds_list)
@@ -270,6 +271,8 @@ class MyGame(arcade.Window):
 
                 if self.player_sprite.health<0:
                     self.player_sprite.active = False
+                    global Final_score 
+                    Final_score = self.player_sprite.score
                     self.player_sprite.kill()
 
         #Get screeshot for NN
@@ -304,7 +307,9 @@ class MyGame(arcade.Window):
                 # Loop through each colliding sprite, remove it, and add to the player_score.
                 for fire in hit_list:
                     fire.kill()
-                    self.player_sprite.score += 1
+                    self.player_sprite.score += 100
+                    global Final_score
+                    Final_score = self.player_sprite.score
 
 
 
@@ -348,3 +353,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+    with open('scores.txt', 'a') as f:
+        name = input("Enter your name: \n")
+        store = (name + " : £" + str(Final_score))
+        f.write("%s\n" % store )

@@ -183,27 +183,9 @@ class MyGame(arcade.Window):
         for i in range (0,len(points)):
             item = points[i]
 
-            detected = None
-            #Check for in valid values
-            if item[1][0] >= 0 and item[1][1] >=0 and item[1][1] < SCREEN_HEIGHT:
+            self.add_sprite(item[0], item[1])
 
-                if item[0] == "fire":
-                    # Create the fire instance
-                    detected = Fire("images/fire.png", SPRITE_SCALING_FIRE)
 
-                else:
-                    #Create cloud instance
-                    detected=Cloud("images/clouds.png", SPRITE_SCALING_CLOUD)
-
-            
-                # Position the fire
-                detected.center_x = item[1][0] 
-                detected.center_y = item[1][1]
-            
-                if item[0] == "fire":     
-                    self.fire_list.append(detected)
-                else:
-                    self.clouds_list.append(detected)
     def on_draw(self):
 
         # This command has to happen before we start drawing
@@ -333,6 +315,29 @@ class MyGame(arcade.Window):
             self.player_sprite.change_y = 0
         elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
             self.player_sprite.change_x = 0
+
+    def add_sprite(self,event,coOrds):
+     if coOrds[0] >= 0 and coOrds[1] >=0 and coOrds[1] < SCREEN_HEIGHT:
+
+                if  event == "fire":
+                    # Create the fire instance
+                    detected = Fire("images/fire.png", SPRITE_SCALING_FIRE)
+
+                else:
+                    #Create cloud instance
+                    detected=Cloud("images/clouds.png", SPRITE_SCALING_CLOUD)
+
+            
+                # Position the fire
+                detected.center_x = coOrds[0] 
+                detected.center_y = coOrds[1]
+            
+                if event == "fire":     
+                    self.fire_list.append(detected)
+                else:
+                    self.clouds_list.append(detected)
+
+
 
 #Run game
 def main():

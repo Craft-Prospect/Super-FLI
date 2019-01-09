@@ -341,6 +341,10 @@ class MyGame(arcade.Window):
                     self.fire_list.append(detected)
                 else:
                     self.clouds_list.append(detected)
+#helper function
+
+def get_number(line):
+    return line.split('£')[1]
 
 
 
@@ -350,10 +354,18 @@ def main():
     window.setup()
     arcade.run()
 
-
 if __name__ == "__main__":
     main()
     with open('scores.txt', 'a') as f:
         name = input("Enter your name: \n")
         store = (name + " : £" + str(Final_score))
         f.write("%s\n" % store )
+
+    sorted_lines = ''
+
+    with open('scores.txt', 'r') as f:
+        lines = f.readlines()
+        sorted_lines = sorted(lines, key=get_number)
+    
+    with open('scores.txt', 'w') as f:
+       f.writelines(sorted_lines)

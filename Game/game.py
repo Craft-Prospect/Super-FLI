@@ -19,7 +19,7 @@ SCREEN_HEIGHT = 587
 MOVEMENT_SPEED = 2  #Player speeds
 CPU_SPEED = 1.25 #Normal CPU speed
 CPU_TRACK_SPEED = 0.5 #CPU speed when no emergency on screen and is tracking player movement
-SCROLL_SPEED = 1  #Speed of background, clouds and fire sprites
+SCROLL_SPEED = 1  #Speed of background_sprite, clouds and fire sprites
 
 CLOUD_DAMAGE = 0.1
 HEALTH = 100
@@ -31,9 +31,11 @@ SOURCE="images/fire_long.jpg"
 Final_score = 0
 
 START_PAGE = 0
-GAME_PAGE = 1
-END_PAGE = 2
-HIGH_SCORE_PAGE = 3
+INSTRUCT1 = 1
+INSTRUCT2 = 2
+GAME_PAGE = 3
+END_PAGE = 4
+HIGH_SCORE_PAGE = 5
 
 
 #PLayer and CPU sprite class
@@ -165,6 +167,16 @@ class MyGame(arcade.Window):
         self.current_state = START_PAGE  
         self.instructions = []
 
+        texture = arcade.load_texture("images/menu.png")
+        self.instructions.append(texture)
+
+        texture = arcade.load_texture("images/instruct_0.png")
+        self.instructions.append(texture)
+
+        texture = arcade.load_texture("images/instruct_1.png")
+        self.instructions.append(texture)
+
+
     #Setgame variables
     def setup(self):
         
@@ -187,8 +199,8 @@ class MyGame(arcade.Window):
         self.cpu_list.append(self.cpu_sprite)
   
         #Set up background
-        self.background=Background(SOURCE, BACKGROUND_SCALING)
-        self.background.center_y=SCREEN_HEIGHT/2
+        self.background_sprite=Background(SOURCE, BACKGROUND_SCALING)
+        self.background_sprite.center_y=SCREEN_HEIGHT/2
         
         
         # Create the fires and clouds
@@ -203,7 +215,7 @@ class MyGame(arcade.Window):
         arcade.start_render()
         
         #Draw background
-        self.background.draw()
+        self.background_sprite.draw()
         
         # Draw all the sprites.
         self.fire_list.draw()
@@ -236,12 +248,22 @@ class MyGame(arcade.Window):
         health_cpu= f"CPU Power: {cpu_health}"
         arcade.draw_text(health_cpu, SCREEN_WIDTH-200, 50, arcade.color.RED, 14)
 
-    def draw_menu(self, page_number):
+    def draw_page(self, page_number):
 
-        page_texture = arcade.load_texture("images/menu.png")
+        page_texture = self.instructions[page_number] 
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
                                       page_texture.width,
                                       page_texture.height, page_texture, 0)
+        if page_number == 1:
+            arcade.draw_text(("Control your satellite \nwith the joystick"),SCREEN_WIDTH - 500 , (5*(SCREEN_HEIGHT//6)), arcade.color.BLACK, 25)
+            
+            arcade.draw_text(("Capture fire by \npressing the button"),SCREEN_WIDTH - 500 , (13*(SCREEN_HEIGHT//24)), arcade.color.BLACK, 25)
+            
+            arcade.draw_text(("Avoid clouds which \ndrain your power"),SCREEN_WIDTH - 500 , (6*(SCREEN_HEIGHT//24)), arcade.color.BLACK, 25)
+
+        elif page_number == 2:
+            arcade.draw_text(("You will be competing \nagainst a computer, acting \nas a satellite powered  \nby a Neural Network."),SCREEN_WIDTH - 600 , (2*(SCREEN_HEIGHT//3)), arcade.color.BLACK, 30)
+
 
     def draw_game_over(self):
         output = "Game Over"
@@ -257,7 +279,7 @@ class MyGame(arcade.Window):
                                       page_texture.width,
                                       page_texture.height, page_texture, 0)
  
-        arcade.draw_text(("HIGH SCORES"), SCREEN_WIDTH//2, SCREEN_HEIGHT-30, arcade.color.WHITE, 20)
+        arcade.draw_text(("HIGH SCORES"), SCREEN_WIDTH//2-200, 3*SCREEN_HEIGHT/4, arcade.color.RED, 40)
 
         i = 1 
 
@@ -265,7 +287,7 @@ class MyGame(arcade.Window):
             while i <11:
                 line = f.readline()
                 line = str(i) + ". " + line
-                arcade.draw_text((line),SCREEN_WIDTH//2 , (SCREEN_HEIGHT-50-(20*i)), arcade.color.WHITE, 14)
+                arcade.draw_text((line),SCREEN_WIDTH//2-150 , (3*SCREEN_HEIGHT/4-(40*i)), arcade.color.WHITE, 30)
                 i += 1
 
 
@@ -275,7 +297,13 @@ class MyGame(arcade.Window):
         arcade.start_render()
 
         if self.current_state == START_PAGE:
-            self.draw_menu(0)
+            self.draw_page(0)
+
+        elif self.current_state == INSTRUCT1:
+            self.draw_page(1)
+
+        elif self.current_state == INSTRUCT2:
+            self.draw_page(2)
 
         elif self.current_state == GAME_PAGE:
             self.draw_game()
@@ -288,12 +316,15 @@ class MyGame(arcade.Window):
             self.draw_high_score()
 
     def on_mouse_press(self, x, y, button, modifiers):
-        """
-        Called when the user presses a mouse button.
-        """
-
         # Change states as needed.
+
         if self.current_state == START_PAGE:
+            self.current_state = INSTRUCT1
+
+        elif self.current_state == INSTRUCT1:
+            self.current_state = INSTRUCT2
+
+        elif self.current_state == INSTRUCT2:
             self.setup()
             self.current_state = GAME_PAGE
             print(self.current_state)
@@ -320,7 +351,7 @@ class MyGame(arcade.Window):
             self.fire_list.update()
         
             self.clouds_list.update()
-            self.current_state = self.background.update()
+            self.current_state = self.background_sprite.update()
 
             #Update CPU satellite
             if self.cpu_sprite.active:
@@ -349,6 +380,9 @@ class MyGame(arcade.Window):
                         self.cpu_sprite.active = False
                         self.cpu_sprite.kill()
 
+                        if not self.player_sprite.active:
+                            self.current_state = END_PAGE
+
             #If the player is there
             if self.player_sprite.active:
                 # Generate a list of all clouds that collided with the player.
@@ -363,6 +397,9 @@ class MyGame(arcade.Window):
                         global Final_score 
                         Final_score = self.player_sprite.score
                         self.player_sprite.kill()
+
+                        if not self.cpu_sprite.active:
+                            self.current_state=END_PAGE
 
             #Get screeshot for NN
             #if self.frame_count > self.frame:

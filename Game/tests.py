@@ -64,10 +64,12 @@ class TestErrorHandlingSetupt(unittest.TestCase):
 
 class TestEventsCPU(unittest.TestCase):
     def test_fireCapture(self):
-        window = init([("fire", (100,game.SCREEN_HEIGHT-80))])
-        for i in range(330):
+        game.STATE = game.GAME_PAGE
+        window = init([("fire", (80,game.SCREEN_HEIGHT-80))])
+        window.draw_game()
+        for i in range(100):
             window.update(1)
-        self.assertEqual(window.cpu_sprite.score, 1)
+        self.assertEqual(window.cpu_sprite.score, 100)
 
     def test_tracking(self):
         window = init([])
@@ -77,8 +79,10 @@ class TestEventsCPU(unittest.TestCase):
         self.assertEqual((round((window.cpu_sprite.center_x)+ window.cpu_sprite.center_y)), (window.player_sprite.center_x + window.player_sprite.center_y))
 
     def test_cloudDamage(self):
+        game.STATE = game.GAME_PAGE
         window = init([("cloud",(50,game.SCREEN_HEIGHT-50))])
         game.CPU_TRACK_SPEED = 0 #Keep CPU stationary to cause damage
+        window.draw_game()
         for i in range(100):
                 window.update(1)
         self.assertNotEqual(window.cpu_sprite.health, game.HEALTH)

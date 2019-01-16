@@ -2,7 +2,6 @@
 
 import arcade
 import os
-import random
 
 #Set sprite sizes
 SPRITE_SCALING_PLAYER = 0.25
@@ -23,13 +22,17 @@ SCROLL_SPEED = 1  #Speed of background_sprite, clouds and fire sprites
 
 CLOUD_DAMAGE = 0.1
 HEALTH = 100
-#Sprite co-ordinates
+
+#Sprite co-ordinates (will be replaced by NN)
 points = [("cloud", (0,150)),("fire", (120,12)),("fire", (170,800)),("fire", (1200,13)),("fire", (1500,450)),("fire", (1740,12)),("cloud", (0,0)),("cloud", (20,300)),("cloud", (100,342)),("cloud", (500,200)),("cloud", (1000,10)),("cloud", (1300,200)),("cloud", (1600,0)),("cloud", (1653,500)),("cloud", (1800,0)),("cloud", (1900,150)),("fire", (1920,12)),("fire", (2100,800)),("fire", (2400,13)),("fire", (2750,450)),("fire", (3000,12)),("cloud", (2400,400)),("cloud", (2420,100)),("cloud", (2600,342)),("cloud", (2700,200)),("cloud", (3000,10)),("cloud", (3100,200)),("cloud", (3400,0)),("cloud", (3653,500)),("cloud", (3800,0))]
  
+#Image source (global variable so can be used in testing) 
 SOURCE="images/fire_long.jpg"
 
+#PLayer's score for saving in Highscore file
 Final_score = 0
 
+#Game states
 START_PAGE = 0
 INSTRUCT1 = 1
 INSTRUCT2 = 2
@@ -37,6 +40,8 @@ GAME_PAGE = 3
 END_PAGE = 4
 HIGH_SCORE_PAGE = 5
 
+
+STATE = START_PAGE
 
 #PLayer and CPU sprite class
 class Satellite(arcade.Sprite):
@@ -64,7 +69,7 @@ class Satellite(arcade.Sprite):
     #Addtional update called for CPU player. Moves CPU towards Fire or Player
     def cpu_update(self, Player, Fire = None):
         
-        """If fire is there, track it else, track player"""
+        #If fire is there, track it else, track player
 
         
         #X co-ordinates
@@ -91,18 +96,20 @@ class Satellite(arcade.Sprite):
             elif(self.center_y > Player.center_y):
                 self.center_y -= CPU_TRACK_SPEED
 
+
+#Class for scrolling back ground image
 class Background(arcade.Sprite):
     def update(self):
 
         # Move the fire
         self.center_x -= SCROLL_SPEED 
 
+        #If background has finsished scrolling, end game
         if self.right <0:
             return END_PAGE
 
         return GAME_PAGE
 
-           #Game will end here 
 
 #Fire sprite for satellites to capture (Will be replaced by emergencies)
 class Fire(arcade.Sprite):
@@ -114,7 +121,7 @@ class Fire(arcade.Sprite):
         self.center_x -= SCROLL_SPEED 
 
         # See if the fire has movded off the side of the screen.
-        # If so, reset it
+        # If so, remove it
 
         if self.right < 0:
             self.kill()
@@ -129,7 +136,7 @@ class Cloud(arcade.Sprite):
         self.center_x -= SCROLL_SPEED 
 
         # See if the cloud has fallen off the left of the screen.
-        # If so, reset it.
+        # If so, remove it.
         if self.right < 0:
             self.kill()    
 
@@ -141,7 +148,7 @@ class MyGame(arcade.Window):
         # Call the parent class initialise to window
         super().__init__(width, height)
 
-        0# Set the working directory (where we expect to find files) to the same
+        # Set the working directory (where we expect to find files) to the same
         # directory this .py file is in.
         file_path = os.path.dirname(os.path.abspath(__file__))
         os.chdir(file_path)
@@ -156,15 +163,21 @@ class MyGame(arcade.Window):
         #Set up CPU sprite
         self.cpu_sprite = None
 
-        # Background image will be stored in this variable
+        # Static Background image will be stored in this variable(currently unused)
         self.background = None
+
+        #Background sprite
+        self.background_sprite = None
 
         #For screenshot timings
         self.frame = 800
         self.frame_count = 0
         self.picture = 0
 
-        self.current_state = START_PAGE  
+        #Game state
+        self.current_state = STATE  
+
+        #Instruction pages
         self.instructions = []
 
         texture = arcade.load_texture("images/menu.png")
@@ -201,7 +214,6 @@ class MyGame(arcade.Window):
         #Set up background
         self.background_sprite=Background(SOURCE, BACKGROUND_SCALING)
         self.background_sprite.center_y=SCREEN_HEIGHT/2
-        
         
         # Create the fires and clouds
         for i in range (0,len(points)):
@@ -248,12 +260,14 @@ class MyGame(arcade.Window):
         health_cpu= f"CPU Power: {cpu_health}"
         arcade.draw_text(health_cpu, SCREEN_WIDTH-200, 50, arcade.color.RED, 14)
 
+    #Draw instruction page
     def draw_page(self, page_number):
 
         page_texture = self.instructions[page_number] 
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
                                       page_texture.width,
                                       page_texture.height, page_texture, 0)
+
         if page_number == 1:
             arcade.draw_text(("Control your satellite \nwith the joystick"),SCREEN_WIDTH - 500 , (5*(SCREEN_HEIGHT//6)), arcade.color.BLACK, 25)
             
@@ -264,7 +278,7 @@ class MyGame(arcade.Window):
         elif page_number == 2:
             arcade.draw_text(("You will be competing \nagainst a computer, acting \nas a satellite powered  \nby a Neural Network."),SCREEN_WIDTH - 600 , (2*(SCREEN_HEIGHT//3)), arcade.color.BLACK, 30)
 
-
+    #Draw game over screen
     def draw_game_over(self):
         output = "Game Over"
         arcade.draw_text(output, 240, 400, arcade.color.WHITE, 54)
@@ -272,7 +286,7 @@ class MyGame(arcade.Window):
         output = "Click to restart"
         arcade.draw_text(output, 310, 300, arcade.color.WHITE, 24)
 
-
+    #Display high scores
     def draw_high_score(self):
         page_texture = arcade.load_texture("images/hs.jpeg")
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
@@ -281,8 +295,10 @@ class MyGame(arcade.Window):
  
         arcade.draw_text(("HIGH SCORES"), SCREEN_WIDTH//2-200, 3*SCREEN_HEIGHT/4, arcade.color.RED, 40)
 
-        i = 1 
 
+        #Get top ten high scores from file
+        i = 1 
+        
         with open('scores.txt', 'r') as f:
             while i <11:
                 line = f.readline()
@@ -290,11 +306,11 @@ class MyGame(arcade.Window):
                 arcade.draw_text((line),SCREEN_WIDTH//2-150 , (3*SCREEN_HEIGHT/4-(40*i)), arcade.color.WHITE, 30)
                 i += 1
 
-
-
     def on_draw(self):
         # This command has to happen before we start drawing
         arcade.start_render()
+
+        #Draw different events dependant on stage
 
         if self.current_state == START_PAGE:
             self.draw_page(0)
@@ -315,6 +331,8 @@ class MyGame(arcade.Window):
         elif self.current_state == HIGH_SCORE_PAGE:
             self.draw_high_score()
 
+
+    #Change between game pages (e.g instructions and high score)
     def on_mouse_press(self, x, y, button, modifiers):
         # Change states as needed.
 
@@ -327,15 +345,12 @@ class MyGame(arcade.Window):
         elif self.current_state == INSTRUCT2:
             self.setup()
             self.current_state = GAME_PAGE
-            print(self.current_state)
 
         elif self.current_state == END_PAGE:
             self.current_state = HIGH_SCORE_PAGE
-            print(self.current_state)
         
         elif self.current_state == HIGH_SCORE_PAGE:
             self.current_state = START_PAGE
-            print(self.current_state)
             
 
     #Refresh the screen
@@ -401,6 +416,9 @@ class MyGame(arcade.Window):
                         if not self.cpu_sprite.active:
                             self.current_state=END_PAGE
 
+
+      #Currently screenshots slow down game. May need better solution
+
             #Get screeshot for NN
             #if self.frame_count > self.frame:
              #   image = arcade.draw_commands.get_image(x=0, y=0, width=None, height=None)
@@ -445,6 +463,7 @@ class MyGame(arcade.Window):
         elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
             self.player_sprite.change_x = 0
 
+    #Will be used by NN to generate newly identified events
     def add_sprite(self,event,coOrds):
      if coOrds[0] >= 0 and coOrds[1] >=0 and coOrds[1] < SCREEN_HEIGHT:
 
@@ -465,12 +484,9 @@ class MyGame(arcade.Window):
                     self.fire_list.append(detected)
                 else:
                     self.clouds_list.append(detected)
-#helper function
-
+#helper sort function
 def get_number(line):
     return line.split('£')[1]
-
-
 
 #Run game
 def main():
@@ -480,6 +496,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+  
+    #When game closes, get player high score and store it in file. Will be included in states with Ibrahim's program
+
     with open('scores.txt', 'a') as f:
         name = input("Enter your name: \n")
         store = (name + " : £" + str(Final_score))

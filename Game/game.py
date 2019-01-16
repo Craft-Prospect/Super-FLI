@@ -30,6 +30,12 @@ SOURCE="images/fire_long.jpg"
 
 Final_score = 0
 
+START_PAGE = 0
+GAME_PAGE = 1
+END_PAGE = 2
+HIGH_SCORE_PAGE = 3
+
+
 #PLayer and CPU sprite class
 class Satellite(arcade.Sprite):
 
@@ -90,7 +96,10 @@ class Background(arcade.Sprite):
         self.center_x -= SCROLL_SPEED 
 
         if self.right <0:
-            arcade.window_commands.close_window()
+            return END_PAGE
+
+        return GAME_PAGE
+
            #Game will end here 
 
 #Fire sprite for satellites to capture (Will be replaced by emergencies)
@@ -130,7 +139,7 @@ class MyGame(arcade.Window):
         # Call the parent class initialise to window
         super().__init__(width, height)
 
-        # Set the working directory (where we expect to find files) to the same
+        0# Set the working directory (where we expect to find files) to the same
         # directory this .py file is in.
         file_path = os.path.dirname(os.path.abspath(__file__))
         os.chdir(file_path)
@@ -152,6 +161,9 @@ class MyGame(arcade.Window):
         self.frame = 800
         self.frame_count = 0
         self.picture = 0
+
+        self.current_state = START_PAGE  
+        self.instructions = []
 
     #Setgame variables
     def setup(self):
@@ -185,8 +197,7 @@ class MyGame(arcade.Window):
 
             self.add_sprite(item[0], item[1])
 
-
-    def on_draw(self):
+    def draw_game(self):
 
         # This command has to happen before we start drawing
         arcade.start_render()
@@ -208,81 +219,159 @@ class MyGame(arcade.Window):
 
         #CPU Score   
         score_cpu= f"CPU Money: £{self.cpu_sprite.score}"
-        arcade.draw_text(score_cpu, SCREEN_WIDTH-155, 20, arcade.color.RED, 14)
+        arcade.draw_text(score_cpu, SCREEN_WIDTH-200, 20, arcade.color.RED, 14)
 
         # Player Health
         player_health = round(self.player_sprite.health,1)
+        if player_health < 0:
+            player_health = 0
         health_player= f"Player Power: {player_health}"
         arcade.draw_text((health_player), 10, 50, arcade.color.WHITE, 14)
 
         #CPU Health   
         cpu_health = round(self.cpu_sprite.health, 1)
-        health_cpu= f"CPU Power: {cpu_health}"
-        arcade.draw_text(health_cpu, SCREEN_WIDTH-155, 50, arcade.color.RED, 14)
+        if cpu_health < 0:
+            cpu_health = 0
 
+        health_cpu= f"CPU Power: {cpu_health}"
+        arcade.draw_text(health_cpu, SCREEN_WIDTH-200, 50, arcade.color.RED, 14)
+
+    def draw_menu(self, page_number):
+
+        page_texture = arcade.load_texture("images/menu.png")
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
+                                      page_texture.width,
+                                      page_texture.height, page_texture, 0)
+
+    def draw_game_over(self):
+        output = "Game Over"
+        arcade.draw_text(output, 240, 400, arcade.color.WHITE, 54)
+
+        output = "Click to restart"
+        arcade.draw_text(output, 310, 300, arcade.color.WHITE, 24)
+
+
+    def draw_high_score(self):
+        page_texture = arcade.load_texture("images/hs.jpeg")
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
+                                      page_texture.width,
+                                      page_texture.height, page_texture, 0)
+ 
+        arcade.draw_text(("HIGH SCORES"), SCREEN_WIDTH//2, SCREEN_HEIGHT-30, arcade.color.WHITE, 20)
+
+        i = 1 
+
+        with open('scores.txt', 'r') as f:
+            while i <11:
+                line = f.readline()
+                line = str(i) + ". " + line
+                arcade.draw_text((line),SCREEN_WIDTH//2 , (SCREEN_HEIGHT-50-(20*i)), arcade.color.WHITE, 14)
+                i += 1
+
+
+
+    def on_draw(self):
+        # This command has to happen before we start drawing
+        arcade.start_render()
+
+        if self.current_state == START_PAGE:
+            self.draw_menu(0)
+
+        elif self.current_state == GAME_PAGE:
+            self.draw_game()
+
+        elif self.current_state == END_PAGE:
+            self.draw_game()
+            self.draw_game_over()
+        
+        elif self.current_state == HIGH_SCORE_PAGE:
+            self.draw_high_score()
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        """
+        Called when the user presses a mouse button.
+        """
+
+        # Change states as needed.
+        if self.current_state == START_PAGE:
+            self.setup()
+            self.current_state = GAME_PAGE
+            print(self.current_state)
+
+        elif self.current_state == END_PAGE:
+            self.current_state = HIGH_SCORE_PAGE
+            print(self.current_state)
+        
+        elif self.current_state == HIGH_SCORE_PAGE:
+            self.current_state = START_PAGE
+            print(self.current_state)
+            
 
     #Refresh the screen
     def update(self, delta_time):
-        #If player is alive, update
-        if self.player_sprite.active:
-            self.player_list.update()
-        
-        #Update sprites and clouds
-        self.fire_list.update()
-        
-        self.clouds_list.update()
-        self.background.update()
 
-        #Update CPU satellite
-        if self.cpu_sprite.active:
-            if len(self.fire_list)> 0:
-                self.cpu_sprite.cpu_update(self.player_sprite,self.fire_list[0])
-            else:
-                self.cpu_sprite.cpu_update(self.player_sprite)
-            self.cpu_list.update()
+        if self.current_state == GAME_PAGE:
 
-            # Generate a list of all emergencies that collided with the satellite.
-            hit_list = arcade.check_for_collision_with_list(self.cpu_sprite,self.fire_list)
-            # Loop through each colliding fire, remove it, and add to the cpu_score.
-            for fire in hit_list:
-                fire.kill()
-                self.cpu_sprite.score += 100
+            #If player is alive, update
+            if self.player_sprite.active:
+                self.player_list.update()
+        
+            #Update sprites and clouds
+            self.fire_list.update()
+        
+            self.clouds_list.update()
+            self.current_state = self.background.update()
+
+            #Update CPU satellite
+            if self.cpu_sprite.active:
+                if len(self.fire_list)> 0:
+                    self.cpu_sprite.cpu_update(self.player_sprite,self.fire_list[0])
+                else:
+                    self.cpu_sprite.cpu_update(self.player_sprite)
+                self.cpu_list.update()
+
+                # Generate a list of all emergencies that collided with the satellite.
+                hit_list = arcade.check_for_collision_with_list(self.cpu_sprite,self.fire_list)
+                # Loop through each colliding fire, remove it, and add to the cpu_score.
+                for fire in hit_list:
+                    fire.kill()
+                    self.cpu_sprite.score += 100
               
 
-            # Generate a list of all clouds that collided with the CPU.
-            hit_list = arcade.check_for_collision_with_list(self.cpu_sprite,self.clouds_list)
+                # Generate a list of all clouds that collided with the CPU.
+                hit_list = arcade.check_for_collision_with_list(self.cpu_sprite,self.clouds_list)
 
-            # Loop through each colliding cloud, decrease CPU health.
-            for cloud in hit_list:
-                self.cpu_sprite.health -= CLOUD_DAMAGE 
+                # Loop through each colliding cloud, decrease CPU health.
+                for cloud in hit_list:
+                    self.cpu_sprite.health -= CLOUD_DAMAGE 
 
-                if self.cpu_sprite.health < 0:
-                    self.cpu_sprite.active = False
-                    self.cpu_sprite.kill()
+                    if self.cpu_sprite.health <= 0:
+                        self.cpu_sprite.active = False
+                        self.cpu_sprite.kill()
 
-        #If the player is there
-        if self.player_sprite.active:
-            # Generate a list of all clouds that collided with the player.
-            hit_list = arcade.check_for_collision_with_list(self.player_sprite,self.clouds_list)
+            #If the player is there
+            if self.player_sprite.active:
+                # Generate a list of all clouds that collided with the player.
+                hit_list = arcade.check_for_collision_with_list(self.player_sprite,self.clouds_list)
 
-            # Loop through each colliding sprite, remove it, and add to the player_score.
-            for cloud in hit_list:
-                self.player_sprite.health -= CLOUD_DAMAGE
+                # Loop through each colliding sprite, remove it, and add to the player_score.
+                for cloud in hit_list:
+                    self.player_sprite.health -= CLOUD_DAMAGE
 
-                if self.player_sprite.health<0:
-                    self.player_sprite.active = False
-                    global Final_score 
-                    Final_score = self.player_sprite.score
-                    self.player_sprite.kill()
+                    if self.player_sprite.health <=0:
+                        self.player_sprite.active = False
+                        global Final_score 
+                        Final_score = self.player_sprite.score
+                        self.player_sprite.kill()
 
-        #Get screeshot for NN
-        if self.frame_count > self.frame:
-            image = arcade.draw_commands.get_image(x=0, y=0, width=None, height=None)
-            image.save(("data/screenshot"+ str(self.picture)) + ".png", "PNG")
-            self.frame_count = 0
-            self.picture += 1
-        else:
-            self.frame_count +=1
+            #Get screeshot for NN
+            #if self.frame_count > self.frame:
+             #   image = arcade.draw_commands.get_image(x=0, y=0, width=None, height=None)
+              #  image.save(("data/screenshot"+ str(self.picture)) + ".png", "PNG")
+               # self.frame_count = 0
+                #self.picture += 1
+            #else:
+             #   self.frame_count +=1
     
     
     #Player controls
@@ -308,8 +397,6 @@ class MyGame(arcade.Window):
                 for fire in hit_list:
                     fire.kill()
                     self.player_sprite.score += 100
-                    global Final_score
-                    Final_score = self.player_sprite.score
 
 
 
@@ -365,7 +452,7 @@ if __name__ == "__main__":
 
     with open('scores.txt', 'r') as f:
         lines = f.readlines()
-        sorted_lines = sorted(lines, key=get_number)
+        sorted_lines = sorted(lines, key=get_number, reverse = True)
     
     with open('scores.txt', 'w') as f:
        f.writelines(sorted_lines)

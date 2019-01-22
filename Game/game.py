@@ -488,6 +488,24 @@ class MyGame(arcade.Window):
 def get_number(line):
     return line.split('£')[1]
 
+#When game closes, get player high score and store it in file. Will be included in states with Ibrahim's program
+def add_high_score(name):
+    #Add name to file
+    with open('scores.txt', 'a') as f:
+        store = (name + " : £" + str(Final_score))
+        f.write("%s\n" % store )
+
+    sorted_lines = ''
+    
+    #Sort file
+    with open('scores.txt', 'r') as f:
+        lines = f.readlines()
+        sorted_lines = sorted(lines, key=get_number, reverse = True)
+    #Stored sorted file
+    with open('scores.txt', 'w') as f:
+       f.writelines(sorted_lines)
+
+
 #Run game
 def main():
     window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -496,20 +514,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-
+    name = input("Enter your name: \n")
+    add_high_score(name)
   
-    #When game closes, get player high score and store it in file. Will be included in states with Ibrahim's program
 
-    with open('scores.txt', 'a') as f:
-        name = input("Enter your name: \n")
-        store = (name + " : £" + str(Final_score))
-        f.write("%s\n" % store )
-
-    sorted_lines = ''
-
-    with open('scores.txt', 'r') as f:
-        lines = f.readlines()
-        sorted_lines = sorted(lines, key=get_number, reverse = True)
-    
-    with open('scores.txt', 'w') as f:
-       f.writelines(sorted_lines)

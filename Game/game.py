@@ -44,6 +44,12 @@ HIGH_SCORE_PAGE = 5
 
 STATE = START_PAGE
 
+PLAYER_START_X = 50
+PLAYER_START_Y = 50
+
+CPU_START_X = 50
+CPU_START_Y = SCREEN_HEIGHT - 50
+
 #PLayer and CPU sprite class
 class Satellite(arcade.Sprite):
 
@@ -247,14 +253,14 @@ class MyGame(arcade.Window):
 
         # Set up the player
         self.player_sprite = Satellite("images/satellite.png", SPRITE_SCALING_PLAYER)
-        self.player_sprite.center_x = 50
-        self.player_sprite.center_y = 50
+        self.player_sprite.center_x = PLAYER_START_X 
+        self.player_sprite.center_y = PLAYER_START_Y 
         self.player_list.append(self.player_sprite)
         
         #Set up CPU
         self.cpu_sprite= Satellite("images/cpu.png", SPRITE_SCALING_PLAYER)
-        self.cpu_sprite.center_x = 50
-        self.cpu_sprite.center_y = SCREEN_HEIGHT - 50
+        self.cpu_sprite.center_x = CPU_START_X
+        self.cpu_sprite.center_y = CPU_START_Y
         self.cpu_list.append(self.cpu_sprite)
   
         #Set up background
@@ -399,7 +405,6 @@ class MyGame(arcade.Window):
     #Change between game pages (e.g instructions and high score)
     def on_mouse_press(self, x, y, button, modifiers):
         # Change states as needed.
-
         if self.current_state == START_PAGE:
             if self.selected == self.inst_button:
                 self.current_state = INSTRUCT1
@@ -526,7 +531,6 @@ class MyGame(arcade.Window):
         
         elif self.current_state == START_PAGE:
             if key == arcade.key.SPACE:
-                
                 self.selected_index = (self.selected_index+1)%2
                 self.selected = self.buttons[self.selected_index]
                 self.pointer.center_y = self.selected.center_y

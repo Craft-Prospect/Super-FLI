@@ -87,11 +87,6 @@ class TestEventsCPU(unittest.TestCase):
                 window.update(1)
         self.assertNotEqual(window.cpu_sprite.health, game.HEALTH)
 
-class TestHighScores(self):
-
-
-
-
 #Helper Functions
 def init(points,source="images/fire.jpg"): 
     window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT)

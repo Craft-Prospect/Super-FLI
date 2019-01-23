@@ -7,6 +7,7 @@ import os
 SPRITE_SCALING_PLAYER = 0.25
 SPRITE_SCALING_FIRE = 0.01
 SPRITE_SCALING_CLOUD = 0.05
+SPRITE_SCALING_BUTTON = 0.07
 BACKGROUND_SCALING = 1 
 
 #Set number of elements to appear on screen (This will be removed when sprites are generated from co-ordinates)
@@ -22,6 +23,7 @@ SCROLL_SPEED = 1  #Speed of background_sprite, clouds and fire sprites
 
 CLOUD_DAMAGE = 0.1
 HEALTH = 100
+BUTTON = 2
 
 #Sprite co-ordinates (will be replaced by NN)
 points = [("cloud", (0,150)),("fire", (120,12)),("fire", (170,800)),("fire", (1200,13)),("fire", (1500,450)),("fire", (1740,12)),("cloud", (0,0)),("cloud", (20,300)),("cloud", (100,342)),("cloud", (500,200)),("cloud", (1000,10)),("cloud", (1300,200)),("cloud", (1600,0)),("cloud", (1653,500)),("cloud", (1800,0)),("cloud", (1900,150)),("fire", (1920,12)),("fire", (2100,800)),("fire", (2400,13)),("fire", (2750,450)),("fire", (3000,12)),("cloud", (2400,400)),("cloud", (2420,100)),("cloud", (2600,342)),("cloud", (2700,200)),("cloud", (3000,10)),("cloud", (3100,200)),("cloud", (3400,0)),("cloud", (3653,500)),("cloud", (3800,0))]
@@ -39,7 +41,6 @@ INSTRUCT2 = 2
 GAME_PAGE = 3
 END_PAGE = 4
 HIGH_SCORE_PAGE = 5
-
 
 STATE = START_PAGE
 
@@ -140,6 +141,13 @@ class Cloud(arcade.Sprite):
         if self.right < 0:
             self.kill()    
 
+
+#Buttons for main menu
+class Button(arcade.Sprite):
+
+    def update(self):
+        pass
+
 #Main window
 class MyGame(arcade.Window):
     #Initalise game variables and window
@@ -189,6 +197,34 @@ class MyGame(arcade.Window):
         texture = arcade.load_texture("images/instruct_1.png")
         self.instructions.append(texture)
 
+        #Menu buttons
+        self.buttons = None
+        self.start_button = None
+        self.inst_button = None
+
+        self.selected = None
+        self.selected_index = None
+
+        self.start_page_setup()
+
+
+    def start_page_setup(self):
+
+        self.buttons = arcade.SpriteList()
+
+        self.start_button = Button("images/button(blank).png", SPRITE_SCALING_BUTTON)
+        self.start_button.center_x = SCREEN_WIDTH//2 
+        self.start_button.center_y = SCREEN_HEIGHT//2 - 50
+        
+        self.inst_button = Button("images/button(blank).png", SPRITE_SCALING_BUTTON)
+        self.inst_button.center_x = SCREEN_WIDTH//2 
+        self.inst_button.center_y = SCREEN_HEIGHT//2 + 50
+
+        self.buttons.append(self.start_button)
+        self.buttons.append(self.inst_button)
+
+        self.selected = self.start_button
+        self.selected_index = 0
 
     #Setgame variables
     def setup(self):
@@ -260,6 +296,23 @@ class MyGame(arcade.Window):
         health_cpu= f"CPU Power: {cpu_health}"
         arcade.draw_text(health_cpu, SCREEN_WIDTH-200, 50, arcade.color.RED, 14)
 
+
+    #Draw main menu
+    def draw_start_page(self):
+        
+
+        page_texture = self.instructions[0] 
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
+                                      page_texture.width,
+                                      page_texture.height, page_texture, 0)
+
+
+        self.buttons.draw()
+
+        arcade.draw_text(("Working Title"),SCREEN_WIDTH//2 - 100 , (5*(SCREEN_HEIGHT//6)), arcade.color.RED, 30)
+        arcade.draw_text(("Start Game"),SCREEN_WIDTH//2-55 , ((SCREEN_HEIGHT//2+50)), arcade.color.BLACK, 15)
+        arcade.draw_text(("Instructions"),SCREEN_WIDTH//2-55 , ((SCREEN_HEIGHT//2-50)), arcade.color.BLACK, 15)
+
     #Draw instruction page
     def draw_page(self, page_number):
 
@@ -309,11 +362,11 @@ class MyGame(arcade.Window):
     def on_draw(self):
         # This command has to happen before we start drawing
         arcade.start_render()
-
+        
         #Draw different events dependant on stage
 
         if self.current_state == START_PAGE:
-            self.draw_page(0)
+            self.draw_start_page()
 
         elif self.current_state == INSTRUCT1:
             self.draw_page(1)
@@ -337,7 +390,11 @@ class MyGame(arcade.Window):
         # Change states as needed.
 
         if self.current_state == START_PAGE:
-            self.current_state = INSTRUCT1
+            if self.selected == self.inst_button:
+                self.current_state = INSTRUCT1
+            else:
+                self.setup()
+                self.current_state = GAME_PAGE
 
         elif self.current_state == INSTRUCT1:
             self.current_state = INSTRUCT2
@@ -350,6 +407,7 @@ class MyGame(arcade.Window):
             self.current_state = HIGH_SCORE_PAGE
         
         elif self.current_state == HIGH_SCORE_PAGE:
+            self.start_page_setup()
             self.current_state = START_PAGE
             
 
@@ -431,27 +489,35 @@ class MyGame(arcade.Window):
     
     #Player controls
     def on_key_press(self, key, modifiers):
-        if self.player_sprite.active:
-            """Pressing arrow keys """
+        if self.current_state == GAME_PAGE:
+            if self.player_sprite.active:
+                """Pressing arrow keys """
 
-            if key == arcade.key.UP:
-                self.player_sprite.change_y = MOVEMENT_SPEED
-            elif key == arcade.key.DOWN:
-                self.player_sprite.change_y = -MOVEMENT_SPEED
-            elif key == arcade.key.LEFT:
-                self.player_sprite.change_x = -MOVEMENT_SPEED
-            elif key == arcade.key.RIGHT:
-                self.player_sprite.change_x = MOVEMENT_SPEED
+                if key == arcade.key.UP:
+                    self.player_sprite.change_y = MOVEMENT_SPEED
+                elif key == arcade.key.DOWN:
+                    self.player_sprite.change_y = -MOVEMENT_SPEED
+                elif key == arcade.key.LEFT:
+                    self.player_sprite.change_x = -MOVEMENT_SPEED
+                elif key == arcade.key.RIGHT:
+                    self.player_sprite.change_x = MOVEMENT_SPEED
         
-            #PLayer attempts to capture
-            elif key == arcade.key.SPACE:
+                #PLayer attempts to capture
+                elif key == arcade.key.SPACE:
 
-                # Generate a list of all sprites that collided with the player.
-                hit_list = arcade.check_for_collision_with_list(self.player_sprite,self.fire_list)
-                # Loop through each colliding sprite, remove it, and add to the player_score.
-                for fire in hit_list:
-                    fire.kill()
-                    self.player_sprite.score += 100
+                    # Generate a list of all sprites that collided with the player.
+                    hit_list = arcade.check_for_collision_with_list(self.player_sprite,self.fire_list)
+                    # Loop through each colliding sprite, remove it, and add to the player_score.
+                    for fire in hit_list:
+                        fire.kill()
+                        self.player_sprite.score += 100
+        
+        elif self.current_state == START_PAGE:
+            if key == arcade.key.SPACE:
+                
+                self.selected_index = (self.selected_index+1)%2
+                self.selected = self.buttons[self.selected_index]
+                print (self.selected_index)
 
 
 

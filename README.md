@@ -17,10 +17,10 @@ Arcade game that uses a Recurrent Neural Network. User and CPU compete to captur
 git clone "http://stgit.dcs.gla.ac.uk/tp3-2018-ese3/dissertation"
 ```
 
-* Install requirements
-```
-pip install -r requirements.txt   
-```
+* Install arcade academy
+
+[http://arcade.academy/installation.html](http://arcade.academy/installation.html)
+
 
 **How to run**
 

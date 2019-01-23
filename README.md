@@ -21,9 +21,15 @@ git clone "http://stgit.dcs.gla.ac.uk/tp3-2018-ese3/dissertation"
 
 [http://arcade.academy/installation.html](http://arcade.academy/installation.html)
 
+or alternatively use
+
+'''
+pip3 install -r requirements.txt
+'''
 
 **How to run**
 
+Inside the cloned reposistory, run the following commands
 ```
 cd Game
 python3 game.py

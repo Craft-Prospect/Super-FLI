@@ -205,23 +205,33 @@ class MyGame(arcade.Window):
         self.selected = None
         self.selected_index = None
 
+        self.pointer_list = None
+        self.pointer = None
+
         self.start_page_setup()
 
 
     def start_page_setup(self):
 
         self.buttons = arcade.SpriteList()
+        self.pointer_list = arcade.SpriteList()
 
         self.start_button = Button("images/button(blank).png", SPRITE_SCALING_BUTTON)
         self.start_button.center_x = SCREEN_WIDTH//2 
-        self.start_button.center_y = SCREEN_HEIGHT//2 - 50
+        self.start_button.center_y = SCREEN_HEIGHT//2 + 50
         
         self.inst_button = Button("images/button(blank).png", SPRITE_SCALING_BUTTON)
         self.inst_button.center_x = SCREEN_WIDTH//2 
-        self.inst_button.center_y = SCREEN_HEIGHT//2 + 50
+        self.inst_button.center_y = SCREEN_HEIGHT//2 - 50
 
         self.buttons.append(self.start_button)
         self.buttons.append(self.inst_button)
+
+        self.pointer = Button("images/arrow.png", SPRITE_SCALING_BUTTON)
+        self.pointer.center_y = self.start_button.center_y
+        self.pointer.center_x = self.start_button.center_x - 100
+
+        self.pointer_list.append(self.pointer)
 
         self.selected = self.start_button
         self.selected_index = 0
@@ -308,6 +318,7 @@ class MyGame(arcade.Window):
 
 
         self.buttons.draw()
+        self.pointer_list.draw()
 
         arcade.draw_text(("Working Title"),SCREEN_WIDTH//2 - 100 , (5*(SCREEN_HEIGHT//6)), arcade.color.RED, 30)
         arcade.draw_text(("Start Game"),SCREEN_WIDTH//2-55 , ((SCREEN_HEIGHT//2+50)), arcade.color.BLACK, 15)
@@ -485,6 +496,7 @@ class MyGame(arcade.Window):
                 #self.picture += 1
             #else:
              #   self.frame_count +=1
+
     
     
     #Player controls
@@ -517,7 +529,7 @@ class MyGame(arcade.Window):
                 
                 self.selected_index = (self.selected_index+1)%2
                 self.selected = self.buttons[self.selected_index]
-                print (self.selected_index)
+                self.pointer.center_y = self.selected.center_y
 
 
 

@@ -7,7 +7,7 @@ In saying that the errors are due to requierments and training and once this has
 full decription file will be added.
 
 Neural Network
-The network is provided by darknet. It is a convolutional network that has some provided weights. 
+The network is provided by darknet. It is a convolutional (YOLOv2) network that has some provided weights. 
 Team ESE3 is curently training an object detection weight to identify fires, this testing will 
 start on Monday the 27th of Jan as all the equipment (GPU's) has now been set up.
 

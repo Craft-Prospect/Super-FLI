@@ -2,6 +2,8 @@
 import arcade
 import os
 import random
+import glob
+import time
 
 SPRITE_SCALING_POINTER = 1
 SPRITE_SCALING_KEY = 1
@@ -11,8 +13,13 @@ SCREEN_HEIGHT = 600
 MOVEMENT_SPEED = 3
 DEAD_ZONE = 0.02
 
+
+
+
 class Key(arcade.Sprite):
     character = ""
+    y_coord = 0
+    x_coord = 0
         
 
         
@@ -34,6 +41,7 @@ class MyGame(arcade.Window):
         file_path = os.path.dirname(os.path.abspath(__file__))
         os.chdir(file_path)
 
+
         # If you have sprite lists, you should create them here,
         # Variables that will hold sprite lists
         self.pointer_list = None
@@ -52,22 +60,17 @@ class MyGame(arcade.Window):
             self.joystick.on_joybutton_press = self.on_joybutton_press
             self.joystick.on_joybutton_release = self.on_joybutton_release
             self.joystick.on_joyhat_motion = self.on_joyhat_motion
+
         else:
             print("There are no Joysticks")
             self.joystick = None
 
-    def on_joybutton_press(self, joystick, button):
-        print("Button {} down".format(button))
-
-    def on_joybutton_release(self, joystick, button):
-        print("Button {} up".format(button))
-
-    def on_joyhat_motion(self, joystick, hat_x, hat_y):
-        print("Hat ({}, {})".format(hat_x, hat_y))        
+          
 
           
 
     def setup(self):
+
         # Create your sprites and sprite lists here
         #Sprite lists
         self.pointer_list = arcade.SpriteList()
@@ -75,21 +78,47 @@ class MyGame(arcade.Window):
         
         #Set up pointer
         # Set up the player
-        self.pointer_sprite = arcade.Sprite("images/icons8-cursor-filled-24.png", SPRITE_SCALING_POINTER)
+        self.pointer_sprite = arcade.Sprite('keyboard_images/icons8-unchecked-checkbox-filled-50.png', SPRITE_SCALING_POINTER)
         self.pointer_sprite.center_x = 50
-        self.pointer_sprite.center_y = 50
+        self.pointer_sprite.center_y = 200
         self.pointer_list.append(self.pointer_sprite)
+
+        #String taking input
+        self.name = []
+
+        #Character list tracking variable
+        self.key_position = 0
+
+        #Check variable for joystick
+        self.check = 0
+        self.check_y = 0
 
         #Setup keys
         x = 0
         y = 0
-        for filename in os.listdir('images/keyboard_images'):
+        count = 0
+        #for filename in os.listdir('keyboard_images/characters'):
+        for filename in sorted(glob.glob('keyboard_images/characters/*.png')):
             if filename.endswith(".png"):
                 #print(filename[7])
-                self.key_sprite = Key('images/keyboard_images/'+ filename, SPRITE_SCALING_KEY)
+                if count == 10:
+                    x = 0
+                    y = -50
+                if count == 19:
+                    x = 0
+                    y = -100
+                    
+                    
+                self.key_sprite = Key(filename, SPRITE_SCALING_KEY)
                 self.key_sprite.center_x = 50 + x
-                self.key_sprite.center_y = 200
-                self.key_sprite.character = filename[7]
+                self.key_sprite.center_y = 200 + y
+                self.key_sprite.character = filename[29]
+                self.key_sprite.x_coord = 50 + x 
+                self.key_sprite.y_coord = 200 + y 
+
+                count += 1
+                
+                #print(filename[29])
         
                 
 
@@ -108,29 +137,56 @@ class MyGame(arcade.Window):
         # the screen to the background color, and erase what we drew last frame.
         arcade.start_render()
 
+        start_x = 200
+        start_y = 300
+        arcade.draw_text(''.join(self.name), start_x, start_y, arcade.color.BLACK, 30)
+
         # Call draw() on all your sprite lists below
         self.pointer_list.draw()
         self.key_list.draw()
 
-    def update(self, delta_time):
+    def update(self, deltatime):
         """
         All the logic to move, and the game logic goes here.
         Normally, you'll call update() on the sprite lists that
         need it.
         """
-        if self.joystick:
+        
+        
 
-            # Set a "dead zone" to prevent drive from a centered joystick
+        if self.joystick:
+            
+           # Set a "dead zone" to prevent drive from a centered joystick
             if abs(self.joystick.x) < DEAD_ZONE:
                 self.pointer_sprite.change_x = 0
-            else:
-                self.pointer_sprite.change_x = self.joystick.x * MOVEMENT_SPEED
+                self.check = 0
+
+            elif self.check == 0:
+                if self.joystick.x == 1:
+                    print(self.pointer_sprite.change_angle)
+                    self.pointer_sprite.change_x +=50
+                else:
+                    self.pointer_sprite.change_x -= 50 
+                self.check = 1
+                time.sleep(0.2)
+                
+                
 
             # Set a "dead zone" to prevent drive from a centered joystick
-            if abs(self.pointer_sprite.center_y) < DEAD_ZONE:
+            if abs(self.joystick.y) < DEAD_ZONE:
                 self.pointer_sprite.change_y = 0
-            else:
-                self.pointer_sprite.change_y = -self.joystick.y * MOVEMENT_SPEED
+                self.check_y = 0
+
+            elif self.check_y == 0:
+                if self.joystick.y == -1:
+                    self.pointer_sprite.change_y +=50
+                else:
+                    self.pointer_sprite.change_y -= 50 
+                self.check_y = 1
+                time.sleep(0.2)
+            
+
+        
 
         self.pointer_sprite.update()
 
@@ -168,6 +224,28 @@ class MyGame(arcade.Window):
         Called when a user releases a mouse button.
         """
         pass
+
+    def on_joybutton_press(self, joystick, button):
+        print("Button {} down".format(button))
+
+        # On button press generate/add to list of keys selected by the button
+        character_hit_list = arcade.check_for_collision_with_list(self.pointer_sprite,self.key_list)
+
+        for Key in character_hit_list:
+                           
+            self.name.append(Key.character.upper())
+            
+
+            #print(''.join(self.name))
+
+
+    def on_joybutton_release(self, joystick, button):
+        print("Button {} up".format(button))
+
+    def on_joyhat_motion(self, joystick, hat_x, hat_y):
+        print("Hat ({}, {})".format(hat_x, hat_y))    
+
+       
 
 
 def main():

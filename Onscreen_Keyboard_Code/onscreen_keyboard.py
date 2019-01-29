@@ -83,6 +83,20 @@ class MyGame(arcade.Window):
         self.pointer_sprite.center_y = 200
         self.pointer_list.append(self.pointer_sprite)
 
+        #Setup Delete button
+        self.key_sprite = Key('keyboard_images/icons8-clear-symbol-26.png',SPRITE_SCALING_KEY)
+        self.key_sprite.center_x = 500
+        self.key_sprite.center_y = 150
+        self.key_sprite.character = '-'  # use '-' as identifier for backspace
+        self.key_list.append(self.key_sprite)
+
+        #Setup Delete button
+        self.key_sprite = Key('keyboard_images/icons8-enter-26.png',SPRITE_SCALING_KEY)
+        self.key_sprite.center_x = 400
+        self.key_sprite.center_y = 100
+        self.key_sprite.character = ';'  # use ';' as identifier for backspace
+        self.key_list.append(self.key_sprite)
+
         #String taking input
         self.name = []
 
@@ -162,13 +176,30 @@ class MyGame(arcade.Window):
                 self.check = 0
 
             elif self.check == 0:
+                #Joystick movement to the right update position
                 if self.joystick.x == 1:
-                    print(self.pointer_sprite.change_angle)
                     self.pointer_sprite.change_x +=50
+                #Joystick movement to the left update postion
                 else:
                     self.pointer_sprite.change_x -= 50 
                 self.check = 1
+
                 time.sleep(0.2)
+
+            #if statements to ensure pointer always on the keyboard // Replace with case statement?
+            if self.pointer_sprite._position[0] >500:
+                self.pointer_sprite._position[0] = 50
+
+            if self.pointer_sprite._position[0] <50:
+                self.pointer_sprite._position[0] = 500
+
+            if self.pointer_sprite._position[0] > 400 and self.pointer_sprite._position[1] == 100:
+                self.pointer_sprite._position[0] = 50
+
+            if self.pointer_sprite._position[0] <50 and self.pointer_sprite._position[1] == 100:
+                self.pointer_sprite._position[0] = 400
+            
+            
                 
                 
 
@@ -184,7 +215,13 @@ class MyGame(arcade.Window):
                     self.pointer_sprite.change_y -= 50 
                 self.check_y = 1
                 time.sleep(0.2)
-            
+
+            #Scroll back if sprite is moving off the keyboard
+            if self.pointer_sprite._position[1] > 200:
+                self.pointer_sprite._position[1] = 100
+
+            if self.pointer_sprite._position[1] <100:
+                self.pointer_sprite._position[1] = 200    
 
         
 
@@ -232,8 +269,12 @@ class MyGame(arcade.Window):
         character_hit_list = arcade.check_for_collision_with_list(self.pointer_sprite,self.key_list)
 
         for Key in character_hit_list:
-                           
-            self.name.append(Key.character.upper())
+
+            if Key.character == '-':
+                self.name = self.name[0:-1]
+
+            else:
+                self.name.append(Key.character.upper())
             
 
             #print(''.join(self.name))

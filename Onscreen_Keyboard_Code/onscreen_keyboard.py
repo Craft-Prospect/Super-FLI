@@ -96,6 +96,9 @@ class MyGame(arcade.Window):
         #String taking input
         self.name = []
 
+        #Boolean for CapsLock toggle
+        self.caps_on = False
+
         #Character list tracking variable
         self.key_position = 0
 
@@ -244,7 +247,36 @@ class MyGame(arcade.Window):
         print("Button {} up".format(button))
 
     def on_joyhat_motion(self, joystick, hat_x, hat_y):
-        print("Hat ({}, {})".format(hat_x, hat_y))    
+        print("Hat ({}, {})".format(hat_x, hat_y)) 
+
+    #On key press parse value of key being pressed and add to the string being output
+    def on_key_press(self, key, modifiers):
+
+            print(key)
+            
+            #If value over 2^16 is selected as it causes a crash
+            if key> 65536:
+                return
+
+            #Value for shift instead of printing value return
+            elif key == 65506:
+                return
+
+            #Value for caps key, boolean turned on and off if selected
+            elif key == 65509:
+                self.caps_on = not self.caps_on
+                return 
+            
+            #Value for delete key
+            elif key == 65288:
+                self.name = self.name[0:-1]
+
+            #If caps is on append in upper case otherwise in lowercase z
+            elif self.caps_on:
+                self.name.append(chr(key).upper())
+            else:
+                self.name.append(chr(key))
+
 
        
 

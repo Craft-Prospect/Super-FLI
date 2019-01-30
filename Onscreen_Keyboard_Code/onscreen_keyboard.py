@@ -1,15 +1,18 @@
 #Onscreen Keyboard
 import arcade
 import os
-import random
 import glob
 import time
 
+#Scaling for sprites
 SPRITE_SCALING_POINTER = 1
 SPRITE_SCALING_KEY = 1
 
+#Screen dimensions
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
+
+#Variables used for joystick movement
 MOVEMENT_SPEED = 3
 DEAD_ZONE = 0.02
 
@@ -25,14 +28,7 @@ class Key(arcade.Sprite):
         
         
 class MyGame(arcade.Window):
-    """
-    Main application class.
-
-    NOTE: Go ahead and delete the methods you don't need.
-    If you do need a method, delete the 'pass' and replace it
-    with your own code. Don't leave 'pass' in this program.
-    """
-
+    
     def __init__(self, width, height):
         super().__init__(width, height)
 
@@ -112,9 +108,9 @@ class MyGame(arcade.Window):
         y = 0
         count = 0
         #for filename in os.listdir('keyboard_images/characters'):
+        #Loops through file containing characters and adds creates a 'Key' object for each character
         for filename in sorted(glob.glob('keyboard_images/characters/*.png')):
             if filename.endswith(".png"):
-                #print(filename[7])
                 if count == 10:
                     x = 0
                     y = -50
@@ -160,11 +156,7 @@ class MyGame(arcade.Window):
         self.key_list.draw()
 
     def update(self, deltatime):
-        """
-        All the logic to move, and the game logic goes here.
-        Normally, you'll call update() on the sprite lists that
-        need it.
-        """
+       
         
         
 
@@ -204,6 +196,7 @@ class MyGame(arcade.Window):
                 
 
             # Set a "dead zone" to prevent drive from a centered joystick
+            # Movement value must be greater than dead zone for movement to be registered by the joystick 
             if abs(self.joystick.y) < DEAD_ZONE:
                 self.pointer_sprite.change_y = 0
                 self.check_y = 0
@@ -228,44 +221,11 @@ class MyGame(arcade.Window):
         self.pointer_sprite.update()
 
 
-
-    def on_key_press(self, key, key_modifiers):
-        """
-        Called whenever a key on the keyboard is pressed.
-
-        For a full list of keys, see:
-        http://arcade.academy/arcade.key.html
-        """
-        pass
-
-    def on_key_release(self, key, key_modifiers):
-        """
-        Called whenever the user lets off a previously pressed key.
-        """
-        pass
-
-    def on_mouse_motion(self, x, y, delta_x, delta_y):
-        """
-        Called whenever the mouse moves.
-        """
-        pass
-
-    def on_mouse_press(self, x, y, button, key_modifiers):
-        """
-        Called when the user presses a mouse button.
-        """
-        pass
-
-    def on_mouse_release(self, x, y, button, key_modifiers):
-        """
-        Called when a user releases a mouse button.
-        """
-        pass
-
     def on_joybutton_press(self, joystick, button):
         print("Button {} down".format(button))
 
-        # On button press generate/add to list of keys selected by the button
+        # If there is a collision between a 'Key' object and the pointer. The Key is added to the hit list
+        # Hit list is then iterated through and character value from Key object is added to string  thats printed to the screen 
         character_hit_list = arcade.check_for_collision_with_list(self.pointer_sprite,self.key_list)
 
         for Key in character_hit_list:

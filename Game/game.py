@@ -21,8 +21,11 @@ CPU_SPEED = 1.25 #Normal CPU speed
 CPU_TRACK_SPEED = 0.5 #CPU speed when no emergency on screen and is tracking player movement
 SCROLL_SPEED = 1  #Speed of background_sprite, clouds and fire sprites
 
+#Variable for setting difficulty
 CLOUD_DAMAGE = 0.1
 HEALTH = 100
+
+#Number of buttons in the menu
 BUTTON = 2
 
 #Sprite co-ordinates (will be replaced by NN)
@@ -42,11 +45,14 @@ GAME_PAGE = 3
 END_PAGE = 4
 HIGH_SCORE_PAGE = 5
 
+#Initial game state
 STATE = START_PAGE
 
+#Player co-ordinates
 PLAYER_START_X = 50
 PLAYER_START_Y = 50
 
+#CPU co-ordinates
 CPU_START_X = 50
 CPU_START_Y = SCREEN_HEIGHT - 50
 
@@ -78,21 +84,21 @@ class Satellite(arcade.Sprite):
         
         #If fire is there, track it else, track player
 
-        
-        #X co-ordinates
+        #For X co-ordinates if the cpu is furhter left that the fire and there's a fire on the screen
         if (Fire and self.center_x <Fire.center_x and Fire.center_x < (SCREEN_WIDTH-10)):
             self.center_x += CPU_SPEED
+        #Else if there's a fire on the screen and the CPU is to the right of it
         elif (Fire and self.center_x > Fire.center_x and Fire.center_x < (SCREEN_WIDTH-10)):
             self.center_x -= CPU_SPEED
         
+        #Else if the fire is off-screen, follow the player
         else: 
             if (self.center_x <Player.center_x):
                 self.center_x += CPU_TRACK_SPEED
             elif(self.center_x > Player.center_x):
                 self.center_x -= CPU_TRACK_SPEED
 
-           
-        #Y co-ordinates
+        #Same as above except for Y co-ordinates
         if (Fire and self.center_y <Fire.center_y and Fire.center_x < (SCREEN_WIDTH-10)):
             self.center_y += CPU_SPEED
         elif (Fire and self.center_y > Fire.center_y and Fire.center_x < (SCREEN_WIDTH-10)):
@@ -111,7 +117,7 @@ class Background(arcade.Sprite):
         # Move the fire
         self.center_x -= SCROLL_SPEED 
 
-        #If background has finsished scrolling, end game
+        #If background has finsished scrolling(No image left to show), end the game
         if self.right <0:
             return END_PAGE
 
@@ -127,12 +133,9 @@ class Fire(arcade.Sprite):
         # Move the fire
         self.center_x -= SCROLL_SPEED 
 
-        # See if the fire has movded off the side of the screen.
-        # If so, remove it
-
+        # See if the fire has moved off the left side of the screen.If it is off screen remove it from the sprite list
         if self.right < 0:
             self.kill()
-
 
 class Cloud(arcade.Sprite):
 
@@ -142,13 +145,11 @@ class Cloud(arcade.Sprite):
         # Move the cloud
         self.center_x -= SCROLL_SPEED 
 
-        # See if the cloud has fallen off the left of the screen.
-        # If so, remove it.
+        # See if the cloud has fallen off the left of the screen, if so, remove it from the sprite list.
         if self.right < 0:
             self.kill()    
 
-
-#Buttons for main menu
+#Buttons for main menu, (they do nothin, just a graphical representation)
 class Button(arcade.Sprite):
 
     def update(self):
@@ -194,6 +195,7 @@ class MyGame(arcade.Window):
         #Instruction pages
         self.instructions = []
 
+        #Setup background textures
         texture = arcade.load_texture("images/menu.png")
         self.instructions.append(texture)
 
@@ -208,37 +210,45 @@ class MyGame(arcade.Window):
         self.start_button = None
         self.inst_button = None
 
+        #Currently selected buttons
         self.selected = None
+
+        #Pointer into button list
         self.selected_index = None
 
+        #Sprite to show which button is selected
         self.pointer_list = None
         self.pointer = None
-
+        
         self.start_page_setup()
-
 
     def start_page_setup(self):
 
+        #Setup up lists for buttons
         self.buttons = arcade.SpriteList()
         self.pointer_list = arcade.SpriteList()
 
+        #Setup button for launching game
         self.start_button = Button("images/button(blank).png", SPRITE_SCALING_BUTTON)
         self.start_button.center_x = SCREEN_WIDTH//2 
         self.start_button.center_y = SCREEN_HEIGHT//2 + 50
         
+        #Setup button for displaying instructions
         self.inst_button = Button("images/button(blank).png", SPRITE_SCALING_BUTTON)
         self.inst_button.center_x = SCREEN_WIDTH//2 
         self.inst_button.center_y = SCREEN_HEIGHT//2 - 50
-
+ 
         self.buttons.append(self.start_button)
         self.buttons.append(self.inst_button)
 
+        #Set up indicator for selected button
         self.pointer = Button("images/arrow.png", SPRITE_SCALING_BUTTON)
         self.pointer.center_y = self.start_button.center_y
         self.pointer.center_x = self.start_button.center_x - 100
 
         self.pointer_list.append(self.pointer)
 
+        #Start off with the start game button being selected
         self.selected = self.start_button
         self.selected_index = 0
 
@@ -299,16 +309,24 @@ class MyGame(arcade.Window):
 
         # Player Health
         player_health = round(self.player_sprite.health,1)
+        
+        #Stop player health being negative
         if player_health < 0:
             player_health = 0
+        
+        #Display player health on the screen
         health_player= f"Player Power: {player_health}"
         arcade.draw_text((health_player), 10, 50, arcade.color.WHITE, 14)
 
         #CPU Health   
+
         cpu_health = round(self.cpu_sprite.health, 1)
+        
+        #Stop CPU health being negative
         if cpu_health < 0:
             cpu_health = 0
-
+        
+        #Display cpu health on the screen
         health_cpu= f"CPU Power: {cpu_health}"
         arcade.draw_text(health_cpu, SCREEN_WIDTH-200, 50, arcade.color.RED, 14)
 
@@ -316,16 +334,17 @@ class MyGame(arcade.Window):
     #Draw main menu
     def draw_start_page(self):
         
-
+        #Load background image
         page_texture = self.instructions[0] 
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
                                       page_texture.width,
                                       page_texture.height, page_texture, 0)
 
-
+        #Draw buttons
         self.buttons.draw()
         self.pointer_list.draw()
 
+        #Add text for title and buttons
         arcade.draw_text(("Working Title"),SCREEN_WIDTH//2 - 100 , (5*(SCREEN_HEIGHT//6)), arcade.color.RED, 30)
         arcade.draw_text(("Start Game"),SCREEN_WIDTH//2-55 , ((SCREEN_HEIGHT//2+50)), arcade.color.BLACK, 15)
         arcade.draw_text(("Instructions"),SCREEN_WIDTH//2-55 , ((SCREEN_HEIGHT//2-50)), arcade.color.BLACK, 15)
@@ -333,16 +352,15 @@ class MyGame(arcade.Window):
     #Draw instruction page
     def draw_page(self, page_number):
 
+        #Load background image
         page_texture = self.instructions[page_number] 
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
                                       page_texture.width,
                                       page_texture.height, page_texture, 0)
-
+        #Load test for insturction pages
         if page_number == 1:
             arcade.draw_text(("Control your satellite \nwith the joystick"),SCREEN_WIDTH - 500 , (5*(SCREEN_HEIGHT//6)), arcade.color.BLACK, 25)
-            
             arcade.draw_text(("Capture fire by \npressing the button"),SCREEN_WIDTH - 500 , (13*(SCREEN_HEIGHT//24)), arcade.color.BLACK, 25)
-            
             arcade.draw_text(("Avoid clouds which \ndrain your power"),SCREEN_WIDTH - 500 , (6*(SCREEN_HEIGHT//24)), arcade.color.BLACK, 25)
 
         elif page_number == 2:
@@ -373,6 +391,8 @@ class MyGame(arcade.Window):
             while i <11:
                 line = f.readline()
                 line = str(i) + ". " + line
+                
+                #Display highscores opn screen
                 arcade.draw_text((line),SCREEN_WIDTH//2-150 , (3*SCREEN_HEIGHT/4-(40*i)), arcade.color.WHITE, 30)
                 i += 1
 
@@ -404,8 +424,8 @@ class MyGame(arcade.Window):
 
     #Change between game pages (e.g instructions and high score)
     def on_mouse_press(self, x, y, button, modifiers):
-        # Change states as needed.
         if self.current_state == START_PAGE:
+            #Change state depending on button selected
             if self.selected == self.inst_button:
                 self.current_state = INSTRUCT1
             else:

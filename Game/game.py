@@ -4,10 +4,10 @@ import arcade
 import os
 
 #Set sprite sizes
-SPRITE_SCALING_PLAYER = 0.25
-SPRITE_SCALING_FIRE = 0.01
-SPRITE_SCALING_CLOUD = 0.05
-SPRITE_SCALING_BUTTON = 0.07
+SPRITE_SCALING_PLAYER = 1
+SPRITE_SCALING_FIRE = 1
+SPRITE_SCALING_CLOUD = 1
+SPRITE_SCALING_BUTTON = 1
 BACKGROUND_SCALING = 1 
 
 #Set number of elements to appear on screen (This will be removed when sprites are generated from co-ordinates)
@@ -29,8 +29,11 @@ HEALTH = 100
 BUTTON = 2
 
 #Sprite co-ordinates (will be replaced by NN)
-points = [("cloud", (0,150)),("fire", (120,12)),("fire", (170,800)),("fire", (1200,13)),("fire", (1500,450)),("fire", (1740,12)),("cloud", (0,0)),("cloud", (20,300)),("cloud", (100,342)),("cloud", (500,200)),("cloud", (1000,10)),("cloud", (1300,200)),("cloud", (1600,0)),("cloud", (1653,500)),("cloud", (1800,0)),("cloud", (1900,150)),("fire", (1920,12)),("fire", (2100,800)),("fire", (2400,13)),("fire", (2750,450)),("fire", (3000,12)),("cloud", (2400,400)),("cloud", (2420,100)),("cloud", (2600,342)),("cloud", (2700,200)),("cloud", (3000,10)),("cloud", (3100,200)),("cloud", (3400,0)),("cloud", (3653,500)),("cloud", (3800,0))]
+fire_data = [("fire", (120,12)),("fire", (670,800)),("fire", (1200,13)),("fire", (1500,450)),("fire", (1740,12)),("fire", (1920,12)),("fire", (2100,800)),("fire", (2400,13)),("fire", (2750,450)),("fire", (3000,12))]
  
+cloud_data = [("cloud", (0,150)),("cloud", (420,300)),("cloud", (700,742)),("cloud", (1000,200)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (2200,0)),("cloud", (2900,150)),("cloud", (3000,400)),("cloud", (3100,200)),("cloud", (3400,0)),("cloud", (3653,500)),("cloud", (3800,0))]
+
+
 #Image source (global variable so can be used in testing) 
 SOURCE="images/fire_long.jpg"
 
@@ -171,10 +174,16 @@ class MyGame(arcade.Window):
         # Variables that will hold the sprite lists
         self.fire_list=None
         self.clouds_list = None
+
+        global fire_data
+        self.fire_data = fire_data 
+        
+        global cloud_data 
+        self.cloud_data = cloud_data
         
         # Set up the player info
         self.player_sprite = None
-
+       
         #Set up CPU sprite
         self.cpu_sprite = None
 
@@ -204,7 +213,6 @@ class MyGame(arcade.Window):
 
         texture = arcade.load_texture("images/instruct_1.png")
         self.instructions.append(texture)
-
         #Menu buttons
         self.buttons = None
         self.start_button = None
@@ -254,6 +262,12 @@ class MyGame(arcade.Window):
 
     #Setgame variables
     def setup(self):
+
+        global fire_data
+        self.fire_data = fire_data 
+        
+        global cloud_data 
+        self.cloud_data = cloud_data
         
         # Sprite lists
         self.fire_list = arcade.SpriteList()
@@ -276,13 +290,15 @@ class MyGame(arcade.Window):
         #Set up background
         self.background_sprite=Background(SOURCE, BACKGROUND_SCALING)
         self.background_sprite.center_y=SCREEN_HEIGHT/2
+
+        for i in range(0,3):
+            if len(fire_data) > 0:
+                item = fire_data.pop(0)
+                self.add_sprite(item[0],item[1])
+            if len(cloud_data) > 0:
+                item = cloud_data.pop(0)
+                self.add_sprite(item[0],item[1])
         
-        # Create the fires and clouds
-        for i in range (0,len(points)):
-            item = points[i]
-
-            self.add_sprite(item[0], item[1])
-
     def draw_game(self):
 
         # This command has to happen before we start drawing
@@ -510,6 +526,15 @@ class MyGame(arcade.Window):
                         if not self.cpu_sprite.active:
                             self.current_state=END_PAGE
 
+            if len(self.fire_list) <3 and len(fire_data) > 0:
+                item = fire_data.pop(0)
+                self.add_sprite(item[0], item[1])
+            if len(self.clouds_list) <3 and len(cloud_data) > 0:
+                item = cloud_data.pop(0) 
+                self.add_sprite(item[0], item[1])
+
+                
+
 
       #Currently screenshots slow down game. May need better solution
 
@@ -521,8 +546,6 @@ class MyGame(arcade.Window):
                 #self.picture += 1
             #else:
              #   self.frame_count +=1
-
-    
     
     #Player controls
     def on_key_press(self, key, modifiers):
@@ -567,16 +590,16 @@ class MyGame(arcade.Window):
 
     #Will be used by NN to generate newly identified events
     def add_sprite(self,event,coOrds):
+
      if coOrds[0] >= 0 and coOrds[1] >=0 and coOrds[1] < SCREEN_HEIGHT:
 
                 if  event == "fire":
                     # Create the fire instance
-                    detected = Fire("images/fire.png", SPRITE_SCALING_FIRE)
+                    detected = Fire("images/fire_sprite.png", SPRITE_SCALING_FIRE)
 
                 else:
                     #Create cloud instance
                     detected=Cloud("images/clouds.png", SPRITE_SCALING_CLOUD)
-
             
                 # Position the fire
                 detected.center_x = coOrds[0] 

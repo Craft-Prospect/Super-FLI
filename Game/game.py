@@ -35,7 +35,7 @@ cloud_data = [("cloud", (0,150)),("cloud", (420,300)),("cloud", (700,742)),("clo
 
 
 #Image source (global variable so can be used in testing) 
-SOURCE="images/fire_long.jpg"
+SOURCE=["images/background1.jpg", "images/background2.jpg", "images/background3.jpg", "images/background4.jpg"]
 
 #PLayer's score for saving in Highscore file
 Final_score = 0
@@ -122,9 +122,10 @@ class Background(arcade.Sprite):
 
         #If background has finsished scrolling(No image left to show), end the game
         if self.right <0:
-            return END_PAGE
+            self.kill()
+            return 1 
 
-        return GAME_PAGE
+        return 0 
 
 
 #Fire sprite for satellites to capture (Will be replaced by emergencies)
@@ -187,11 +188,11 @@ class MyGame(arcade.Window):
         #Set up CPU sprite
         self.cpu_sprite = None
 
-        # Static Background image will be stored in this variable(currently unused)
-        self.background = None
-
-        #Background sprite
-        self.background_sprite = None
+        #Background sprites
+        self.background_list = None
+        self.background_even = None
+        self.background_odd = None
+        self.background_index = 0
 
         #For screenshot timings
         self.frame = 800
@@ -288,8 +289,19 @@ class MyGame(arcade.Window):
         self.cpu_list.append(self.cpu_sprite)
   
         #Set up background
-        self.background_sprite=Background(SOURCE, BACKGROUND_SCALING)
-        self.background_sprite.center_y=SCREEN_HEIGHT/2
+        self.background_list = arcade.SpriteList()
+        
+        self.background_even= Background(SOURCE[0], BACKGROUND_SCALING)
+        self.background_even.center_x = SCREEN_WIDTH/2
+        self.background_even.center_y = SCREEN_HEIGHT/2
+        
+        self.background_odd = Background(SOURCE[1], BACKGROUND_SCALING)
+        self.background_odd.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
+        self.background_odd.center_y= SCREEN_HEIGHT/2
+        
+        self.background_list.append(self.background_even)
+        self.background_list.append(self.background_odd)
+        self.background_index = 2
 
         for i in range(0,3):
             if len(fire_data) > 0:
@@ -304,8 +316,8 @@ class MyGame(arcade.Window):
         # This command has to happen before we start drawing
         arcade.start_render()
         
-        #Draw background
-        self.background_sprite.draw()
+        #Backgrounds 
+        self.background_list.draw()
         
         # Draw all the sprites.
         self.fire_list.draw()
@@ -476,7 +488,26 @@ class MyGame(arcade.Window):
             self.fire_list.update()
         
             self.clouds_list.update()
-            self.current_state = self.background_sprite.update()
+            if(self.background_even.update() == 1):
+                self.background_even = Background(SOURCE[self.background_index], BACKGROUND_SCALING)
+                self.background_index += 1
+                self.background_even.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
+                self.background_even.center_y = SCREEN_HEIGHT/2
+                self.background_list.append(self.background_even)
+
+                if (self.background_index == len(SOURCE) ):
+                    self.current_state = END_PAGE
+
+            elif(self.background_odd.update() == 1):
+                self.background_even = Background(SOURCE[self.background_index], BACKGROUND_SCALING)
+                self.background_index += 1
+                self.background_odd.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
+                self.background_odd.center_y = SCREEN_HEIGHT/2
+
+                self.background_list.append(self.background_odd)
+
+                if (self.background_index == len(SOURCE) ):
+                    self.current_state = END_PAGE
 
             #Update CPU satellite
             if self.cpu_sprite.active:
@@ -532,9 +563,6 @@ class MyGame(arcade.Window):
             if len(self.clouds_list) <3 and len(cloud_data) > 0:
                 item = cloud_data.pop(0) 
                 self.add_sprite(item[0], item[1])
-
-                
-
 
       #Currently screenshots slow down game. May need better solution
 

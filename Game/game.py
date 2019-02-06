@@ -12,8 +12,8 @@ BACKGROUND_SCALING = 1
 
 #Set number of elements to appear on screen (This will be removed when sprites are generated from co-ordinates)
 #Window size
-SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = 587 
+SCREEN_WIDTH = 1041
+SCREEN_HEIGHT = 597 
 
 #Sprite Speeds
 MOVEMENT_SPEED = 2  #Player speeds
@@ -29,13 +29,13 @@ HEALTH = 100
 BUTTON = 2
 
 #Sprite co-ordinates (will be replaced by NN)
-fire_data = [("fire", (120,12)),("fire", (670,800)),("fire", (1200,13)),("fire", (1500,450)),("fire", (1740,12)),("fire", (1920,12)),("fire", (2100,800)),("fire", (2400,13)),("fire", (2750,450)),("fire", (3000,12))]
+fire_data = [("fire", (120,12)),("fire", (670,800)),("fire", (1200,13)),("fire", (1261,450)),("fire", (1781,12)),("fire", (1920,12)),("fire", (1261,450)),("fire", (1781,12)),("fire", (1920,12)),("fire", (1261,450)),("fire", (1781,12)),("fire", (1920,12))]
  
-cloud_data = [("cloud", (0,150)),("cloud", (420,300)),("cloud", (700,742)),("cloud", (1000,200)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (2200,0)),("cloud", (2900,150)),("cloud", (3000,400)),("cloud", (3100,200)),("cloud", (3400,0)),("cloud", (3653,500)),("cloud", (3800,0))]
+cloud_data = [("cloud", (0,150)),("cloud", (420,300)),("cloud", (700,742)),("cloud", (1000,200)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0))]
 
 
 #Image source (global variable so can be used in testing) 
-SOURCE=["images/background1.jpg", "images/background2.jpg", "images/background3.jpg", "images/background4.jpg"]
+SOURCE=["images/fire.jpg", "images/forest.png", "images/fire.jpg", "images/forest.png","images/sea.png"]
 
 #PLayer's score for saving in Highscore file
 Final_score = 0
@@ -193,6 +193,8 @@ class MyGame(arcade.Window):
         self.background_even = None
         self.background_odd = None
         self.background_index = 0
+        self.final_background = False
+        self.background = None
 
         #For screenshot timings
         self.frame = 800
@@ -316,7 +318,7 @@ class MyGame(arcade.Window):
         # This command has to happen before we start drawing
         arcade.start_render()
         
-        #Backgrounds 
+        #Backgrounds
         self.background_list.draw()
         
         # Draw all the sprites.
@@ -488,27 +490,41 @@ class MyGame(arcade.Window):
             self.fire_list.update()
         
             self.clouds_list.update()
-            if(self.background_even.update() == 1):
-                self.background_even = Background(SOURCE[self.background_index], BACKGROUND_SCALING)
-                self.background_index += 1
-                self.background_even.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
-                self.background_even.center_y = SCREEN_HEIGHT/2
-                self.background_list.append(self.background_even)
 
-                if (self.background_index == len(SOURCE) ):
+            update = self.background_even.update()
+            update -= self.background_odd.update()
+
+            if(update == 1):
+
+                if(self.final_background):
+                    pass
+
+                else:
+                    self.background_even = Background(SOURCE[self.background_index], BACKGROUND_SCALING)
+                    self.background_index += 1
+                    self.background_even.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
+                    self.background_even.center_y = SCREEN_HEIGHT/2
+                    self.background_list.append(self.background_even)
+
+                if (self.background_index == len(SOURCE)):
+                    self.final_background = True 
+
+            elif(update == -1):
+
+                if(self.final_background):
                     self.current_state = END_PAGE
 
-            elif(self.background_odd.update() == 1):
-                self.background_even = Background(SOURCE[self.background_index], BACKGROUND_SCALING)
-                self.background_index += 1
-                self.background_odd.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
-                self.background_odd.center_y = SCREEN_HEIGHT/2
+                else:
+                    self.background_odd = Background(SOURCE[self.background_index], BACKGROUND_SCALING)
+                    self.background_index += 1
+                    self.background_odd.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
+                    self.background_odd.center_y = SCREEN_HEIGHT/2
 
-                self.background_list.append(self.background_odd)
+                    self.background_list.append(self.background_odd)
 
-                if (self.background_index == len(SOURCE) ):
-                    self.current_state = END_PAGE
-
+                    if (self.background_index == len(SOURCE)):
+                        self.final_background = True 
+            
             #Update CPU satellite
             if self.cpu_sprite.active:
                 if len(self.fire_list)> 0:

@@ -3,8 +3,8 @@ build:
   script:
     - latexmk -pdf -cd docs/dissertation/dissertation.tex
     - cd Game
-    - pip3 install -r requirements.txt
-    - python3 tests.py
+    - pip3.6 install -r requirements.txt
+    - python3.6 tests.py
   artifacts:
     paths:
      - "*.pdf"

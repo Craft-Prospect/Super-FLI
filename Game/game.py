@@ -15,14 +15,19 @@ BACKGROUND_SCALING = 1
 SCREEN_WIDTH = 1041
 SCREEN_HEIGHT = 597 
 
+#Raspberry Pi speeds
+RASP = 0
+#RASP = 20
+
+
 #Sprite Speeds
-MOVEMENT_SPEED = 2  #Player speeds
-CPU_SPEED = 1.25 #Normal CPU speed
-CPU_TRACK_SPEED = 0.5 #CPU speed when no emergency on screen and is tracking player movement
-SCROLL_SPEED = 1  #Speed of background_sprite, clouds and fire sprites
+MOVEMENT_SPEED = 2 + RASP  #Player speeds
+CPU_SPEED = 1.25 + RASP #Normal CPU speed
+CPU_TRACK_SPEED = 0.5 + RASP #CPU speed when no emergency on screen and is tracking player movement
+SCROLL_SPEED = 1 + RASP #Speed of background_sprite, clouds and fire sprites
 
 #Variable for setting difficulty
-CLOUD_DAMAGE = 0.1
+CLOUD_DAMAGE = 0.1*(RASP +1)
 HEALTH = 100
 
 #Number of buttons in the menu
@@ -679,6 +684,7 @@ def add_high_score(name):
 def main():
     window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT)
     window.setup()
+    #window.set_update_rate(1/10)
     arcade.run()
 
 if __name__ == "__main__":

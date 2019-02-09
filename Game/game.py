@@ -499,27 +499,35 @@ class MyGame(arcade.Window):
             update = self.background_even.update()
             update -= self.background_odd.update()
 
+            #If the even background sprite have reached the end of the screen
             if(update == 1):
-
+                
+                #If there's no more backgrounds, don't make another
                 if(self.final_background):
                     pass
 
+
                 else:
+                    #Else create a new even background, off screen, to scroll after the next odd one
                     self.background_even = Background(SOURCE[self.background_index], BACKGROUND_SCALING)
                     self.background_index += 1
                     self.background_even.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
                     self.background_even.center_y = SCREEN_HEIGHT/2
                     self.background_list.append(self.background_even)
 
+                #If there is no more backgrounds left
                 if (self.background_index == len(SOURCE)):
                     self.final_background = True 
 
+            #If the odd background has reached the end of the screen
             elif(update == -1):
-
+                
+                #If it's the final background, end the game (This code may need to be added to the even side, if an even number of bacgkrounds is used)
                 if(self.final_background):
                     self.current_state = END_PAGE
 
                 else:
+                    #Create a new odd background, opff screen, ready to scroll in after the next even one
                     self.background_odd = Background(SOURCE[self.background_index], BACKGROUND_SCALING)
                     self.background_index += 1
                     self.background_odd.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
@@ -527,6 +535,7 @@ class MyGame(arcade.Window):
 
                     self.background_list.append(self.background_odd)
 
+                    #If there's no backgrounds left
                     if (self.background_index == len(SOURCE)):
                         self.final_background = True 
             

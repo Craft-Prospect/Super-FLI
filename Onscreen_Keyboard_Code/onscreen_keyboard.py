@@ -3,6 +3,7 @@ import arcade
 import os
 import glob
 import time
+import sys
 
 #Scaling for sprites
 SPRITE_SCALING_POINTER = 1
@@ -43,7 +44,7 @@ class MyGame(arcade.Window):
         self.pointer_list = None
         self.key_list = None
         # and set them to None
-
+ 
          # Get a list of all the game controllers that are plugged in
         joysticks = arcade.get_joysticks()
 
@@ -67,7 +68,34 @@ class MyGame(arcade.Window):
 
     def setup(self):
 
-        # Create your sprites and sprite lists here
+
+
+        #String taking input
+        self.name = []
+
+        #Boolean for CapsLock toggle
+        self.caps_on = False
+
+        #Character list tracking variable
+        self.key_position = 0
+
+        #Check variable for joystick
+        self.check = 0
+        self.check_y = 0
+ 
+        #Form options and dictionary of responses, initialize variable for dictionary tracking
+        self.form_options = ["Please enter your name?", "Are you a company interested in Craft Prospects work(y/n)?",
+        "Whats your company called","Would you like to leave your email address (y/n)","Please enter your email address"]
+
+        self.dict_responses = {"Name":None,"Company name":None,"Email address":None}
+
+        #int to count no of questions answered
+        self.qCount = 0
+
+        #two ints to be used as booleans for y/n questions
+        self.lastKey = 0
+
+    
         #Sprite lists
         self.pointer_list = arcade.SpriteList()
         self.key_list = arcade.SpriteList()
@@ -92,19 +120,6 @@ class MyGame(arcade.Window):
         self.key_sprite.center_y = 100
         self.key_sprite.character = ';'  # use ';' as identifier for backspace
         self.key_list.append(self.key_sprite)
-
-        #String taking input
-        self.name = []
-
-        #Boolean for CapsLock toggle
-        self.caps_on = False
-
-        #Character list tracking variable
-        self.key_position = 0
-
-        #Check variable for joystick
-        self.check = 0
-        self.check_y = 0
 
         #Setup keys
         x = 0
@@ -139,6 +154,8 @@ class MyGame(arcade.Window):
                 x+=50
                 self.key_list.append(self.key_sprite)
 
+        
+
             
 
     def on_draw(self):
@@ -150,9 +167,39 @@ class MyGame(arcade.Window):
         # the screen to the background color, and erase what we drew last frame.
         arcade.start_render()
 
-        start_x = 200
-        start_y = 300
-        arcade.draw_text(''.join(self.name), start_x, start_y, arcade.color.BLACK, 30)
+        j = 475 - (50*self.qCount)
+        arcade.draw_text(''.join(self.name),50, j, arcade.color.BLACK, 20)
+
+        #Prints form options on the screen
+        y = 500
+        for i in self.form_options:
+            arcade.draw_text(i,50,y,arcade.color.BLACK, 15)
+            y -= 50
+
+        #Prints form answers on the screen
+        x = 475
+        for i in list(self.dict_responses.values()):
+            if i != None:
+                arcade.draw_text(i,50, x, arcade.color.BLACK, 20)
+            x -= 100    
+
+
+        #Draw line over questions
+        #k = 455
+        #if(self.q1 == 1):
+        #    for i in range(3): 
+        #        arcade.draw_line(50, k, 500, k, arcade.color.RED_DEVIL, 3)
+        #        k -= 50
+
+        #k = 350
+        #if(self.q2 == 1):
+        #    for i in range(2): 
+        #        arcade.draw_line(50, k, 500, k, arcade.color.RED_DEVIL, 3)
+        #        k -= 50
+
+
+           
+    
 
         # Call draw() on all your sprite lists below
         self.pointer_list.draw()
@@ -223,6 +270,33 @@ class MyGame(arcade.Window):
 
         self.pointer_sprite.update()
 
+    def on_enter(self):
+
+        
+        self.qCount += 1
+        for key, value in self.dict_responses.items():
+            if value == None:
+                self.dict_responses[key] = "".join(self.name)
+                break
+            
+        
+            
+
+        self.name = []
+
+    def endForm(self):
+        form_options = []
+        print("Form has ended")
+        
+        
+
+
+
+
+
+        
+
+
 
     def on_joybutton_press(self, joystick, button):
         print("Button {} down".format(button))
@@ -233,6 +307,9 @@ class MyGame(arcade.Window):
 
         for Key in character_hit_list:
 
+            if Key.character == ';':
+                MyGame.on_enter(self)
+
             if Key.character == '-':
                 self.name = self.name[0:-1]
 
@@ -241,6 +318,7 @@ class MyGame(arcade.Window):
             
 
             #print(''.join(self.name))
+        
 
 
     def on_joybutton_release(self, joystick, button):
@@ -252,7 +330,30 @@ class MyGame(arcade.Window):
     #On key press parse value of key being pressed and add to the string being output
     def on_key_press(self, key, modifiers):
 
-            print(key)
+            if(self.dict_responses["Email address"] != None):
+                MyGame.endForm(self)
+            
+            
+             # 65293 value for **ENTER**
+            if key == 65293:
+                if "".join(self.name) == "n":
+                    MyGame.endForm(self)
+                    return
+                if "".join(self.name) == "y":
+                    self.qCount +=1
+                    self.name = []
+
+                    return
+
+                
+
+                MyGame.on_enter(self)
+
+                for key,value in self.dict_responses.items():
+                    print(key,value)
+                return
+
+                
             
             #If value over 2^16 is selected as it causes a crash
             if key> 65536:
@@ -274,8 +375,17 @@ class MyGame(arcade.Window):
             #If caps is on append in upper case otherwise in lowercase z
             elif self.caps_on:
                 self.name.append(chr(key).upper())
+        
             else:
                 self.name.append(chr(key))
+    
+
+            
+
+    
+   
+        
+    
 
 
        
@@ -286,6 +396,7 @@ def main():
     game = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT)
     game.setup()
     arcade.run()
+    sys.exit()
 
 
 if __name__ == "__main__":

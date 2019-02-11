@@ -12,30 +12,35 @@ BACKGROUND_SCALING = 1
 
 #Set number of elements to appear on screen (This will be removed when sprites are generated from co-ordinates)
 #Window size
-SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = 587 
+SCREEN_WIDTH = 1041
+SCREEN_HEIGHT = 597 
+
+#Raspberry Pi speeds
+RASP = 0
+#RASP = 20
+
 
 #Sprite Speeds
-MOVEMENT_SPEED = 2  #Player speeds
-CPU_SPEED = 1.25 #Normal CPU speed
-CPU_TRACK_SPEED = 0.5 #CPU speed when no emergency on screen and is tracking player movement
-SCROLL_SPEED = 1  #Speed of background_sprite, clouds and fire sprites
+MOVEMENT_SPEED = 2 + RASP  #Player speeds
+CPU_SPEED = 1.25 + RASP #Normal CPU speed
+CPU_TRACK_SPEED = 0.5 + RASP #CPU speed when no emergency on screen and is tracking player movement
+SCROLL_SPEED = 1 + RASP #Speed of background_sprite, clouds and fire sprites
 
 #Variable for setting difficulty
-CLOUD_DAMAGE = 0.1
+CLOUD_DAMAGE = 0.1*(RASP +1)
 HEALTH = 100
 
 #Number of buttons in the menu
 BUTTON = 2
 
 #Sprite co-ordinates (will be replaced by NN)
-fire_data = [("fire", (120,12)),("fire", (670,800)),("fire", (1200,13)),("fire", (1500,450)),("fire", (1740,12)),("fire", (1920,12)),("fire", (2100,800)),("fire", (2400,13)),("fire", (2750,450)),("fire", (3000,12))]
+fire_data = [("fire", (120,12)),("fire", (670,800)),("fire", (1200,13)),("fire", (1261,450)),("fire", (1781,12)),("fire", (1920,12)),("fire", (1261,450)),("fire", (1781,12)),("fire", (1920,12)),("fire", (1261,450)),("fire", (1781,12)),("fire", (1920,12))]
  
-cloud_data = [("cloud", (0,150)),("cloud", (420,300)),("cloud", (700,742)),("cloud", (1000,200)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (2200,0)),("cloud", (2900,150)),("cloud", (3000,400)),("cloud", (3100,200)),("cloud", (3400,0)),("cloud", (3653,500)),("cloud", (3800,0))]
+cloud_data = [("cloud", (0,150)),("cloud", (420,300)),("cloud", (700,742)),("cloud", (1000,200)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0))]
 
 
 #Image source (global variable so can be used in testing) 
-SOURCE="images/fire_long.jpg"
+SOURCE=["images/fire.jpg", "images/forest.png", "images/fire.jpg", "images/forest.png","images/sea.png"]
 
 #PLayer's score for saving in Highscore file
 Final_score = 0
@@ -122,9 +127,10 @@ class Background(arcade.Sprite):
 
         #If background has finsished scrolling(No image left to show), end the game
         if self.right <0:
-            return END_PAGE
+            self.kill()
+            return 1 
 
-        return GAME_PAGE
+        return 0 
 
 
 #Fire sprite for satellites to capture (Will be replaced by emergencies)
@@ -187,11 +193,13 @@ class MyGame(arcade.Window):
         #Set up CPU sprite
         self.cpu_sprite = None
 
-        # Static Background image will be stored in this variable(currently unused)
+        #Background sprites
+        self.background_list = None
+        self.background_even = None
+        self.background_odd = None
+        self.background_index = 0
+        self.final_background = False
         self.background = None
-
-        #Background sprite
-        self.background_sprite = None
 
         #For screenshot timings
         self.frame = 800
@@ -288,8 +296,19 @@ class MyGame(arcade.Window):
         self.cpu_list.append(self.cpu_sprite)
   
         #Set up background
-        self.background_sprite=Background(SOURCE, BACKGROUND_SCALING)
-        self.background_sprite.center_y=SCREEN_HEIGHT/2
+        self.background_list = arcade.SpriteList()
+        
+        self.background_even= Background(SOURCE[0], BACKGROUND_SCALING)
+        self.background_even.center_x = SCREEN_WIDTH/2
+        self.background_even.center_y = SCREEN_HEIGHT/2
+        
+        self.background_odd = Background(SOURCE[1], BACKGROUND_SCALING)
+        self.background_odd.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
+        self.background_odd.center_y= SCREEN_HEIGHT/2
+        
+        self.background_list.append(self.background_even)
+        self.background_list.append(self.background_odd)
+        self.background_index = 2
 
         for i in range(0,3):
             if len(fire_data) > 0:
@@ -304,8 +323,8 @@ class MyGame(arcade.Window):
         # This command has to happen before we start drawing
         arcade.start_render()
         
-        #Draw background
-        self.background_sprite.draw()
+        #Backgrounds
+        self.background_list.draw()
         
         # Draw all the sprites.
         self.fire_list.draw()
@@ -476,8 +495,50 @@ class MyGame(arcade.Window):
             self.fire_list.update()
         
             self.clouds_list.update()
-            self.current_state = self.background_sprite.update()
 
+            update = self.background_even.update()
+            update -= self.background_odd.update()
+
+            #If the even background sprite have reached the end of the screen
+            if(update == 1):
+                
+                #If there's no more backgrounds, don't make another
+                if(self.final_background):
+                    pass
+
+
+                else:
+                    #Else create a new even background, off screen, to scroll after the next odd one
+                    self.background_even = Background(SOURCE[self.background_index], BACKGROUND_SCALING)
+                    self.background_index += 1
+                    self.background_even.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
+                    self.background_even.center_y = SCREEN_HEIGHT/2
+                    self.background_list.append(self.background_even)
+
+                #If there is no more backgrounds left
+                if (self.background_index == len(SOURCE)):
+                    self.final_background = True 
+
+            #If the odd background has reached the end of the screen
+            elif(update == -1):
+                
+                #If it's the final background, end the game (This code may need to be added to the even side, if an even number of bacgkrounds is used)
+                if(self.final_background):
+                    self.current_state = END_PAGE
+
+                else:
+                    #Create a new odd background, opff screen, ready to scroll in after the next even one
+                    self.background_odd = Background(SOURCE[self.background_index], BACKGROUND_SCALING)
+                    self.background_index += 1
+                    self.background_odd.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
+                    self.background_odd.center_y = SCREEN_HEIGHT/2
+
+                    self.background_list.append(self.background_odd)
+
+                    #If there's no backgrounds left
+                    if (self.background_index == len(SOURCE)):
+                        self.final_background = True 
+            
             #Update CPU satellite
             if self.cpu_sprite.active:
                 if len(self.fire_list)> 0:
@@ -532,9 +593,6 @@ class MyGame(arcade.Window):
             if len(self.clouds_list) <3 and len(cloud_data) > 0:
                 item = cloud_data.pop(0) 
                 self.add_sprite(item[0], item[1])
-
-                
-
 
       #Currently screenshots slow down game. May need better solution
 
@@ -635,6 +693,7 @@ def add_high_score(name):
 def main():
     window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT)
     window.setup()
+    #window.set_update_rate(1/10)
     arcade.run()
 
 if __name__ == "__main__":

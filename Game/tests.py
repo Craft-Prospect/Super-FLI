@@ -259,7 +259,7 @@ class TestMenuSystem(unittest.TestCase):
 #Helper Functions
 
 #Set up game
-def init(clouds=[],fire=[],source="images/fire.jpg"): 
+def init(clouds=[],fire=[],source=["images/fire.jpg","images/forest.png"]): 
     window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT)
     game.cloud_data = clouds
     game.fire_data = fire

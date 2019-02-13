@@ -242,6 +242,8 @@ class MyGame(arcade.Window):
         
         self.update_count = 0
 
+
+#Demo code ===============================================================================================================================================
     #Setgame variables
     def demo_setup(self):
 
@@ -309,29 +311,30 @@ class MyGame(arcade.Window):
 
         arcade.draw_text(("Click {} to start"),SCREEN_WIDTH//2-50,50,arcade.color.ORANGE, 15)
 
-    #Draw main menu
+    #Draw instruction on screen
     def draw_ins(self,text):
-        
         arcade.draw_text((text),SCREEN_WIDTH//2-450,SCREEN_HEIGHT//2-100,arcade.color.ORANGE, 15)
-
 
     def on_draw(self):
         # This command has to happen before we start drawing
         arcade.start_render()
         
-        #Draw different events dependant on stage
-
         self.draw_demo()
 
+
+       #Draw different text depending on stage 
         if self.current_state == INS0:
             self.draw_ins("You will be controlling the blue satellite. \nThe neural network will be controlling the red satellite.")
+        
         elif self.current_state == INS1:
             self.draw_ins("The aim of the game is collect the most money. \nCapture fires to collect money")
 
         elif self.current_state == INS2:
             self.draw_ins("The Neural Network will detect fires\n It will add a sprite to help you capture the fires")
+        
         elif self.current_state == INS4:
             self.draw_ins("Clouds will drain your power. \nIf you have no power left, your satellite will disapear")
+        
         elif self.current_state == INS7:
             self.draw_ins("Capture a fire by pressing the [] button\n Your score will increase by £100")
 
@@ -339,12 +342,15 @@ class MyGame(arcade.Window):
     #Refresh the screen
     def update(self, delta_time):
 
+        #If the game is in a text instruction, pause for ~5 secs
         if self.current_state == INS0 or self.current_state == INS1 or self.current_state == INS4 or self.current_state == INS7:
             if self.update_count == 400:
                 self.update_count = 0
                 self.current_state += 1 
             else:
                 self.update_count += 1
+        
+        #Generate the sprite for the fire after ~2 secs and display text for ~5 secs
         elif self.current_state == INS2:
             if self.update_count == 400:
                 self.update_count = 0
@@ -355,6 +361,7 @@ class MyGame(arcade.Window):
                 self.add_sprite("fire",(2700,200))
             self.update_count += 1
 
+        #Move the clouds close the player 
         elif self.current_state == INS3:
             self.clouds_list.update()
 
@@ -363,7 +370,8 @@ class MyGame(arcade.Window):
             if self.update_count == 80:
                 self.update_count = 0
                 self.current_state += 1
-        
+       
+        #Do cloud damage to the player
         elif self.current_state == INS5:
             self.clouds_list.update()
 
@@ -381,6 +389,7 @@ class MyGame(arcade.Window):
                 self.update_count = 0
                 self.current_state += 1 
 
+        #Move player close to fire
         elif self.current_state == INS6:
             self.player_sprite.cpu_update(self.cpu_sprite, self.fire_list[0])
             self.update_count += 1
@@ -389,12 +398,16 @@ class MyGame(arcade.Window):
                 self.update_count = 0
                 self.current_state += 1
         
+        #Capture fire and add to player score 
         elif self.current_state == INS8:
             self.fire_list[0].kill()
             self.player_sprite.score += 100
             self.current_state += 1
 
 
+#Demo code ===============================================================================================================================================
+    
+    
     #Will be used by NN to generate newly identified events
     def add_sprite(self,event,coOrds):
 

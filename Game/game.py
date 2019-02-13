@@ -34,7 +34,7 @@ HEALTH = 100
 BUTTON = 2
 
 #Sprite co-ordinates (will be replaced by NN)
-fire_data = [("fire", (120,12)),("fire", (670,800)),("fire", (1200,13)),("fire", (1261,450)),("fire", (1781,12)),("fire", (1920,12)),("fire", (1261,450)),("fire", (1781,12)),("fire", (1920,12)),("fire", (1261,450)),("fire", (1781,12)),("fire", (1920,12))]
+fire_data = [("fire",(150,400))]
  
 cloud_data = [("cloud", (0,150)),("cloud", (420,300)),("cloud", (700,742)),("cloud", (1000,200)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0))]
 
@@ -308,7 +308,9 @@ class MyGame(arcade.Window):
         
         self.background_list.append(self.background_even)
         self.background_list.append(self.background_odd)
+
         self.background_index = 2
+        self.add_new_data()
 
         for i in range(0,3):
             if len(fire_data) > 0:
@@ -514,6 +516,7 @@ class MyGame(arcade.Window):
                     self.background_even.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
                     self.background_even.center_y = SCREEN_HEIGHT/2
                     self.background_list.append(self.background_even)
+                    self.add_new_data()
 
                 #If there is no more backgrounds left
                 if (self.background_index == len(SOURCE)):
@@ -534,6 +537,7 @@ class MyGame(arcade.Window):
                     self.background_odd.center_y = SCREEN_HEIGHT/2
 
                     self.background_list.append(self.background_odd)
+                    self.add_new_data()
 
                     #If there's no backgrounds left
                     if (self.background_index == len(SOURCE)):
@@ -667,6 +671,18 @@ class MyGame(arcade.Window):
                     self.fire_list.append(detected)
                 else:
                     self.clouds_list.append(detected)
+
+    def add_new_data(self):
+        fileName = "NNData/background" + str(self.background_index-1) + "-fire.txt"
+
+        with open(fileName) as f:
+            lines = f.readlines()
+
+            for line in lines:
+                line[-1].strip()
+                line = eval(line, {"__builtins__": {}})                
+                self.add_sprite("fire",(line[0] + SCREEN_WIDTH, line[1])) 
+
 #helper sort function
 def get_number(line):
     return line.split('£')[1]

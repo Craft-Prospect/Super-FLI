@@ -16,32 +16,49 @@ BACKGROUND_SCALING = 1
 SCREEN_WIDTH = 1041
 SCREEN_HEIGHT = 597 
 
+#Raspberry Pi speeds
+RASP = 0
+#RASP = 20
+
+
 #Sprite Speeds
-MOVEMENT_SPEED = 2 #Player speeds
-CPU_SPEED = 1.25 #Normal CPU speed
-CPU_TRACK_SPEED = 0.5 #CPU speed when no emergency on screen and is tracking player movement
-SCROLL_SPEED = 1 #Speed of background_sprite, clouds and fire sprites
+MOVEMENT_SPEED = 2 + RASP  #Player speeds
+CPU_SPEED = 1.25 + RASP #Normal CPU speed
+CPU_TRACK_SPEED = 0.5 + RASP #CPU speed when no emergency on screen and is tracking player movement
+SCROLL_SPEED = 1 + RASP #Speed of background_sprite, clouds and fire sprites
 
 #Variable for setting difficulty
-CLOUD_DAMAGE = 0.1
+CLOUD_DAMAGE = 0.1*(RASP +1)
 HEALTH = 100
 
 #Number of buttons in the menu
 BUTTON = 2
 
-#Image source (global variable so can be used in testing) 
-SOURCE=["images/fire.jpg"]
+#Sprite co-ordinates (will be replaced by NN)
+fire_data = []
+ 
+cloud_data = []
 
-#PLayer's score for saving in Highscore file
+#Image source (global variable so can be used in testing) 
+SOURCE=["images/fire.jpg", "images/forest.png", "images/fire.jpg", "images/forest.png","images/sea.png"]
+
+#Player's score for saving in Highscore file
 Final_score = 0
 
 #Game states
 INS0 = 0
 INS1 = 1
 INS2 = 2
+INS3 = 3
+INS4 = 4
+INS5 = 5
+INS6 = 6
+INS7 = 7
+INS8 = 8
+INS9 = 9
 
 #Initial game state
-STATE = INS0  
+STATE = INS0
 
 #Player co-ordinates
 PLAYER_START_X = 50
@@ -104,6 +121,22 @@ class Satellite(arcade.Sprite):
             elif(self.center_y > Player.center_y):
                 self.center_y -= CPU_TRACK_SPEED
 
+
+#Class for scrolling back ground image
+class Background(arcade.Sprite):
+    def update(self):
+
+        # Move the fire
+        self.center_x -= SCROLL_SPEED 
+
+        #If background has finsished scrolling(No image left to show), end the game
+        if self.right <0:
+            self.kill()
+            return 1 
+
+        return 0 
+
+
 #Fire sprite for satellites to capture (Will be replaced by emergencies)
 class Fire(arcade.Sprite):
 
@@ -151,6 +184,12 @@ class MyGame(arcade.Window):
         # Variables that will hold the sprite lists
         self.fire_list=None
         self.clouds_list = None
+
+        global fire_data
+        self.fire_data = fire_data 
+        
+        global cloud_data 
+        self.cloud_data = cloud_data
         
         # Set up the player info
         self.player_sprite = None
@@ -158,17 +197,53 @@ class MyGame(arcade.Window):
         #Set up CPU sprite
         self.cpu_sprite = None
 
+        #Background sprites
+        self.background_list = None
+        self.background_even = None
+        self.background_odd = None
+        self.background_index = 0
+        self.final_background = False
         self.background = None
+
+        #For screenshot timings
+        self.frame = 800
+        self.frame_count = 0
+        self.picture = 0
 
         #Game state
         self.current_state = STATE  
 
+        #Instruction pages
+        self.instructions = []
+
+        #Setup background textures
+        texture = arcade.load_texture("images/menu.png")
+        self.instructions.append(texture)
+
+        texture = arcade.load_texture("images/instruct_0.png")
+        self.instructions.append(texture)
+
+        texture = arcade.load_texture("images/instruct_1.png")
+        self.instructions.append(texture)
+        #Menu buttons
+        self.buttons = None
+        self.start_button = None
+        self.inst_button = None
+
+        #Currently selected buttons
+        self.selected = None
+
+        #Pointer into button list
+        self.selected_index = None
+
+        #Sprite to show which button is selected
+        self.pointer_list = None
+        self.pointer = None
+        
         self.update_count = 0
-       
-        self.setup()
 
     #Setgame variables
-    def setup(self):
+    def demo_setup(self):
 
         # Sprite lists
         self.fire_list = arcade.SpriteList()
@@ -188,23 +263,22 @@ class MyGame(arcade.Window):
         self.cpu_sprite.center_y = CPU_START_Y
         self.cpu_list.append(self.cpu_sprite)
   
+        self.add_sprite("cloud",(300,520))
+        self.add_sprite("cloud",(300,50))
+
         #Set up background
         self.background = arcade.load_texture("images/fire.jpg")
  
-        self.add_sprite("Fire", (SCREEN_HEIGHT/2, SCREEN_WIDTH/2))
-        self.add_sprite("Cloud", ((SCREEN_HEIGHT -100), SCREEN_WIDTH/3))
-        self.add_sprite("Cloud", (SCREEN_HEIGHT/2, 2*SCREEN_WIDTH/3))
-        self.add_sprite("Cloud", (100, SCREEN_WIDTH - 100))
         
-    def draw_game(self):
+    def draw_demo(self):
 
         # This command has to happen before we start drawing
         arcade.start_render()
-         
+
         # Draw the background texture
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
                                       SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
-
+        
         # Draw all the sprites.
         self.fire_list.draw()
         self.player_list.draw()
@@ -221,70 +295,118 @@ class MyGame(arcade.Window):
         score_cpu= f"CPU Money: £{self.cpu_sprite.score}"
         arcade.draw_text(score_cpu, SCREEN_WIDTH-200, 20, arcade.color.RED, 14)
 
-        # Player Health
         player_health = round(self.player_sprite.health,1)
-        
-        #Stop player health being negative
-        if player_health < 0:
-            player_health = 0
         
         #Display player health on the screen
         health_player= f"Player Power: {player_health}"
         arcade.draw_text((health_player), 10, 50, arcade.color.WHITE, 14)
 
-        #CPU Health   
-
         cpu_health = round(self.cpu_sprite.health, 1)
-        
-        #Stop CPU health being negative
-        if cpu_health < 0:
-            cpu_health = 0
         
         #Display cpu health on the screen
         health_cpu= f"CPU Power: {cpu_health}"
         arcade.draw_text(health_cpu, SCREEN_WIDTH-200, 50, arcade.color.RED, 14)
 
+        arcade.draw_text(("Click {} to start"),SCREEN_WIDTH//2-50,50,arcade.color.ORANGE, 15)
 
-    def draw_ins0(self):
-        text= "You will be controlling the blue satetlite.\n The neural network will be controlling the red Satellite. \n The aim of the game is to collect more money then the other Satellite"
-        arcade.draw_text((text), SCREEN_WIDTH/2-200, SCREEN_HEIGHT/2-100, arcade.color.ORANGE, 14)
+    #Draw main menu
+    def draw_ins(self,text):
+        
+        arcade.draw_text((text),SCREEN_WIDTH//2-450,SCREEN_HEIGHT//2-100,arcade.color.ORANGE, 15)
 
 
     def on_draw(self):
         # This command has to happen before we start drawing
+        arcade.start_render()
         
-        self.draw_game()
+        #Draw different events dependant on stage
+
+        self.draw_demo()
 
         if self.current_state == INS0:
-            self.draw_ins0()
+            self.draw_ins("You will be controlling the blue satellite. \nThe neural network will be controlling the red satellite.")
+        elif self.current_state == INS1:
+            self.draw_ins("The aim of the game is collect the most money. \nCapture fires to collect money")
+
+        elif self.current_state == INS2:
+            self.draw_ins("The Neural Network will detect fires\n It will add a sprite to help you capture the fires")
+        elif self.current_state == INS4:
+            self.draw_ins("Clouds will drain your power. \nIf you have no power left, your satellite will disapear")
+        elif self.current_state == INS7:
+            self.draw_ins("Capture a fire by pressing the [] button\n Your score will increase by £100")
+
+
     #Refresh the screen
     def update(self, delta_time):
-        if self.current_state == INS0:
-            time.sleep(5)
-            self.current_state = INS1
 
-        if self.current_state == INS1:
+        if self.current_state == INS0 or self.current_state == INS1 or self.current_state == INS4 or self.current_state == INS7:
+            if self.update_count == 400:
+                self.update_count = 0
+                self.current_state += 1 
+            else:
+                self.update_count += 1
+        elif self.current_state == INS2:
+            if self.update_count == 400:
+                self.update_count = 0
+                self.current_state += 1
+
+            elif self.update_count == 200:
+                self.add_sprite("fire",(SCREEN_WIDTH//2,SCREEN_HEIGHT//2))
+                self.add_sprite("fire",(2700,200))
+            self.update_count += 1
+
+        elif self.current_state == INS3:
             self.clouds_list.update()
-            self.fire_list.update()
 
             self.update_count += 1
 
-            if self.update_count == 20:
+            if self.update_count == 80:
                 self.update_count = 0
-                self.current_state = INS0
-            
+                self.current_state += 1
+        
+        elif self.current_state == INS5:
+            self.clouds_list.update()
+
+            players = [self.cpu_sprite, self.player_sprite]
+            for sat in players: 
+                # Generate a list of all clouds that collided with the CPU.
+                hit_list = arcade.check_for_collision_with_list(sat,self.clouds_list)
+
+                # Loop through each colliding cloud, decrease CPU health.
+                for cloud in hit_list:
+                    sat.health -= CLOUD_DAMAGE 
+            self.update_count += 1
+
+            if self.update_count == 400:
+                self.update_count = 0
+                self.current_state += 1 
+
+        elif self.current_state == INS6:
+            self.player_sprite.cpu_update(self.cpu_sprite, self.fire_list[0])
+            self.update_count += 1
+
+            if self.update_count == 340:
+                self.update_count = 0
+                self.current_state += 1
+        
+        elif self.current_state == INS8:
+            self.fire_list[0].kill()
+            self.player_sprite.score += 100
+            self.current_state += 1
 
 
     #Will be used by NN to generate newly identified events
     def add_sprite(self,event,coOrds):
-        if coOrds[0] >= 0 and coOrds[1] >=0 and coOrds[1] < SCREEN_HEIGHT:
-            if  event == "fire":
-                # Create the fire instance
-                detected = Fire("images/fire_sprite.png", SPRITE_SCALING_FIRE)
 
-            else:
-                #Create cloud instance
-                detected=Cloud("images/clouds.png", SPRITE_SCALING_CLOUD)
+     if coOrds[0] >= 0 and coOrds[1] >=0 and coOrds[1] < SCREEN_HEIGHT:
+
+                if  event == "fire":
+                    # Create the fire instance
+                    detected = Fire("images/fire_sprite.png", SPRITE_SCALING_FIRE)
+
+                else:
+                    #Create cloud instance
+                    detected=Cloud("images/clouds.png", SPRITE_SCALING_CLOUD)
             
                 # Position the fire
                 detected.center_x = coOrds[0] 
@@ -294,12 +416,15 @@ class MyGame(arcade.Window):
                     self.fire_list.append(detected)
                 else:
                     self.clouds_list.append(detected)
+    
 #Run game
 def main():
     window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT)
-    window.setup()
+    window.demo_setup()
     #window.set_update_rate(1/10)
     arcade.run()
 
 if __name__ == "__main__":
     main()
+  
+

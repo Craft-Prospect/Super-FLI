@@ -19,7 +19,7 @@ DEAD_ZONE = 0.02
 
 
 
-
+#Class for each Key contains it's 'Character'
 class Key(arcade.Sprite):
     character = ""
     
@@ -143,7 +143,7 @@ class MyGame(arcade.Window):
 
         arcade.start_render()
 
-        #Print question: "Enter player name?"
+        #Print question:
         arcade.draw_text("Enter player name?",50,500,arcade.color.BLACK,20)
 
         #Prints input text
@@ -249,7 +249,7 @@ class MyGame(arcade.Window):
     def on_joyhat_motion(self, joystick, hat_x, hat_y):
         print("Hat ({}, {})".format(hat_x, hat_y)) 
 
-        
+
 
     def endForm(self):
         print("Form has ended")
@@ -290,17 +290,6 @@ class MyGame(arcade.Window):
                 else:
                     self.name.append(chr(key))
     
-
-            
-
-    
-   
-        
-    
-
-
-       
-
 
 def main():
     """ Main method """

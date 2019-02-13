@@ -240,7 +240,6 @@ class MyGame(arcade.Window):
         self.pointer_list = None
         self.pointer = None
         
-        self.update_count = 0
 
 
 #Demo code ===============================================================================================================================================
@@ -271,7 +270,7 @@ class MyGame(arcade.Window):
         #Set up background
         self.background = arcade.load_texture("images/fire.jpg")
  
-        
+        self.update_count = 0
     def draw_demo(self):
 
         # This command has to happen before we start drawing

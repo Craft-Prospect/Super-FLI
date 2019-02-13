@@ -229,14 +229,24 @@ class TestDeaths(unittest.TestCase):
 #Test menu selection screen works
 class TestMenuSystem(unittest.TestCase):
 
-    def test_game_launchs_on_click(self):
+    def test_demo_launchs_on_click(self):
         game.STATE = game.START_PAGE
         window = init([])
         window.draw_start_page()
         window.on_mouse_press(0.0,0.0,1,0)
+        self.assertEqual(window.current_state, game.INS0)
+        finish()
+    
+    def test_demo_skips_on_click(self):
+        game.STATE = game.START_PAGE
+        window = init([])
+        window.draw_start_page()
+        window.on_mouse_press(0.0,0.0,1,0)
+        window.on_mouse_press(0.0,0.0,1,0)
         self.assertEqual(window.current_state, game.GAME_PAGE)
         finish()
     
+
     def test_button_changes_state(self):
         game.STATE = game.START_PAGE
         window = init([])

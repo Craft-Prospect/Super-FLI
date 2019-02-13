@@ -264,6 +264,7 @@ def init(clouds=[],fire=[],source=["images/fire.jpg","images/forest.png"]):
     game.cloud_data = clouds
     game.fire_data = fire
     game.SOURCE = source
+    game.NNDir = "TestDir/"
     window.setup()
     return window
 

@@ -22,8 +22,7 @@ DEAD_ZONE = 0.02
 
 class Key(arcade.Sprite):
     character = ""
-    y_coord = 0
-    x_coord = 0
+    
         
 
         
@@ -141,16 +140,10 @@ class MyGame(arcade.Window):
                 self.key_sprite.center_x = 50 + x
                 self.key_sprite.center_y = 200 + y
                 self.key_sprite.character = filename[29]
-                self.key_sprite.x_coord = 50 + x 
-                self.key_sprite.y_coord = 200 + y 
+                
 
                 count += 1
                 
-                #print(filename[29])
-        
-                
-
-            
                 x+=50
                 self.key_list.append(self.key_sprite)
 

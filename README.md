@@ -11,6 +11,12 @@ Arcade game that uses a Recurrent Neural Network. User and CPU compete to captur
 
 * Requires python 3 to run
 
+* Install dependencies
+
+'''
+apt update && sudo apt install -y python3-dev python3-pip libjpeg-dev zlib1g-dev python-gst-1.0
+'''
+
 * Clone repository
 
 ```

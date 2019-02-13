@@ -41,7 +41,7 @@ cloud_data = [("cloud", (0,150)),("cloud", (420,300)),("cloud", (700,742)),("clo
 
 #Image source (global variable so can be used in testing) 
 SOURCE=["images/fire.jpg", "images/forest.png", "images/fire.jpg", "images/forest.png","images/sea.png"]
-
+NNDir = "NNData/"
 #PLayer's score for saving in Highscore file
 Final_score = 0
 
@@ -673,7 +673,7 @@ class MyGame(arcade.Window):
                     self.clouds_list.append(detected)
 
     def add_new_data(self):
-        fileName = "NNData/background" + str(self.background_index-1) + "-fire.txt"
+        fileName = NNDir + "background" + str(self.background_index-1) + "-fire.txt"
 
         with open(fileName) as f:
             lines = f.readlines()

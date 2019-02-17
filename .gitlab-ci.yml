@@ -1,11 +1,4 @@
 image: blang/latex
-Build:
-  stage: build
-  script:
-    - latexmk -pdf -cd docs/dissertation/dissertation.tex
-  artifacts:
-    paths:
-     - "*.pdf"
 Test:
   stage: test
   script:

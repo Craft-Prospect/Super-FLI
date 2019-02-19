@@ -59,6 +59,7 @@ GAME_PAGE = 3
 END_PAGE = 4
 ENTER_NAME = 5
 HIGH_SCORE_PAGE = 6
+FEEDBACK_PAGE = 7
 
 #Demo states
 #Game states
@@ -488,6 +489,13 @@ class MyGame(arcade.Window):
                 arcade.draw_text((line),SCREEN_WIDTH//2-150 , (3*SCREEN_HEIGHT/4-(40*i)), arcade.color.WHITE, 30)
                 i += 1
 
+    def draw_feedback(self):
+        page_texture = arcade.load_texture("images/feedback.png")
+        arcade.draw_texture_rectangle(SCREEN_WIDTH//2, SCREEN_HEIGHT//2, page_texture.width, page_texture.height, page_texture, 0)
+        
+        arcade.draw_text(("Please leave some feedback"), SCREEN_WIDTH//2-400, 3*SCREEN_HEIGHT/4, arcade.color.RED, 40)
+
+
     def on_draw(self):
         # This command has to happen before we start drawing
         arcade.start_render()
@@ -515,6 +523,9 @@ class MyGame(arcade.Window):
         
         elif self.current_state == HIGH_SCORE_PAGE:
             self.draw_high_score()
+
+        elif self.current_state == FEEDBACK_PAGE:
+            self.draw_feedback()
         
         elif self.current_state >= 10:
             self.draw_demo()
@@ -560,9 +571,12 @@ class MyGame(arcade.Window):
             self.keyboard_setup()
         
         elif self.current_state == HIGH_SCORE_PAGE:
+            self.current_state = FEEDBACK_PAGE
+    
+        elif self.current_state == FEEDBACK_PAGE:
             self.start_page_setup()
             self.current_state = START_PAGE
-    
+
         elif self.current_state >= 10:
             global PLAYER_START_X
             PLAYER_START_X = self.player_sprite.center_x

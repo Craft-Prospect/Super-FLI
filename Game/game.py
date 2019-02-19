@@ -46,7 +46,7 @@ cloud_data = [("cloud", (0,150)),("cloud", (420,300)),("cloud", (700,742)),("clo
 
 
 #Image source (global variable so can be used in testing) 
-SOURCE=["images/fire.jpg", "images/forest.png", "images/fire.jpg", "images/forest.png","images/sea.png"]
+SOURCE=["images/background1.png", "images/background2.png", "images/background3.png", "images/background4.png","images/sea.png"]
 NNDir = "NNData/"
 #PLayer's score for saving in Highscore file
 Final_score = 0

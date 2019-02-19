@@ -580,6 +580,25 @@ class MyGame(arcade.Window):
 
         if self.current_state == GAME_PAGE:
 
+            # Update the position according to the game controller
+            if self.joystick:
+
+                # Set a "dead zone" to prevent drive from a centered joystick
+                if abs(self.joystick.x) < DEAD_ZONE:
+                    self.player_sprite.change_x = 0
+                else:
+                    self.player_sprite.change_x = self.joystick.x * MOVEMENT_SPEED
+
+            # Set a "dead zone" to prevent drive from a centered joystick
+                if abs(self.joystick.y) < DEAD_ZONE:
+                    self.player_sprite.change_y = 0
+                else:
+                    self.player_sprite.change_y = -self.joystick.y * MOVEMENT_SPEED
+
+            self.player_sprite.update()
+
+
+
             #If player is alive, update
             if self.player_sprite.active:
                 self.player_list.update()
@@ -948,11 +967,11 @@ class MyGame(arcade.Window):
         self.key_sprite.character = '-'  # use '-' as identifier for backspace
         self.key_list.append(self.key_sprite)
 
-        #Setup Delete button
+        #Setup enter button
         self.key_sprite = Key('keyboard_images/icons8-enter-26.png',SPRITE_SCALING_KEY)
         self.key_sprite.center_x = 400
         self.key_sprite.center_y = 100
-        self.key_sprite.character = ';'  # use ';' as identifier for backspace
+        self.key_sprite.character = ';'  # use ';' as identifier for enter
         self.key_list.append(self.key_sprite)
 
         #Setup keys
@@ -1006,17 +1025,27 @@ class MyGame(arcade.Window):
 
         # If there is a collision between a 'Key' object and the pointer. The Key is added to the hit list
         # Hit list is then iterated through and character value from Key object is added to string  thats printed to the screen 
-        character_hit_list = arcade.check_for_collision_with_list(self.pointer_sprite,self.key_list)
+        if self.current_state == ENTER_NAME:
+            character_hit_list = arcade.check_for_collision_with_list(self.pointer_sprite,self.key_list)
 
-        for Key in character_hit_list:
+            for Key in character_hit_list:
+                if Key.character == ';':
+                    add_high_score(self.name)
+                    self.current_state = HIGH_SCORE_PAGE
 
-            if Key.character == ';':
-                MyGame.endForm(self)
+                if Key.character == '-':
+                    self.name = self.name[0:-1]
 
-            if Key.character == '-':
-                self.name = self.name[0:-1]
+                elif len(self.name) <= 3:self.name.append(Key.character.upper())
 
-            elif len(self.name) <= 3:self.name.append(Key.character.upper())
+        if self.current_state == GAME_PAGE:
+            # Generate a list of all sprites that collided with the player.
+                    hit_list = arcade.check_for_collision_with_list(self.player_sprite,self.fire_list)
+                    # Loop through each colliding sprite, remove it, and add to the player_score.
+                    for fire in hit_list:
+                        fire.kill()
+                        self.player_sprite.score += 100
+            
             
 
 

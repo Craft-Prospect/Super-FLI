@@ -27,7 +27,7 @@ RASP = 0
 #RASP = 20
 
 #Sprite Speeds
-MOVEMENT_SPEED = 2 + RASP  #Player speeds
+MOVEMENT_SPEED = 1.5 + RASP  #Player speeds
 CPU_SPEED = 1.25 + RASP #Normal CPU speed
 CPU_TRACK_SPEED = 0.5 + RASP #CPU speed when no emergency on screen and is tracking player movement
 SCROLL_SPEED = 1 + RASP #Speed of background_sprite, clouds and fire sprites
@@ -90,7 +90,6 @@ CPU_START_X = 50
 CPU_START_Y = SCREEN_HEIGHT - 50
 
 #Variables used for joystick movement
-MOVEMENT_SPEED = 3
 DEAD_ZONE = 0.02
 
 #PLayer and CPU sprite class

@@ -40,6 +40,8 @@ class Mixin:
         self.background_index = 2
         self.add_new_data()
 
+
+        #Display up to three fires and clouds at a time (for performance)
         self.fire_data = self.init_fire_data.copy()
         self.cloud_data = self.init_cloud_data.copy()
 
@@ -76,27 +78,18 @@ class Mixin:
         arcade.draw_text(score_cpu, SCREEN_WIDTH-200, 20, arcade.color.RED, 14)
 
         # Player Health
-        player_health = round(self.player_sprite.health,1)
-
-        #Stop player health being negative
-        if player_health < 0:
-            player_health = 0
-
-        #Display player health on the screen
-        health_player= f"Player Power: {player_health}"
-        arcade.draw_text((health_player), 10, 50, arcade.color.WHITE, 14)
+        player_health = self.round_health(self.player_sprite)
 
         #CPU Health
-
-        cpu_health = round(self.cpu_sprite.health, 1)
-
-        #Stop CPU health being negative
-        if cpu_health < 0:
-            cpu_health = 0
+        cpu_health = self.round_health(self.cpu_sprite)
 
         #Display cpu health on the screen
         health_cpu= f"CPU Power: {cpu_health}"
         arcade.draw_text(health_cpu, SCREEN_WIDTH-200, 50, arcade.color.RED, 14)
+
+        #Display player health on the screen
+        health_player= f"Player Power: {player_health}"
+        arcade.draw_text((health_player), 10, 50, arcade.color.WHITE, 14)
 
 
     #Draw game over screen
@@ -109,3 +102,13 @@ class Mixin:
 
         if self.player_sprite.active:
             self.player_score = self.player_sprite.score
+
+    def round_health(self,sprite):
+        # Player Health
+        health = round(sprite.health,1)
+
+        #Stop player health being negative
+        if health < 0:
+            health = 0
+
+        return health

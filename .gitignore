@@ -4,11 +4,16 @@
 *.bbl
 *.log
 
-#Removes locks created by Libre office
+#Removes locks created by Libre office and Latex files
 *.~lock
-
+*.swp
+*.pdf
+*.out
+*.gz
 #Remove pycache binaries
 __pycache__/
+*.pyc
 
 Game/data
 Game/scores.txt
+Game/htmlcov

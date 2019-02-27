@@ -12,15 +12,17 @@ import runGame
 import highscore
 import demo
 import keyboard
-import update
 import keypress
 import mouse
-import add_sprite
+import spriteFunc
 import drawing
+import updateGame
+import updateIns
+import updateKeyboard
 
 
 #Main window
-class MyGame(drawing.Mixin, keypress.Mixin, mouse.Mixin, add_sprite.Mixin, update.Mixin, menu.Mixin, instructions.Mixin, demo.Mixin, runGame.Mixin,keyboard.Mixin,highscore.Mixin, arcade.Window):
+class MyGame(drawing.Mixin, keypress.Mixin, mouse.Mixin, spriteFunc.Mixin, updateGame.Mixin, updateIns.Mixin, updateKeyboard.Mixin, menu.Mixin, instructions.Mixin, demo.Mixin, runGame.Mixin,keyboard.Mixin,highscore.Mixin, arcade.Window):
     #Initalise game variables and window
     def __init__(self, width, height):
 
@@ -117,3 +119,15 @@ class MyGame(drawing.Mixin, keypress.Mixin, mouse.Mixin, add_sprite.Mixin, updat
 
         else:
             self.joystick = None
+
+
+    def update(self, delta_time):
+
+        if self.current_state == GAME_PAGE:
+            self.game_update()
+
+        elif self.current_state == ENTER_NAME:
+            self.keyboard_update()
+
+        else:
+            self.ins_update()

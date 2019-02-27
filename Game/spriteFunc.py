@@ -33,3 +33,11 @@ class Mixin:
                 line[-1].strip()
                 line = eval(line, {"__builtins__": {}})
                 self.add_sprite("fire",(line[0] + SCREEN_WIDTH, line[1]))
+
+    def check_fire_collison(self,sprite):
+        # Generate a list of all emergencies that collided with the satellite.
+        hit_list = arcade.check_for_collision_with_list(sprite,self.fire_list)
+        # Loop through each colliding fire, remove it, and add to the cpu_score.
+        for fire in hit_list:
+            fire.kill()
+            sprite.score += 100

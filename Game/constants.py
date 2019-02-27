@@ -7,12 +7,12 @@ SPRITE_SCALING_PLAYER = 1
 SPRITE_SCALING_FIRE = 1
 SPRITE_SCALING_CLOUD = 1
 SPRITE_SCALING_BUTTON = 1
-BACKGROUND_SCALING = 1 
+BACKGROUND_SCALING = 1
 
 #Set number of elements to appear on screen (This will be removed when sprites are generated from co-ordinates)
 #Window size
 SCREEN_WIDTH = 1041
-SCREEN_HEIGHT = 597 
+SCREEN_HEIGHT = 597
 
 #Raspberry Pi speeds
 RASP = 0
@@ -31,13 +31,7 @@ HEALTH = 100
 #Number of buttons in the menu
 BUTTON = 2
 
-#Sprite co-ordinates (will be replaced by NN)
-fire_data = [("fire",(150,400))]
- 
-cloud_data = [("cloud", (0,150)),("cloud", (420,300)),("cloud", (700,742)),("cloud", (1000,200)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0))]
-
-
-#Image source (global variable so can be used in testing) 
+#Image source (global variable so can be used in testing)
 SOURCE=["images/background1.png", "images/background2.png", "images/background3.png", "images/background4.png","images/sea.png"]
 NNDir = "NNData/"
 #PLayer's score for saving in Highscore file

@@ -13,13 +13,13 @@ class Mixin:
                 if abs(self.joystick.x) < DEAD_ZONE:
                     self.player_sprite.change_x = 0
                 else:
-                    self.player_sprite.change_x = self.joystick.x * MOVEMENT_SPEED
+                    self.player_sprite.change_x = self.joystick.x * self.player_sprite.speed
 
             # Set a "dead zone" to prevent drive from a centered joystick
                 if abs(self.joystick.y) < DEAD_ZONE:
                     self.player_sprite.change_y = 0
                 else:
-                    self.player_sprite.change_y = -self.joystick.y * MOVEMENT_SPEED
+                    self.player_sprite.change_y = -self.joystick.y * self.player_sprite.speed
 
             self.player_sprite.update()
 
@@ -28,10 +28,10 @@ class Mixin:
             #If player is alive, update
             if self.player_sprite.active:
                 self.player_list.update()
-        
+
             #Update sprites and clouds
             self.fire_list.update()
-        
+
             self.clouds_list.update()
 
             update = self.background_even.update()
@@ -39,7 +39,7 @@ class Mixin:
 
             #If the even background sprite have reached the end of the screen
             if(update == 1):
-                
+
                 #If there's no more backgrounds, don't make another
                 if(self.final_background):
                     pass
@@ -47,7 +47,7 @@ class Mixin:
 
                 else:
                     #Else create a new even background, off screen, to scroll after the next odd one
-                    self.background_even = Background(SOURCE[self.background_index], BACKGROUND_SCALING)
+                    self.background_even = Background(self.source[self.background_index], BACKGROUND_SCALING)
                     self.background_index += 1
                     self.background_even.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
                     self.background_even.center_y = SCREEN_HEIGHT/2
@@ -55,19 +55,19 @@ class Mixin:
                     self.add_new_data()
 
                 #If there is no more backgrounds left
-                if (self.background_index == len(SOURCE)):
-                    self.final_background = True 
+                if (self.background_index == len(self.source)):
+                    self.final_background = True
 
             #If the odd background has reached the end of the screen
             elif(update == -1):
-                
+
                 #If it's the final background, end the game (This code may need to be added to the even side, if an even number of bacgkrounds is used)
                 if(self.final_background):
                     self.current_state = END_PAGE
 
                 else:
                     #Create a new odd background, opff screen, ready to scroll in after the next even one
-                    self.background_odd = Background(SOURCE[self.background_index], BACKGROUND_SCALING)
+                    self.background_odd = Background(self.source[self.background_index], BACKGROUND_SCALING)
                     self.background_index += 1
                     self.background_odd.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
                     self.background_odd.center_y = SCREEN_HEIGHT/2
@@ -76,9 +76,9 @@ class Mixin:
                     self.add_new_data()
 
                     #If there's no backgrounds left
-                    if (self.background_index == len(SOURCE)):
-                        self.final_background = True 
-            
+                    if (self.background_index == len(self.source)):
+                        self.final_background = True
+
             #Update CPU satellite
             if self.cpu_sprite.active:
                 if len(self.fire_list)> 0:
@@ -93,14 +93,14 @@ class Mixin:
                 for fire in hit_list:
                     fire.kill()
                     self.cpu_sprite.score += 100
-              
+
 
                 # Generate a list of all clouds that collided with the CPU.
                 hit_list = arcade.check_for_collision_with_list(self.cpu_sprite,self.clouds_list)
 
                 # Loop through each colliding cloud, decrease CPU health.
                 for cloud in hit_list:
-                    self.cpu_sprite.health -= CLOUD_DAMAGE 
+                    self.cpu_sprite.health -= cloud.damage
 
                     if self.cpu_sprite.health <= 0:
                         self.cpu_sprite.active = False
@@ -116,7 +116,7 @@ class Mixin:
 
                 # Loop through each colliding sprite, remove it, and add to the player_score.
                 for cloud in hit_list:
-                    self.player_sprite.health -= CLOUD_DAMAGE
+                    self.player_sprite.health -= cloud.damage
 
                     if self.player_sprite.health <=0:
                         self.player_sprite.active = False
@@ -130,17 +130,17 @@ class Mixin:
                 item = self.fire_data.pop(0)
                 self.add_sprite(item[0], item[1])
             if len(self.clouds_list) <3 and len(self.cloud_data) > 0:
-                item = self.cloud_data.pop(0) 
+                item = self.cloud_data.pop(0)
                 self.add_sprite(item[0], item[1])
-        
+
         #If the game is in a text instruction, pause for ~5 secs
         elif self.current_state == INS0 or self.current_state == INS1 or self.current_state == INS4 or self.current_state == INS7:
             if self.update_count == 400:
                 self.update_count = 0
-                self.current_state += 1 
+                self.current_state += 1
             else:
                 self.update_count += 1
-        
+
         #Generate the sprite for the fire after ~2 secs and display text for ~5 secs
         elif self.current_state == INS2:
             if self.update_count == 400:
@@ -152,7 +152,7 @@ class Mixin:
                 self.add_sprite("fire",(2700,200))
             self.update_count += 1
 
-        #Move the clouds close the player 
+        #Move the clouds close the player
         elif self.current_state == INS3:
             self.clouds_list.update()
 
@@ -161,24 +161,24 @@ class Mixin:
             if self.update_count == 80:
                 self.update_count = 0
                 self.current_state += 1
-       
+
         #Do cloud damage to the player
         elif self.current_state == INS5:
             self.clouds_list.update()
 
             players = [self.cpu_sprite, self.player_sprite]
-            for sat in players: 
+            for sat in players:
                 # Generate a list of all clouds that collided with the CPU.
                 hit_list = arcade.check_for_collision_with_list(sat,self.clouds_list)
 
                 # Loop through each colliding cloud, decrease CPU health.
                 for cloud in hit_list:
-                    sat.health -= CLOUD_DAMAGE 
+                    sat.health -= cloud.damage
             self.update_count += 1
 
             if self.update_count == 400:
                 self.update_count = 0
-                self.current_state += 1 
+                self.current_state += 1
 
         #Move player close to fire
         elif self.current_state == INS6:
@@ -188,8 +188,8 @@ class Mixin:
             if self.update_count == 340:
                 self.update_count = 0
                 self.current_state += 1
-        
-        #Capture fire and add to player score 
+
+        #Capture fire and add to player score
         elif self.current_state == INS8:
             self.fire_list[0].kill()
             self.player_sprite.score += 100
@@ -249,4 +249,3 @@ class Mixin:
                     self.pointer_sprite._position[1] = 200
 
             self.pointer_sprite.update()
- 

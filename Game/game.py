@@ -6,7 +6,7 @@ import sys
 from sprites import *
 from helper import *
 
-import menu 
+import menu
 import instructions
 import runGame
 import highscore
@@ -36,15 +36,16 @@ class MyGame(drawing.Mixin, keypress.Mixin, mouse.Mixin, add_sprite.Mixin, updat
         self.fire_list=None
         self.clouds_list = None
 
-        global fire_data
-        self.fire_data = fire_data.copy()
-        
-        global cloud_data 
-        self.cloud_data = cloud_data.copy()
-        
+        #Sprite co-ordinates (will be replaced by NN)
+        self.init_fire_data = [("fire",(150,400))]
+        self.init_cloud_data = [("cloud", (0,150)),("cloud", (420,300)),("cloud", (700,742)),("cloud", (1000,200)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0))]
+
+        self.fire_data = None
+        self.cloud_data = None
+
         # Set up the player info
         self.player_sprite = None
-       
+
         #Set up CPU sprite
         self.cpu_sprite = None
 
@@ -62,7 +63,7 @@ class MyGame(drawing.Mixin, keypress.Mixin, mouse.Mixin, add_sprite.Mixin, updat
         self.picture = 0
 
         #Game state
-        self.current_state = STATE  
+        self.current_state = STATE
 
         #Instruction pages
         self.instructions = []
@@ -90,14 +91,17 @@ class MyGame(drawing.Mixin, keypress.Mixin, mouse.Mixin, add_sprite.Mixin, updat
         #Sprite to show which button is selected
         self.pointer_list = None
         self.pointer = None
-        
+
         self.start_page_setup()
 
         self.player_score = None
 
         #Keyboard values
         self.key_list = None
- 
+
+        self.source = SOURCE
+        self.NNDir = NNDir
+
         # Get a list of all the game controllers that are plugged in
         joysticks = arcade.get_joysticks()
 
@@ -113,4 +117,3 @@ class MyGame(drawing.Mixin, keypress.Mixin, mouse.Mixin, add_sprite.Mixin, updat
 
         else:
             self.joystick = None
-

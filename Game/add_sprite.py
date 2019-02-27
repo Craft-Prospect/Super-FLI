@@ -13,25 +13,23 @@ class Mixin:
                 else:
                     #Create cloud instance
                     detected=Cloud("images/clouds.png", SPRITE_SCALING_CLOUD)
-            
+
                 # Position the fire
-                detected.center_x = coOrds[0] 
+                detected.center_x = coOrds[0]
                 detected.center_y = coOrds[1]
-            
-                if event == "fire":     
+
+                if event == "fire":
                     self.fire_list.append(detected)
                 else:
                     self.clouds_list.append(detected)
 
     def add_new_data(self):
-        fileName = NNDir + "background" + str(self.background_index-1) + "-fire.txt"
+        fileName = self.NNDir + "background" + str(self.background_index-1) + "-fire.txt"
 
         with open(fileName) as f:
             lines = f.readlines()
 
             for line in lines:
                 line[-1].strip()
-                line = eval(line, {"__builtins__": {}})                
-                self.add_sprite("fire",(line[0] + SCREEN_WIDTH, line[1])) 
-
-
+                line = eval(line, {"__builtins__": {}})
+                self.add_sprite("fire",(line[0] + SCREEN_WIDTH, line[1]))

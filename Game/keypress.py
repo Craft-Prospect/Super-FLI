@@ -9,14 +9,14 @@ class Mixin:
                 """Pressing arrow keys """
 
                 if key == arcade.key.UP:
-                    self.player_sprite.change_y = MOVEMENT_SPEED
+                    self.player_sprite.change_y = self.player_sprite.speed
                 elif key == arcade.key.DOWN:
-                    self.player_sprite.change_y = -MOVEMENT_SPEED
+                    self.player_sprite.change_y = -self.player_sprite.speed
                 elif key == arcade.key.LEFT:
-                    self.player_sprite.change_x = -MOVEMENT_SPEED
+                    self.player_sprite.change_x = -self.player_sprite.speed
                 elif key == arcade.key.RIGHT:
-                    self.player_sprite.change_x = MOVEMENT_SPEED
-        
+                    self.player_sprite.change_x = self.player_sprite.speed
+
                 #PLayer attempts to capture
                 elif key == arcade.key.SPACE:
 
@@ -26,13 +26,13 @@ class Mixin:
                     for fire in hit_list:
                         fire.kill()
                         self.player_sprite.score += 100
-        
+
         elif self.current_state == START_PAGE:
             if key == arcade.key.SPACE:
                 self.selected_index = (self.selected_index+1)%2
                 self.selected = self.buttons[self.selected_index]
                 self.pointer.center_y = self.selected.center_y
-        
+
         elif self.current_state == ENTER_NAME:
             # 65293 value for **ENTER**
             if key == 65293:
@@ -72,5 +72,3 @@ class Mixin:
             self.player_sprite.change_y = 0
         elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
             self.player_sprite.change_x = 0
-
-

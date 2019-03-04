@@ -10,12 +10,12 @@ class TestSetupMethods(unittest.TestCase):
         window = init(fire=[("fire", (0,150))])
         self.assertEqual(len(window.fire_list),1)
         finish()
- 
+
     def test_AddManyFires(self):
         window = init(fire=[("fire", (0,150)),("fire", (5000,350)),("fire", (2000,550))])
         self.assertEqual(len(window.fire_list),3)
         finish()
-       
+
     def test_AddOneCloud(self):
         window = init(clouds=[("cloud", (0,150))])
         self.assertEqual(len(window.clouds_list),1)
@@ -29,7 +29,7 @@ class TestSetupMethods(unittest.TestCase):
     def test_AddOneFireAndCloud(self):
         window = init(clouds=[("cloud", (0,150))], fire =[("fire", (0,150))])
         self.assertEqual((len(window.fire_list)+len(window.clouds_list)),2)
-        finish() 
+        finish()
 
     def test_AddManyFiresandClouds(self):
         window = init(fire =[("fire", (0,150)),("fire", (5000,350)),("fire", (2000,550))], clouds = [("cloud", (0,150)),("cloud", (5000,350)),("cloud", (2000,550))])
@@ -68,7 +68,7 @@ class TestErrorHandlingSetupt(unittest.TestCase):
 
 #Test CPU Satelite behaviour
 class TestEventsCPU(unittest.TestCase):
-        
+
     #Update game to check the CPU tracks and captures the sprite
     def test_fireCapture(self):
         game.STATE = game.GAME_PAGE
@@ -84,9 +84,8 @@ class TestEventsCPU(unittest.TestCase):
     #Update CPU to see if it follows the player
     def test_tracking(self):
         window = init()
-        game.CPU_TRACK_SPEED = 1
 
-        for i in range(game.SCREEN_HEIGHT+100):
+        for i in range(game.SCREEN_HEIGHT+400):
             window.cpu_sprite.cpu_update(window.player_sprite)
 
         self.assertEqual((round((window.cpu_sprite.center_x)+ window.cpu_sprite.center_y)), (window.player_sprite.center_x + window.player_sprite.center_y))
@@ -97,7 +96,7 @@ class TestEventsCPU(unittest.TestCase):
     def test_cloudDamage(self):
         game.STATE = game.GAME_PAGE
         window = init(clouds=[("cloud",(game.CPU_START_X,game.CPU_START_Y))])
-        game.CPU_TRACK_SPEED = 0 #Keep CPU stationary to cause damage
+        window.cpu_sprite.track_speed = 0 #Keep CPU stationary to cause damage
         window.draw_game()
 
         for i in range(100):
@@ -133,17 +132,17 @@ class TestPlayerEvents(unittest.TestCase):
         finish()
 
 
-    #Press the buttons to see if the player moves 
+    #Press the buttons to see if the player moves
     def test_Movement(self):
         game.STATE = game.GAME_PAGE
         window = init()
         window.draw_game()
-        
+
         for i in range(100):
                 window.update(1)
                 window.on_key_press(arcade.key.UP,0)
                 window.on_key_press(arcade.key.RIGHT, 0)
-                
+
         self.assertNotEqual(window.player_sprite.center_x, game.PLAYER_START_X)
         self.assertNotEqual(window.player_sprite.center_y, game.PLAYER_START_Y)
         finish()
@@ -166,10 +165,10 @@ class TestDeaths(unittest.TestCase):
     #Increase clouds damage and check it kills the player
     def test_Player_death(self):
         game.STATE = game.GAME_PAGE
-        game.CLOUD_DAMAGE = 100
         window = init(clouds = [("cloud",(game.PLAYER_START_X,game.PLAYER_START_Y))])
+        window.clouds_list[0].damage = 100
         window.draw_game()
-        
+
         for i in range(100):
                 window.update(1)
         self.assertFalse(window.player_sprite.active)
@@ -179,42 +178,43 @@ class TestDeaths(unittest.TestCase):
     def test_Player_death_no_movement(self):
         game.STATE = game.GAME_PAGE
         window = init(clouds = [("cloud",(game.PLAYER_START_X,game.PLAYER_START_Y))])
-        window.draw_game() 
+        window.draw_game()
         window.player_sprite.health = 0
         window.update(1)
-        
+
         for i in range(10):
                 window.update(1)
                 window.on_key_press(arcade.key.UP, 0)
         self.assertEqual(window.player_sprite.center_x, game.PLAYER_START_X)
         finish()
-        
+
     #Increase cloud damage and check it kills CPU
     def test_CPU_death(self):
         game.STATE = game.GAME_PAGE
-        game.CLOUD_DAMAGE = 100
         window = init(clouds = [("cloud",(game.CPU_START_X,game.CPU_START_Y))])
+        window.cpu_sprite.track_speed = 0
+        window.clouds_list[0].damage = 100
         window.draw_game()
-        
+
         for i in range(100):
                 window.update(1)
         self.assertFalse(window.cpu_sprite.active)
         finish()
 
-    #Check dead CPU doesn't move 
+    #Check dead CPU doesn't move
     def test_CPU_death_no_moment(self):
         game.STATE = game.GAME_PAGE
         window = init(clouds = [("cloud",(game.CPU_START_X,game.CPU_START_Y))])
-        window.draw_game() 
+        window.draw_game()
         window.cpu_sprite.health = 0
         window.update(1)
         window.add_sprite("fire",(game.CPU_START_X + 40, game.CPU_START_Y-30))
-        
+
         for i in range(100):
                 window.update(1)
         self.assertEqual(window.cpu_sprite.center_x, game.CPU_START_X)
         finish()
-   
+
     #Check if both are dead, the game ends
     def test_Player_CPU_death_ends_game(self):
         game.STATE = game.GAME_PAGE
@@ -236,7 +236,7 @@ class TestMenuSystem(unittest.TestCase):
         window.on_mouse_press(0.0,0.0,1,0)
         self.assertEqual(window.current_state, game.INS0)
         finish()
-    
+
     def test_demo_skips_on_click(self):
         game.STATE = game.START_PAGE
         window = init([])
@@ -245,7 +245,7 @@ class TestMenuSystem(unittest.TestCase):
         window.on_mouse_press(0.0,0.0,1,0)
         self.assertEqual(window.current_state, game.GAME_PAGE)
         finish()
-    
+
 
     def test_button_changes_state(self):
         game.STATE = game.START_PAGE
@@ -255,7 +255,7 @@ class TestMenuSystem(unittest.TestCase):
         window.on_mouse_press(0.0,0.0,1,0)
         self.assertEqual(window.current_state, game.INSTRUCT1)
         finish()
-                
+
     def test_game_menu_rolls(self):
         game.STATE = game.START_PAGE
         window = init([])
@@ -269,12 +269,12 @@ class TestMenuSystem(unittest.TestCase):
 #Helper Functions
 
 #Set up game
-def init(clouds=[],fire=[],source=["images/fire.jpg","images/forest.png"]): 
+def init(clouds=[],fire=[],source=["images/fire.jpg","images/forest.png"]):
     window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT)
-    game.cloud_data = clouds
-    game.fire_data = fire
-    game.SOURCE = source
-    game.NNDir = "TestDir/"
+    window.init_cloud_data = clouds
+    window.init_fire_data = fire
+    window.source = source
+    window.NNDir = "TestDir/"
     window.setup()
     return window
 
@@ -283,4 +283,3 @@ def finish():
 
 if __name__ == '__main__':
     unittest.main()
-

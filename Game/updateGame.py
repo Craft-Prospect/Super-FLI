@@ -50,10 +50,12 @@ class Mixin:
         else:
             self.player_sprite.change_x = self.joystick.x * self.player_sprite.speed
             # Set a "dead zone" to prevent drive from a centered joystick
-            if abs(self.joystick.y) < DEAD_ZONE:
-                self.player_sprite.change_y = 0
-            else:
-                self.player_sprite.change_y = -self.joystick.y * self.player_sprite.speed
+        if abs(self.joystick.y) < DEAD_ZONE:
+            self.player_sprite.change_y = 0
+        else:
+            self.player_sprite.change_y = -self.joystick.y * self.player_sprite.speed
+
+        self.player_sprite.update()
 
     def game_background_update(self, update):
 

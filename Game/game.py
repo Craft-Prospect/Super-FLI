@@ -131,3 +131,6 @@ class MyGame(drawing.Mixin, keypress.Mixin, mouse.Mixin, spriteFunc.Mixin, updat
 
         else:
             self.ins_update()
+
+    
+

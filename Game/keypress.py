@@ -88,6 +88,7 @@ class Mixin:
 
         # If there is a collision between a 'Key' object and the pointer. The Key is added to the hit list
         # Hit list is then iterated through and character value from Key object is added to string  thats printed to the screen
+        print(button)
         if self.current_state == ENTER_NAME:
             character_hit_list = arcade.check_for_collision_with_list(self.pointer_sprite,self.key_list)
 

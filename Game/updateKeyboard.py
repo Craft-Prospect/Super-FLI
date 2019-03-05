@@ -1,4 +1,5 @@
 from sprites import *
+import time
 
 class Mixin:
     def keyboard_update(self):

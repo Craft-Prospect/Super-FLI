@@ -98,9 +98,10 @@ class Mixin:
 
     #Draw game over screen
     def draw_game_over(self):
-        pygame.mixer.stop()
-        pygame.mixer.music.load("Music/ResistorAnthemsII/end.mp3")
-        pygame.mixer.music.play(-1)
+        if not self.Test:
+            pygame.mixer.stop()
+            pygame.mixer.music.load("Music/ResistorAnthemsII/end.mp3")
+            pygame.mixer.music.play(-1)
 
 
         output = "Game Over"

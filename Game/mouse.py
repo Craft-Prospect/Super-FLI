@@ -38,9 +38,10 @@ class Mixin:
 
             global PLAYER_START_Y 
             PLAYER_START_Y = self.player_sprite.center_y
-            pygame.mixer.stop() 
-            pygame.mixer.music.load("Music/ResistorAnthemsII/main.mp3")
-            pygame.mixer.music.play(-1)
+            if not self.Test:
+                pygame.mixer.stop() 
+                pygame.mixer.music.load("Music/ResistorAnthemsII/main.mp3")
+                pygame.mixer.music.play(-1)
 
 
             self.setup()

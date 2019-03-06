@@ -45,6 +45,7 @@ class Mixin:
 
         # Loop through each colliding fire, remove it, and add to the cpu_score.
         for fire in hit_list:
-            arcade.sound.play_sound(sound)
+            if not self.Test:
+                arcade.sound.play_sound(sound)
             fire.kill()
             sprite.score += 100

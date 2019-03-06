@@ -11,7 +11,7 @@ BACKGROUND_SCALING = 1
 
 #Set number of elements to appear on screen (This will be removed when sprites are generated from co-ordinates)
 #Window size
-SCREEN_WIDTH = 1041
+SCREEN_WIDTH = 1040
 SCREEN_HEIGHT = 597
 
 #Raspberry Pi speeds
@@ -32,7 +32,7 @@ HEALTH = 100
 BUTTON = 2
 
 #Image source (global variable so can be used in testing)
-SOURCE=["images/background1.png", "images/background2.png", "images/background3.png", "images/background4.png","images/sea.png"]
+SOURCE=["images/background2.png","images/background3.png", "images/background2.png", "images/background3.png","images/sea.png"]
 NNDir = "NNData/"
 #PLayer's score for saving in Highscore file
 Final_score = 0

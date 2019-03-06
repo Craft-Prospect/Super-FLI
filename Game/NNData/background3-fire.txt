@@ -1,1 +1,11 @@
-(400,500)
+hello world
+width: -1 
+ Height: -1
+Total BFLOPS 34.876 
+
+ seen 64 
+images/background2.png: Predicted in 5457.491000 milli-seconds.
+Fire: 33%
+Fire: 31%
+(908,78)
+(904,104)

@@ -24,15 +24,14 @@ class Mixin:
                     self.clouds_list.append(detected)
 
     def add_new_data(self):
-        fileName = self.NNDir + "background" + str(self.background_index-1) + "-fire.txt"
+        fileName = self.NNDir + "background" + str(self.background_index) + "-fire.txt"
 
         with open(fileName) as f:
             lines = f.readlines()
 
-            for line in lines:
-                line[-1].strip()
-                line = eval(line, {"__builtins__": {}})
-                self.add_sprite("fire",(line[0] + SCREEN_WIDTH, line[1]))
+            line = lines[-1].strip()
+            line = eval(line, {"__builtins__": {}})
+            self.add_sprite("fire",(line[0] + SCREEN_WIDTH, SCREEN_HEIGHT - line[1]))
 
     def check_fire_collison(self,sprite):
         # Generate a list of all emergencies that collided with the satellite.

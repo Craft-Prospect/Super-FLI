@@ -39,7 +39,7 @@ class MyGame(drawing.Mixin, keypress.Mixin, mouse.Mixin, spriteFunc.Mixin, updat
         self.clouds_list = None
 
         #Sprite co-ordinates (will be replaced by NN)
-        self.init_fire_data = [("fire",(150,400))]
+        self.init_fire_data = [("fire",(904,483))]
         self.init_cloud_data = [("cloud", (0,150)),("cloud", (420,300)),("cloud", (700,742)),("cloud", (1000,200)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0))]
 
         self.fire_data = None

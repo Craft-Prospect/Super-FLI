@@ -38,6 +38,7 @@ class Mixin:
         self.background_list.append(self.background_odd)
 
         self.background_index = 2
+        self.final_background = False
         self.add_new_data()
 
 

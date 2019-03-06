@@ -1,8 +1,15 @@
 from sprites import *
+import pygame
 
 class Mixin:
    #Setgame variables
     def setup(self):
+
+        #s = arcade.sound.load_sound("Music/ResistorAnthems/test.mp3")
+        #arcade.sound.play_sound(s)
+        pygame.mixer.stop() 
+        pygame.mixer.music.load("Music/ResistorAnthemsII/main.mp3")
+        pygame.mixer.music.play(-1)
 
         # Sprite lists
         self.fire_list = arcade.SpriteList()
@@ -95,6 +102,11 @@ class Mixin:
 
     #Draw game over screen
     def draw_game_over(self):
+        pygame.mixer.stop()
+        pygame.mixer.music.load("Music/ResistorAnthemsII/end.mp3")
+        pygame.mixer.music.play(-1)
+
+
         output = "Game Over"
         arcade.draw_text(output, 240, 400, arcade.color.WHITE, 54)
 

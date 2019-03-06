@@ -1,7 +1,12 @@
 from sprites import *
+import pygame 
 
 class Mixin:
     def start_page_setup(self):
+        pygame.mixer.stop() 
+        pygame.mixer.music.load("Music/ResistorAnthemsII/menu.mp3")
+        pygame.mixer.music.play(-1)
+
 
         #Setup up lists for buttons
         self.buttons = arcade.SpriteList()

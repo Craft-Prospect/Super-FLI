@@ -119,8 +119,7 @@ class MyGame(drawing.Mixin, keypress.Mixin, mouse.Mixin, spriteFunc.Mixin, updat
 
         else:
             self.joystick = None
-
-
+        
     def update(self, delta_time):
 
         if self.current_state == GAME_PAGE:

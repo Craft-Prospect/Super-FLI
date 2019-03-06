@@ -4,6 +4,6 @@ width: -1
 Total BFLOPS 34.876 
 
  seen 64 
-images/background3.png: Predicted in 5781.635000 milli-seconds.
+images/background3.png: Predicted in 5585.590000 milli-seconds.
 Fire: 46%
 (502,298)

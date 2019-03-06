@@ -1,6 +1,6 @@
 import game
 import arcade
-
+import pygame
 import unittest
 
 #Test the game generates sprites
@@ -270,6 +270,7 @@ class TestMenuSystem(unittest.TestCase):
 
 #Set up game
 def init(clouds=[],fire=[],source=["images/fire.jpg","images/forest.png"]):
+    pygame.init()
     window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT)
     window.init_cloud_data = clouds
     window.init_fire_data = fire

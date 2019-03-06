@@ -1,4 +1,5 @@
 from sprites import *
+import pygame
 
 class Mixin:
     #Will be used by NN to generate newly identified events
@@ -36,7 +37,14 @@ class Mixin:
     def check_fire_collison(self,sprite):
         # Generate a list of all emergencies that collided with the satellite.
         hit_list = arcade.check_for_collision_with_list(sprite,self.fire_list)
+
+        if sprite == self.player_sprite:
+            sound = arcade.sound.load_sound("Music/sounds/Ching.wav")
+        else:
+            sound = arcade.sound.load_sound("Music/sounds/beep.wav")
+
         # Loop through each colliding fire, remove it, and add to the cpu_score.
         for fire in hit_list:
+            arcade.sound.play_sound(sound)
             fire.kill()
             sprite.score += 100

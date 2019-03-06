@@ -7,10 +7,6 @@ class Mixin:
 
         #s = arcade.sound.load_sound("Music/ResistorAnthems/test.mp3")
         #arcade.sound.play_sound(s)
-        pygame.mixer.stop() 
-        pygame.mixer.music.load("Music/ResistorAnthemsII/main.mp3")
-        pygame.mixer.music.play(-1)
-
         # Sprite lists
         self.fire_list = arcade.SpriteList()
         self.clouds_list = arcade.SpriteList()

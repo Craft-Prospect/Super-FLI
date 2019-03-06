@@ -27,12 +27,8 @@ class Mixin:
 
         #PLayer attempts to capture
         elif key == arcade.key.SPACE:
-            # Generate a list of all sprites that collided with the player.
-            hit_list = arcade.check_for_collision_with_list(self.player_sprite,self.fire_list)
-            # Loop through each colliding sprite, remove it, and add to the player_score.
-            for fire in hit_list:
-                fire.kill()
-                self.player_sprite.score += 100
+            self.check_fire_collison(self.player_sprite)
+
 
     def menu_keyboard(self,key):
         if key == arcade.key.SPACE:

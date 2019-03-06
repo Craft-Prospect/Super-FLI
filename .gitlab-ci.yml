@@ -4,7 +4,7 @@ Test:
   script:
     - cd Game
     - pip3 install -r requirements.txt
-    - xvfb-run python3 tests.py
+    - xvfb-run -a python3 tests.py
 
 
 

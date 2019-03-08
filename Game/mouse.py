@@ -3,7 +3,11 @@ import pygame
 
 class Mixin:
     #Change between game pages (e.g instructions and high score)
+
     def on_mouse_press(self, x, y, button, modifiers):
+        self.change_state()
+
+    def change_state(self):
         if self.current_state == START_PAGE:
             #Change state depending on button selected
             if self.selected == self.inst_button:
@@ -24,10 +28,10 @@ class Mixin:
         elif self.current_state == END_PAGE:
             self.current_state = ENTER_NAME
             self.keyboard_setup()
-        
+
         elif self.current_state == HIGH_SCORE_PAGE:
             self.current_state = FEEDBACK_PAGE
-    
+
         elif self.current_state == FEEDBACK_PAGE:
             self.start_page_setup()
             self.current_state = START_PAGE
@@ -36,15 +40,13 @@ class Mixin:
             global PLAYER_START_X
             PLAYER_START_X = self.player_sprite.center_x
 
-            global PLAYER_START_Y 
+            global PLAYER_START_Y
             PLAYER_START_Y = self.player_sprite.center_y
             if not self.Test:
-                pygame.mixer.stop() 
+                pygame.mixer.stop()
                 pygame.mixer.music.load("Music/ResistorAnthemsII/main.mp3")
                 pygame.mixer.music.play(-1)
 
 
             self.setup()
             self.current_state = GAME_PAGE
-
-

@@ -80,7 +80,7 @@ class Mixin:
 
 
     def on_joybutton_press(self, joystick, button):
-        
+
     # If there is a collision between a 'Key' object and the pointer. The Key is added to the hit list
         # Hit list is then iterated through and character value from Key object is added to string  thats printed to the screen
 
@@ -103,43 +103,7 @@ class Mixin:
                 self.check_fire_collison(self.player_sprite)
 
         if button == 0:
-            if self.current_state == START_PAGE:
-            #Change state depending on button selected
-                if self.selected == self.inst_button:
-                    self.current_state = INSTRUCT1
-                else:
-                    self.demo_setup()
-                    self.draw_demo()
-                    self.current_state = INS0
-
-            elif self.current_state == INSTRUCT1:
-                self.current_state = INSTRUCT2
-
-            elif self.current_state == INSTRUCT2:
-                self.demo_setup()
-                self.draw_demo()
-                self.current_state = INS0
-
-            elif self.current_state == END_PAGE:
-                self.current_state = ENTER_NAME
-                self.keyboard_setup()
-        
-            elif self.current_state == HIGH_SCORE_PAGE:
-                self.current_state = FEEDBACK_PAGE
-    
-            elif self.current_state == FEEDBACK_PAGE:
-                self.start_page_setup()
-                self.current_state = START_PAGE
-
-            elif self.current_state >= 10:
-                global PLAYER_START_X
-                PLAYER_START_X = self.player_sprite.center_x
-
-                global PLAYER_START_Y 
-                PLAYER_START_Y = self.player_sprite.center_y
-
-                self.setup()
-                self.current_state = GAME_PAGE
+            self.change_state()
 
     # Arcade academy throws errors if these functions aren't implemented
     def on_joybutton_release(self, joystick, button):
@@ -147,9 +111,3 @@ class Mixin:
 
     def on_joyhat_motion(self, joystick, hat_x, hat_y):
         print("Hat ({}, {})".format(hat_x, hat_y))
-            
-            
-        
-        
-            
-

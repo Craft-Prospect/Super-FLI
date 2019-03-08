@@ -38,6 +38,7 @@ NNDir = "NNData/"
 Final_score = 0
 
 #Game states
+SPLASH = -1
 START_PAGE = 0
 INSTRUCT1 = 1
 INSTRUCT2 = 2

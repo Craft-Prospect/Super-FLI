@@ -1,12 +1,14 @@
-
 from game import *
 from network import *
+import pygame
 
 #Run game
 def main():
-    window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT)
+    pygame.init()
+    pygame.mixer.init()
+    window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT,False)
     window.setup()
-    network()
+    #network()
     #window.set_update_rate(1/10)
     arcade.run()
 

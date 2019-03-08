@@ -24,7 +24,7 @@ import updateKeyboard
 #Main window
 class MyGame(drawing.Mixin, keypress.Mixin, mouse.Mixin, spriteFunc.Mixin, updateGame.Mixin, updateIns.Mixin, updateKeyboard.Mixin, menu.Mixin, instructions.Mixin, demo.Mixin, runGame.Mixin,keyboard.Mixin,highscore.Mixin, arcade.Window):
     #Initalise game variables and window
-    def __init__(self, width, height):
+    def __init__(self, width, height,test):
 
         # Call the parent class initialise to window
         super().__init__(width, height)
@@ -38,6 +38,8 @@ class MyGame(drawing.Mixin, keypress.Mixin, mouse.Mixin, spriteFunc.Mixin, updat
         self.fire_list=None
         self.clouds_list = None
 
+        self.Test = test
+        
         #Sprite co-ordinates (will be replaced by NN)
         self.init_fire_data = [("fire",(904,483))]
         self.init_cloud_data = [("cloud", (0,150)),("cloud", (420,300)),("cloud", (700,742)),("cloud", (1000,200)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0))]
@@ -120,7 +122,7 @@ class MyGame(drawing.Mixin, keypress.Mixin, mouse.Mixin, spriteFunc.Mixin, updat
         else:
             self.joystick = None
 
-
+        
     def update(self, delta_time):
 
         if self.current_state == GAME_PAGE:

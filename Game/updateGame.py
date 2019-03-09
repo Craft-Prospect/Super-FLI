@@ -1,4 +1,5 @@
 from sprites import *
+import random
 
 class Mixin:
     def game_update(self):
@@ -106,3 +107,22 @@ class Mixin:
             if sprite.health <= 0:
                 sprite.active = False
                 sprite.kill()
+            if sprite == self.cpu_sprite:
+                self.avoid_cloud(sprite,cloud)
+        if sprite == self.cpu_sprite and len(hit_list) == 0:
+            sprite.avoid = None
+
+
+    def avoid_cloud(self,sprite,cloud):
+
+        value = random.randint(0,40)
+        if sprite.difficulty <= value:
+            if sprite.center_x <= cloud.center_x:
+                sprite.avoid = ["left"]
+            else:
+                sprite.avoid = ["right"]
+
+            if sprite.center_y <= cloud.center_y:
+                sprite.avoid.append("down")
+            else:
+                sprite.avoid.append("up")

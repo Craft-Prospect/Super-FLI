@@ -14,6 +14,7 @@ class Mixin:
                 else:
                     #Create cloud instance
                     detected=Cloud("images/clouds.png", SPRITE_SCALING_CLOUD)
+                    detected.damage = self.cloud_damage
 
                 # Position the fire
                 detected.center_x = coOrds[0]

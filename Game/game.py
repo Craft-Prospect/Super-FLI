@@ -20,9 +20,11 @@ import updateGame
 import updateIns
 import updateKeyboard
 import splash
+import levels
+import pygame
 
 #Main window
-class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin, splash.Mixin, updateGame.Mixin, updateIns.Mixin, updateKeyboard.Mixin, menu.Mixin, instructions.Mixin, demo.Mixin, runGame.Mixin,keyboard.Mixin,highscore.Mixin, arcade.Window):
+class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin, levels.Mixin, splash.Mixin, updateGame.Mixin, updateIns.Mixin, updateKeyboard.Mixin, menu.Mixin, instructions.Mixin, demo.Mixin, runGame.Mixin,keyboard.Mixin,highscore.Mixin, arcade.Window):
     #Initalise game variables and window
     def __init__(self, width, height,test):
 
@@ -46,6 +48,7 @@ class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin,
 
         self.fire_data = None
         self.cloud_data = None
+        self.cloud_damage = CLOUD_DAMAGE
 
         # Set up the player info
         self.player_sprite = None
@@ -101,7 +104,7 @@ class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin,
         #Keyboard values
         self.key_list = None
 
-        self.source = SOURCE
+        self.source = SOURCE[0]
         self.NNDir = NNDir
 
         self.update_count = 0
@@ -122,7 +125,11 @@ class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin,
         else:
             self.joystick = None
 
+
         self.setup_splash()
+
+        if not self.Test:
+            self.lvl_up =  pygame.mixer.Sound("Music/sounds/lvlup.wav")
 
 
     def update(self, delta_time):

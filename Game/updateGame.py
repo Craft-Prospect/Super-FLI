@@ -63,7 +63,7 @@ class Mixin:
             if (update == 1):
                 return
             elif (update == -1):
-                self.current_state = END_PAGE
+                self.level_up()
                 return
 
         elif(update != 0):

@@ -27,23 +27,7 @@ class Mixin:
         self.cpu_list.append(self.cpu_sprite)
 
         #Set up background
-        self.background_list = arcade.SpriteList()
-
-        self.background_even= Background(self.source[0], BACKGROUND_SCALING)
-        self.background_even.center_x = SCREEN_WIDTH/2
-        self.background_even.center_y = SCREEN_HEIGHT/2
-
-        self.background_odd = Background(self.source[1], BACKGROUND_SCALING)
-        self.background_odd.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
-        self.background_odd.center_y= SCREEN_HEIGHT/2
-
-        self.background_list.append(self.background_even)
-        self.background_list.append(self.background_odd)
-
-        self.background_index = 2
-        self.final_background = False
-        self.add_new_data()
-
+        self.background_setup()
 
         #Display up to three fires and clouds at a time (for performance)
         self.fire_data = self.init_fire_data.copy()
@@ -56,6 +40,9 @@ class Mixin:
             if len(self.cloud_data) > 0:
                 item = self.cloud_data.pop(0)
                 self.add_sprite(item[0],item[1])
+
+
+        self.level = 1
 
     def draw_game(self):
 
@@ -95,6 +82,8 @@ class Mixin:
         health_player= f"Player Power: {player_health}"
         arcade.draw_text((health_player), 10, 50, arcade.color.WHITE, 14)
 
+        lvl= f"Level: {self.level}"
+        arcade.draw_text((lvl), SCREEN_WIDTH//2-10, SCREEN_HEIGHT-20, arcade.color.WHITE, 14)
 
     #Draw game over screen
     def draw_game_over(self):
@@ -122,3 +111,22 @@ class Mixin:
             health = 0
 
         return health
+
+    def background_setup(self):
+        #Set up background
+        self.background_list = arcade.SpriteList()
+
+        self.background_even= Background(self.source[0], BACKGROUND_SCALING)
+        self.background_even.center_x = SCREEN_WIDTH/2
+        self.background_even.center_y = SCREEN_HEIGHT/2
+
+        self.background_odd = Background(self.source[1], BACKGROUND_SCALING)
+        self.background_odd.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
+        self.background_odd.center_y= SCREEN_HEIGHT/2
+
+        self.background_list.append(self.background_even)
+        self.background_list.append(self.background_odd)
+
+        self.background_index = 2
+        self.final_background = False
+        self.add_new_data()

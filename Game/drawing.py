@@ -7,6 +7,9 @@ class Mixin:
 
         #Draw different events dependant on stage
 
+        if self.current_state == SPLASH:
+            self.draw_splash()
+
         if self.current_state == START_PAGE:
             self.draw_start_page()
 

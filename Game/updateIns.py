@@ -46,6 +46,11 @@ class Mixin:
             self.player_sprite.score += 100
             self.current_state += 1
 
+        elif self.current_state == SPLASH:
+            self.counting(100)
+            if self.update_count == 99:
+                self.start_page_setup()
+
     def counting(self,t):
         self.update_count += 1
         if self.update_count == t:

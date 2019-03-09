@@ -6,6 +6,18 @@ import unittest
 #Test the game generates sprites
 class TestSetupMethods(unittest.TestCase):
 
+    def test_add_sprite_fire(self):
+        window = init([])
+        window.add_sprite("fire", (1,1))
+        self.assertEqual(len(window.fire_list), 1)
+        finish()
+
+    def test_add_sprite_cloud(self):
+        window = init([])
+        window.add_sprite("cloud")
+        self.assertEqual(len(window.clouds_list),1)
+        finish()
+
     def test_AddOneFire(self):
         window = init(fire=[("fire", (0,150))])
         self.assertEqual(len(window.fire_list),1)
@@ -34,18 +46,6 @@ class TestSetupMethods(unittest.TestCase):
     def test_AddManyFiresandClouds(self):
         window = init(fire =[("fire", (0,150)),("fire", (5000,350)),("fire", (2000,550))], clouds = [("cloud", (0,150)),("cloud", (5000,350)),("cloud", (2000,550))])
         self.assertEqual((len(window.fire_list)+len(window.clouds_list)),6)
-        finish()
-
-    def test_add_sprite_fire(self):
-        window = init([])
-        window.add_sprite("fire", (0,0))
-        self.assertEqual(len(window.fire_list), 1)
-        finish()
-
-    def test_add_sprite_cloud(self):
-        window = init([])
-        window.add_sprite("cloud", (100,100))
-        self.assertEqual(len(window.clouds_list),1)
         finish()
 
 #Test the game won't generate sprites outside game bounds
@@ -273,18 +273,23 @@ class TestMenuSystem(unittest.TestCase):
 #Helper Functions
 
 #Set up game
-def init(clouds=[],fire=[],source=["images/fire.jpg","images/forest.png"]):
+def init(clouds=[],fire=[],source=["images/LVL1/background1.png","images/LVL1/background1.png"]):
     window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
-    window.init_cloud_data = clouds
-    window.init_fire_data = fire
     window.source = source
     window.NNDir = "TestDir/"
     window.Test = True
+    window.clouds_limit = 0
     window.setup()
+    change_game_sprites(window,clouds)
+    change_game_sprites(window,fire)
     return window
 
 def finish():
     arcade.window_commands.close_window()
+
+def change_game_sprites(game,sprites):
+    for sprite in sprites:
+        game.add_sprite(sprite[0],sprite[1])
 
 if __name__ == '__main__':
     unittest.main()

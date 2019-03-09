@@ -42,12 +42,7 @@ class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin,
 
         self.Test = test
 
-        #Sprite co-ordinates (will be replaced by NN)
-        self.init_fire_data = [("fire",(904,483))]
-        self.init_cloud_data = [("cloud", (0,150)),("cloud", (420,300)),("cloud", (700,742)),("cloud", (1000,200)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0)),("cloud", (1500,10)),("cloud", (1800,200)),("cloud", (2000,0))]
-
         self.fire_data = None
-        self.cloud_data = None
         self.cloud_damage = CLOUD_DAMAGE
 
         # Set up the player info
@@ -130,6 +125,8 @@ class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin,
 
         if not self.Test:
             self.lvl_up =  pygame.mixer.Sound("Music/sounds/lvlup.wav")
+
+        self.clouds_limit = 3
 
 
     def update(self, delta_time):

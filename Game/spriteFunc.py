@@ -1,11 +1,12 @@
 from sprites import *
 import pygame
+import random
 
 class Mixin:
     #Will be used by NN to generate newly identified events
-    def add_sprite(self,event,coOrds):
+    def add_sprite(self,event,coOrds = None):
 
-     if coOrds[0] >= 0 and coOrds[1] >=0 and coOrds[1] < SCREEN_HEIGHT:
+     if (coOrds == None) or (coOrds[0] >= 0 and coOrds[1] >=0 and coOrds[1] < SCREEN_HEIGHT): 
 
                 if  event == "fire":
                     # Create the fire instance
@@ -17,8 +18,13 @@ class Mixin:
                     detected.damage = self.cloud_damage
 
                 # Position the fire
-                detected.center_x = coOrds[0]
-                detected.center_y = coOrds[1]
+                if coOrds != None:
+                    detected.center_x = coOrds[0]
+                    detected.center_y = coOrds[1]
+
+                else:
+                    detected.center_y = random.randrange(0,SCREEN_HEIGHT )
+                    detected.center_x = SCREEN_WIDTH + random.randrange(0,SCREEN_WIDTH)
 
                 if event == "fire":
                     self.fire_list.append(detected)

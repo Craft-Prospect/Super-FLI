@@ -29,17 +29,8 @@ class Mixin:
         #Set up background
         self.background_setup()
 
-        #Display up to three fires and clouds at a time (for performance)
-        self.fire_data = self.init_fire_data.copy()
-        self.cloud_data = self.init_cloud_data.copy()
-
-        for i in range(0,3):
-            if len(self.fire_data) > 0:
-                item = self.fire_data.pop(0)
-                self.add_sprite(item[0],item[1])
-            if len(self.cloud_data) > 0:
-                item = self.cloud_data.pop(0)
-                self.add_sprite(item[0],item[1])
+        for i in range(0,self.clouds_limit):
+                self.add_sprite("cloud")
 
 
         self.level = 1
@@ -127,6 +118,7 @@ class Mixin:
         self.background_list.append(self.background_even)
         self.background_list.append(self.background_odd)
 
-        self.background_index = 2
-        self.final_background = False
+        self.background_index = 1
+        self.final_background_odd = False
+        self.final_background_even = False
         self.add_new_data()

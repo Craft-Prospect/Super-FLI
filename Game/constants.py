@@ -38,6 +38,7 @@ NNDir = "NNData/"
 Final_score = 0
 
 #Game states
+SPLASH = -1
 START_PAGE = 0
 INSTRUCT1 = 1
 INSTRUCT2 = 2
@@ -61,7 +62,7 @@ INS8 = 18
 INS9 = 19
 
 #Initial game state
-STATE = START_PAGE
+STATE = SPLASH
 
 #Player co-ordinates
 PLAYER_START_X = 50

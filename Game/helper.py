@@ -7,6 +7,9 @@ def get_number(line):
 def add_high_score(name, score):
     #Add name to file
 
+    if score == None or len(name) == 0:
+        return
+
     name = ''.join(name)
 
     with open('scores.txt', 'a') as f:
@@ -14,7 +17,7 @@ def add_high_score(name, score):
         f.write("%s\n" % store )
 
     sorted_lines = ''
-    
+
     #Sort file
     with open('scores.txt', 'r') as f:
         lines = f.readlines()
@@ -22,6 +25,3 @@ def add_high_score(name, score):
     #Stored sorted file
     with open('scores.txt', 'w') as f:
        f.writelines(sorted_lines)
-
-
-

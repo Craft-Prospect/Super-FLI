@@ -27,7 +27,7 @@ class Mixin:
                 self.cpu_sprite.cpu_update(self.player_sprite,self.fire_list[0])
             else:
                 self.cpu_sprite.cpu_update(self.player_sprite)
-                self.cpu_list.update()
+            self.cpu_list.update()
 
             self.cloud_damages(self.cpu_sprite)
 
@@ -115,14 +115,12 @@ class Mixin:
 
     def avoid_cloud(self,sprite,cloud):
 
-        value = random.randint(0,40)
-        if sprite.difficulty <= value:
-            if sprite.center_x <= cloud.center_x:
-                sprite.avoid = ["left"]
-            else:
-                sprite.avoid = ["right"]
+        if sprite.center_x <= cloud.center_x:
+            sprite.avoid = ["left"]
+        else:
+            sprite.avoid = ["right"]
 
-            if sprite.center_y <= cloud.center_y:
-                sprite.avoid.append("down")
-            else:
-                sprite.avoid.append("up")
+        if sprite.center_y <= cloud.center_y:
+            sprite.avoid.append("down")
+        else:
+            sprite.avoid.append("up")

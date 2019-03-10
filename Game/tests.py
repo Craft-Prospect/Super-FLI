@@ -2,6 +2,8 @@ import game
 import arcade
 import pygame
 import unittest
+import helper
+import os
 
 #Test the game generates sprites
 class TestSetupMethods(unittest.TestCase):
@@ -72,20 +74,56 @@ class TestEventsCPU(unittest.TestCase):
     #Update game to check the CPU tracks and captures the sprite
     def test_fireCapture(self):
         game.STATE = game.GAME_PAGE
-        window = init(fire = [("fire", (game.CPU_START_X + 30,game.CPU_START_Y-30))])
+        window = init(fire = [("fire", (game.CPU_START_X, game.CPU_START_Y))] )
         window.draw_game()
 
-        for i in range(100):
-            window.update(1)
+        window.update(1)
 
         self.assertEqual(window.cpu_sprite.score, 100)
         finish()
 
-    #Update CPU to see if it follows the player
-    def test_tracking(self):
-        window = init()
+    def test_tracking_fire_above_left(self):
+        game.STATE = game.GAME_PAGE
+        window = init(fire = [("fire", (game.CPU_START_X + 10, game.CPU_START_Y-10))])
+        #Don't allow clouds to interfere
+        window.clouds_limit = 0
+        window.clouds_list = arcade.SpriteList()
 
-        for i in range(game.SCREEN_HEIGHT+400):
+        window.cpu_sprite.speed = 1
+
+        for i in range(10):
+            window.cpu_sprite.cpu_update(window.player_sprite, window.fire_list[0])
+
+        self.assertEqual((window.cpu_sprite.center_x + window.cpu_sprite.center_y),(window.fire_list[0].center_x + window.fire_list[0].center_y))
+        finish()
+
+
+    def test_tracking_fire_below_right(self):
+        game.STATE = game.GAME_PAGE
+        window = init(fire = [("fire", (game.CPU_START_X - 10, game.CPU_START_Y +10))])
+        #Don't allow clouds to interfere
+        window.clouds_limit = 0
+        window.clouds_list = arcade.SpriteList()
+
+        window.cpu_sprite.speed = 1
+
+        for i in range(10):
+            window.cpu_sprite.cpu_update(window.player_sprite, window.fire_list[0])
+
+        self.assertEqual((window.cpu_sprite.center_x + window.cpu_sprite.center_y),(window.fire_list[0].center_x + window.fire_list[0].center_y))
+        finish()
+
+    def test_tracking_player_below_right(self):
+        game.STATE = game.GAME_PAGE
+        window = init()
+        window.clouds_limit = 0
+        window.clouds_list = arcade.SpriteList()
+
+        window.cpu_sprite.center_x = game.STARTY - 20
+        window.cpu_sprite.center_y = game.STARTX - 20
+        window.cpu_sprite.track_speed = 1
+
+        for i in range(21):
             window.cpu_sprite.cpu_update(window.player_sprite)
 
         self.assertEqual((round((window.cpu_sprite.center_x)+ window.cpu_sprite.center_y)), (window.player_sprite.center_x + window.player_sprite.center_y))
@@ -159,6 +197,16 @@ class TestPlayerEvents(unittest.TestCase):
         self.assertNotEqual(window.player_sprite.health, game.HEALTH)
         finish()
 
+    #buttons are a image holder. Ensure updating them does nothing
+    def test_button_does_nothing(self):
+        game.STATE = game.START_PAGE
+        window = init()
+        window.start_page_setup()
+
+        window.buttons[0].update()
+
+        self.assertEqual(window.current_state,game.START_PAGE)
+
 #Test PLayer and Satellite Deaths
 class TestDeaths(unittest.TestCase):
 
@@ -225,6 +273,12 @@ class TestDeaths(unittest.TestCase):
 
         self.assertEqual(window.current_state, game.END_PAGE)
 
+    def test_neg_health_rounds(self):
+        game.STATE = game.GAME_PAGE
+        window = init()
+        window.player_sprite.health = -100.75
+
+        self.assertEqual(window.round_health(window.player_sprite), 0)
 
 #Test menu selection screen works
 class TestMenuSystem(unittest.TestCase):
@@ -248,7 +302,6 @@ class TestMenuSystem(unittest.TestCase):
         self.assertEqual(window.current_state, game.GAME_PAGE)
         finish()
 
-
     def test_button_changes_state(self):
         game.STATE = game.START_PAGE
         window = init([])
@@ -270,19 +323,149 @@ class TestMenuSystem(unittest.TestCase):
         finish()
 
 
+class TestHelpers(unittest.TestCase):
+    def test_get_numer(self):
+        self.assertEqual(helper.get_number("£100"),"100")
+
+    def test_add_high_score(self):
+        clear_scores()
+        helper.add_high_score("Test1", 100)
+        helper.add_high_score("Test2", 500)
+        helper.add_high_score("Test", 200)
+
+        with open('scores.txt', 'r') as f:
+            lines = f.readlines()
+            self.assertEqual(lines[0].strip(), "Test2 : £500")
+            self.assertEqual(lines[1].strip(), "Test : £200")
+            self.assertEqual(lines[2].strip(), "Test1 : £100")
+
+    def test_empty_name_high_score(self):
+        clear_scores()
+        helper.add_high_score("","100")
+        self.assertEqual(os.stat("scores.txt").st_size, 0)
+
+    def test_empty_score_high_score(self):
+        clear_scores()
+        helper.add_high_score("Test",None)
+        self.assertEqual(os.stat("scores.txt").st_size, 0)
+
+class TestLevelingUp(unittest.TestCase):
+    def test_level_up(self):
+        game.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
+        window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
+        window.current_state = game.GAME_PAGE
+        window.setup()
+
+        window.background_even.speed = 500
+        window.background_odd.speed = 500
+        for i in range(10):
+            update = window.background_even.update()
+            update -= window.background_odd.update()
+            window.game_background_update(update)
+
+        self.assertEqual(window.level, 2)
+        finish()
+
+    def test_game_over_lvl(self):
+        game.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
+        window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
+        window.current_state = game.GAME_PAGE
+        window.setup()
+
+        window.level_up()
+        window.level_up()
+
+        self.assertEqual(window.current_state, 4)
+        finish()
+
+class TestSpriteMovementHandling(unittest.TestCase):
+
+    def test_check_cloud_death(self):
+        game.STATE = game.GAME_PAGE
+        window = init(clouds = [("cloud", (0,0))])
+        window.clouds_list[0].right = 0
+        window.clouds_list[0].update()
+        self.assertEqual(len(window.clouds_list), 0)
+        finish()
+    def test_left_border_Satelite(self):
+        game.STATE = game.GAME_PAGE
+        window = init()
+        window.player_sprite.left = 0
+        window.player_sprite.change_x = -1
+        window.player_sprite.update()
+        self.assertEqual(window.player_sprite.left, 0)
+        finish()
+    def test_right_border_Satelite(self):
+        game.STATE = game.GAME_PAGE
+        window = init()
+        window.player_sprite.right = game.SCREEN_WIDTH
+        window.player_sprite.change_x = 1
+        window.player_sprite.update()
+        self.assertEqual(window.player_sprite.right, (game.SCREEN_WIDTH-1))
+        finish()
+
+    def test_bottom_border_Satelite(self):
+        game.STATE = game.GAME_PAGE
+        window = init()
+        window.player_sprite.bottom = 0
+        window.player_sprite.change_y = -1
+        window.player_sprite.update()
+        self.assertEqual(window.player_sprite.bottom, 0)
+        finish()
+
+    def test_top_border_Satelite(self):
+        game.STATE = game.GAME_PAGE
+        window = init()
+        window.player_sprite.top = game.SCREEN_HEIGHT
+        window.player_sprite.change_y = 1
+        window.player_sprite.update()
+        self.assertEqual(window.player_sprite.top, (game.SCREEN_HEIGHT-1))
+        finish()
+
+    def test_CPU_avoids_cloud_right_below(self):
+        game.STATE = game.GAME_PAGE
+        window = init(clouds = [("cloud", (0,0))])
+        window.clouds_list[0].center_x = window.cpu_sprite.center_x + 10
+        window.clouds_list[0].center_y = window.cpu_sprite.center_y - 10
+
+        window.cloud_damages(window.cpu_sprite)
+        window.cpu_sprite.cpu_update(window.player_sprite)
+        self.assertEqual(window.cpu_sprite.avoid, ["left", "up"])
+        self.assertEqual(window.cpu_sprite.center_x, game.CPU_START_X-game.CPU_SPEED)
+        self.assertEqual(window.cpu_sprite.center_y, game.CPU_START_Y+game.CPU_SPEED)
+
+        finish()
+
+    def test_CPU_avoids_cloud_left_above(self):
+        game.STATE = game.GAME_PAGE
+        window = init(clouds = [("cloud", (0,0))])
+        window.clouds_list[0].center_x = window.cpu_sprite.center_x - 10
+        window.clouds_list[0].center_y = window.cpu_sprite.center_y + 10
+
+        window.cloud_damages(window.cpu_sprite)
+        window.cpu_sprite.cpu_update(window.player_sprite)
+        self.assertEqual(window.cpu_sprite.avoid, ["right", "down"])
+        self.assertEqual(window.cpu_sprite.center_x, game.CPU_START_X+game.CPU_SPEED)
+        self.assertEqual(window.cpu_sprite.center_y, game.CPU_START_Y-game.CPU_SPEED)
+
+        finish()
 #Helper Functions
 
 #Set up game
 def init(clouds=[],fire=[],source=["images/LVL1/background1.png","images/LVL1/background1.png"]):
-    window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
+    #pygame.init()  #Uncomment for code coverage tests
+    #pygame.mixer.init() #Uncomment for code coverage tests
+    window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True) #Change true to false for code coverage tests
     window.source = source
     window.NNDir = "TestDir/"
-    window.Test = True
     window.clouds_limit = 0
     window.setup()
     change_game_sprites(window,clouds)
     change_game_sprites(window,fire)
     return window
+
+def clear_scores():
+    open('scores.txt', 'w').close()
 
 def finish():
     arcade.window_commands.close_window()

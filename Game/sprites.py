@@ -72,10 +72,12 @@ class Satellite(arcade.Sprite):
 
 #Class for scrolling back ground image
 class Background(arcade.Sprite):
+
+    speed = SCROLL_SPEED
     def update(self):
 
         # Move the fire
-        self.center_x -= SCROLL_SPEED
+        self.center_x -= self.speed
 
         #If background has finsished scrolling(No image left to show), end the game
         if self.right <0:

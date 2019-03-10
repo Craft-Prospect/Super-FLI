@@ -13,7 +13,6 @@ class Mixin:
 
             if self.update_count == 80:
                 self.add_sprite("fire",(SCREEN_WIDTH//2,SCREEN_HEIGHT//2))
-                self.add_sprite("fire",(2700,200))
 
         #Move the clouds close the player
         elif self.current_state == INS3:
@@ -53,6 +52,6 @@ class Mixin:
 
     def counting(self,t):
         self.update_count += 1
-        if self.update_count == t:
+        if self.update_count >= t:
                 self.update_count = 0
                 self.current_state += 1

@@ -449,6 +449,14 @@ class TestSpriteMovementHandling(unittest.TestCase):
         self.assertEqual(window.cpu_sprite.center_y, game.CPU_START_Y-game.CPU_SPEED)
 
         finish()
+
+class TestDemoVideo(unittest.TestCase):
+    def test_helper_counting(self):
+        window = init()
+        window.counting(2)
+        window.counting(2)
+        window.counting(2)
+    
 #Helper Functions
 
 #Set up game

@@ -350,7 +350,7 @@ class TestHelpers(unittest.TestCase):
         self.assertEqual(os.stat("scores.txt").st_size, 0)
 
 class TestLevelingUp(unittest.TestCase):
-    def test_level_up(self):
+    def test_level_up_even(self):
         game.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
         window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
         window.current_state = game.GAME_PAGE
@@ -362,6 +362,25 @@ class TestLevelingUp(unittest.TestCase):
             update = window.background_even.update()
             update -= window.background_odd.update()
             window.game_background_update(update)
+
+        self.assertEqual(window.level, 2)
+        finish()
+
+
+    def test_level_up_odd(self):
+        game.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
+        window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
+        window.current_state = game.GAME_PAGE
+        window.setup()
+
+        window.background_even.speed = 500
+        window.background_odd.speed = 500
+        for i in range(20):
+            update = window.background_even.update()
+            update -= window.background_odd.update()
+            window.game_background_update(update)
+            if update == -1:
+                window.background_odd.speed = 500
 
         self.assertEqual(window.level, 2)
         finish()
@@ -456,7 +475,6 @@ class TestDemoVideo(unittest.TestCase):
         window.counting(2)
         window.counting(2)
         window.counting(2)
-    
 #Helper Functions
 
 #Set up game

@@ -4,8 +4,8 @@ import pygame
 class Mixin:
     def setup_splash(self):
         if not self.Test:
-            pygame.mixer.music.load("Music/sounds/poweron.wav")
-            pygame.mixer.music.play(1)
+            s = pygame.mixer.Sound("Music/sounds/poweron.wav")
+            s.play()
 
     def draw_splash(self):
         #Load background image

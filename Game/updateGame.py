@@ -1,4 +1,5 @@
 from sprites import *
+import random
 
 class Mixin:
     def game_update(self):
@@ -35,9 +36,8 @@ class Mixin:
         if not self.cpu_sprite.active and not self.player_sprite.active:
             self.current_state=END_PAGE
 
-        if len(self.clouds_list) <3 and len(self.cloud_data) > 0:
-            item = self.cloud_data.pop(0)
-            self.add_sprite(item[0], item[1])
+        if len(self.clouds_list) <=self.clouds_limit:
+            self.add_sprite("cloud")
 
 
 
@@ -59,22 +59,32 @@ class Mixin:
 
     def game_background_update(self, update):
 
-        if(self.final_background):
-            if (update == 1):
-                return
-            elif (update == -1):
-                self.current_state = END_PAGE
+        if(self.final_background_odd and self.final_background_even):
+            self.level_up()
+            return
+
+
+        #Else if background has scrolled off
+        elif(update != 0):
+
+            if (self.final_background_odd or self.final_background_even):
+                self.final_background_even = True
+                self.final_background_odd = True
                 return
 
-        elif(update != 0):
             background =  Background(self.source[self.background_index], BACKGROUND_SCALING)
             background.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
             background.center_y = SCREEN_HEIGHT/2
+
+            self.background_index += 1
 
             if(update == 1):
                 #Else create a new even background, off screen, to scroll after the next odd one
                 self.background_even = background
                 self.background_list.append(self.background_even)
+
+                if (self.background_index == len(self.source)):
+                    self.final_background_even = True
 
             #If the odd background has reached the end of the screen
             elif(update == -1):
@@ -82,11 +92,11 @@ class Mixin:
                 self.background_odd = background
                 self.background_list.append(self.background_odd)
 
-            self.background_index += 1
+                if (self.background_index == len(self.source)):
+                    self.final_background_odd = True
+
+            #Get NN data and add fires
             self.add_new_data()
-            #If there's no backgrounds left
-            if (self.background_index == len(self.source)):
-                self.final_background = True
 
 
     def cloud_damages(self,sprite):
@@ -97,3 +107,22 @@ class Mixin:
             if sprite.health <= 0:
                 sprite.active = False
                 sprite.kill()
+            if sprite == self.cpu_sprite:
+                self.avoid_cloud(sprite,cloud)
+        if sprite == self.cpu_sprite and len(hit_list) == 0:
+            sprite.avoid = None
+
+
+    def avoid_cloud(self,sprite,cloud):
+
+        value = random.randint(0,40)
+        if sprite.difficulty <= value:
+            if sprite.center_x <= cloud.center_x:
+                sprite.avoid = ["left"]
+            else:
+                sprite.avoid = ["right"]
+
+            if sprite.center_y <= cloud.center_y:
+                sprite.avoid.append("down")
+            else:
+                sprite.avoid.append("up")

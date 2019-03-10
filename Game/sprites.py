@@ -9,6 +9,8 @@ class Satellite(arcade.Sprite):
     active = True
     speed = MOVEMENT_SPEED
     track_speed = CPU_TRACK_SPEED
+    avoid = None
+    difficulty = 10
 
     #Normal update called when screen is refreshed
     def update(self):
@@ -29,33 +31,44 @@ class Satellite(arcade.Sprite):
     #Addtional update called for CPU player. Moves CPU towards Fire or Player
     def cpu_update(self, Player, Fire = None):
 
+        if self.avoid != None:
+            if self.avoid[0] == "left":
+                self.center_x -=self.speed
+            else:
+                self.center_x += self.speed
+
+            if self.avoid[1] == "up":
+                self.center_y += self.speed
+            else:
+                self.center_y -= self.speed
+
         #If fire is there, track it else, track player
 
         #For X co-ordinates if the cpu is furhter left that the fire and there's a fire on the screen
-        if (Fire and self.center_x <Fire.center_x and Fire.center_x < (SCREEN_WIDTH-10)):
-            self.center_x += self.speed
-        #Else if there's a fire on the screen and the CPU is to the right of it
-        elif (Fire and self.center_x > Fire.center_x and Fire.center_x < (SCREEN_WIDTH-10)):
-            self.center_x -= self.speed
-
-        #Else if the fire is off-screen, follow the player
         else:
-            if (self.center_x <Player.center_x):
-                self.center_x += self.track_speed
-            elif(self.center_x > Player.center_x):
-                self.center_x -= self.track_speed
+            if (Fire and self.center_x <Fire.center_x and Fire.center_x < (SCREEN_WIDTH-10)):
+                self.center_x += self.speed
+                #Else if there's a fire on the screen and the CPU is to the right of it
+            elif (Fire and self.center_x > Fire.center_x and Fire.center_x < (SCREEN_WIDTH-10)):
+                self.center_x -= self.speed
 
-        #Same as above except for Y co-ordinates
-        if (Fire and self.center_y <Fire.center_y and Fire.center_x < (SCREEN_WIDTH-10)):
-            self.center_y +=self.speed
-        elif (Fire and self.center_y > Fire.center_y and Fire.center_x < (SCREEN_WIDTH-10)):
-            self.center_y -= self.speed
-        else:
-            if (self.center_y <Player.center_y):
-                self.center_y += self.track_speed
-            elif(self.center_y > Player.center_y):
-                self.center_y -= self.track_speed
+                #Else if the fire is off-screen, follow the player
+            else:
+                if (self.center_x <Player.center_x):
+                    self.center_x += self.track_speed
+                elif(self.center_x > Player.center_x):
+                    self.center_x -= self.track_speed
 
+            #Same as above except for Y co-ordinates
+            if (Fire and self.center_y <Fire.center_y and Fire.center_x < (SCREEN_WIDTH-10)):
+                self.center_y +=self.speed
+            elif (Fire and self.center_y > Fire.center_y and Fire.center_x < (SCREEN_WIDTH-10)):
+                self.center_y -= self.speed
+            else:
+                if (self.center_y <Player.center_y):
+                    self.center_y += self.track_speed
+                elif(self.center_y > Player.center_y):
+                    self.center_y -= self.track_speed
 
 #Class for scrolling back ground image
 class Background(arcade.Sprite):

@@ -32,7 +32,9 @@ HEALTH = 100
 BUTTON = 2
 
 #Image source (global variable so can be used in testing)
-SOURCE=["images/background2.png","images/background3.png", "images/background2.png", "images/background3.png","images/sea.png"]
+LVL1=["images/LVL1/lvl1.png", "images/LVL1/background1.png","images/LVL1/background2.png", "images/LVL1/background3.png", "images/LVL1/background4.png","images/sea.png"]
+LVL2=["images/LVL2/lvl2.png", "images/LVL2/background1.png","images/LVL2/background2.png", "images/LVL2/background3.png", "images/LVL2/background4.png","images/sea.png"]
+SOURCE = [LVL1,LVL2]
 NNDir = "NNData/"
 #PLayer's score for saving in Highscore file
 Final_score = 0

@@ -1,6 +1,9 @@
 from sprites import *
 import pygame
 import random
+import os
+import subprocess
+
 
 class Mixin:
     #Will be used by NN to generate newly identified events
@@ -33,7 +36,13 @@ class Mixin:
 
     def add_new_data(self):
         fileName = self.NNDir + "background" + str(self.background_index) + "-fire.txt"
-
+        picture = self.NNDir + "background" + str(self.background_index) + "-fire."
+        Network_command = "cd ../yolo_tiny/ && ./darknet detector test cfg/obj.data cfg/tiny-yolo.cfg backup/tiny-yolo_2000.weights screenshot236.png"
+        """
+        subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', '../yolo_tiny/screenshot236.png' ])
+        subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', "../yolo_tiny/screenshot236.png" ])
+        #os.system(Network_command)
+        """
         with open(fileName) as f:
             lines = f.readlines()
 

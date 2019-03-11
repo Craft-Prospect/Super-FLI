@@ -1,5 +1,7 @@
 from sprites import *
 import random
+import subprocess
+import sys
 
 class Mixin:
     def game_update(self):
@@ -73,6 +75,9 @@ class Mixin:
                 return
 
             background =  Background(self.source[self.background_index], BACKGROUND_SCALING)
+            print("**************************")
+            print(self.background_index)
+            print("**************************")
             background.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
             background.center_y = SCREEN_HEIGHT/2
 
@@ -82,9 +87,19 @@ class Mixin:
                 #Else create a new even background, off screen, to scroll after the next odd one
                 self.background_even = background
                 self.background_list.append(self.background_even)
-
+                
                 if (self.background_index == len(self.source)):
                     self.final_background_even = True
+                
+                #run the new image through the NN
+                print(self.background_index)
+                picture = 'images/LVL1/background%d.png' % self.background_index
+                print(picture)
+                log = open('test.txt', 'a')
+                with open("NNData/stdout.txt", "wb") as out:
+                    subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
+                
+                #subprocess.run("../yolo_tiny/darknet detector test ../yolo_tiny/cfg/obj.data ../yolo_tiny/cfg/tiny-yolo.cfg ../yolo_tiny/backup/tiny-yolo_2000.weights "+ picture + " > testing.txt", shell=True, check=True)
 
             #If the odd background has reached the end of the screen
             elif(update == -1):
@@ -94,9 +109,11 @@ class Mixin:
 
                 if (self.background_index == len(self.source)):
                     self.final_background_odd = True
-
+                #run the new image through the NN
+                print(self.background_index)
             #Get NN data and add fires
             self.add_new_data()
+            #self.network()
 
 
     def cloud_damages(self,sprite):

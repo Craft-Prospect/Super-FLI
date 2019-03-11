@@ -1,5 +1,6 @@
 from sprites import *
 import pygame
+import subprocess
 
 class Mixin:
    #Setgame variables
@@ -121,4 +122,11 @@ class Mixin:
         self.background_index = 1
         self.final_background_odd = False
         self.final_background_even = False
+        
+        picture = "images/" + "LVL1/" + "background" + str(self.background_index) + ".png"
+        if self.background_index == 1:
+            print("FIRST BACKGROUND************************************************")
+            with open("NNData/stdout.txt", "wb") as out:
+                subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
+
         self.add_new_data()

@@ -94,12 +94,12 @@ class Mixin:
                 #run the new image through the NN
                 print(self.background_index)
                 picture = 'images/LVL1/background%d.png' % self.background_index
-                print(picture)
-                log = open('test.txt', 'a')
+                
+                
                 with open("NNData/stdout.txt", "wb") as out:
                     subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
                 
-                #subprocess.run("../yolo_tiny/darknet detector test ../yolo_tiny/cfg/obj.data ../yolo_tiny/cfg/tiny-yolo.cfg ../yolo_tiny/backup/tiny-yolo_2000.weights "+ picture + " > testing.txt", shell=True, check=True)
+                
 
             #If the odd background has reached the end of the screen
             elif(update == -1):
@@ -109,6 +109,10 @@ class Mixin:
 
                 if (self.background_index == len(self.source)):
                     self.final_background_odd = True
+                picture = 'images/LVL1/background%d.png' % self.background_index
+                print(self.background_index)
+                with open("NNData/stdout.txt", "wb") as out:
+                    subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
                 #run the new image through the NN
                 print(self.background_index)
             #Get NN data and add fires

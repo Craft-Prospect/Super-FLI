@@ -1,8 +1,6 @@
-#Scaling for sprites
+#Scaling for sprites (Multiply size of sprite's image by a factor)
 SPRITE_SCALING_POINTER = 1
 SPRITE_SCALING_KEY = 1
-
-#Set sprite sizes
 SPRITE_SCALING_PLAYER = 1
 SPRITE_SCALING_FIRE = 1
 SPRITE_SCALING_CLOUD = 1
@@ -31,11 +29,12 @@ HEALTH = 100
 #Number of buttons in the menu
 BUTTON = 2
 
-#Image source (global variable so can be used in testing)
+#Image sources
 LVL1=["images/LVL1/lvl1.png", "images/LVL1/background1.png","images/LVL1/background2.png", "images/LVL1/background3.png", "images/LVL1/background4.png","images/sea.png"]
 LVL2=["images/LVL2/lvl2.png", "images/LVL2/background1.png","images/LVL2/background2.png", "images/LVL2/background3.png", "images/LVL2/background4.png","images/sea.png"]
 SOURCE = [LVL1,LVL2]
 NNDir = "NNData/"
+
 #PLayer's score for saving in Highscore file
 Final_score = 0
 

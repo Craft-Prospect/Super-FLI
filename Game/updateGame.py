@@ -29,19 +29,15 @@ class Mixin:
                 self.cpu_sprite.cpu_update(self.player_sprite)
             self.cpu_list.update()
 
+            self.check_fire_collison(self.cpu_sprite)
             self.cloud_damages(self.cpu_sprite)
 
-            self.check_fire_collison(self.cpu_sprite)
-
         if not self.cpu_sprite.active and not self.player_sprite.active:
+            self.game_over_setup()
             self.current_state=END_PAGE
 
         if len(self.clouds_list) <=self.clouds_limit:
             self.add_sprite("cloud")
-
-
-
-
 
     def game_joystick_update(self):
         # Set a "dead zone" to prevent drive from a centered joystick
@@ -62,7 +58,6 @@ class Mixin:
         if(self.final_background_odd and self.final_background_even):
             self.level_up()
             return
-
 
         #Else if background has scrolled off
         elif(update != 0):
@@ -106,6 +101,8 @@ class Mixin:
             sprite.health -= cloud.damage
             if sprite.health <= 0:
                 sprite.active = False
+                if sprite == self.player_sprite:
+                    self.player_score = self.player_sprite.score
                 sprite.kill()
             if sprite == self.cpu_sprite:
                 self.avoid_cloud(sprite,cloud)

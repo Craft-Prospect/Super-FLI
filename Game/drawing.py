@@ -23,7 +23,6 @@ class Mixin:
             self.draw_game()
 
         elif self.current_state == END_PAGE:
-            self.draw_game()
             self.draw_game_over()
 
         elif self.current_state == ENTER_NAME:

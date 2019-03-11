@@ -1,5 +1,3 @@
 
  seen 64 
-images/LVL1/background1.png: Predicted in 2327.890000 milli-seconds.
-Fire: 48%
-(521,300)
+images/LVL1/background5.png: Predicted in 2543.386000 milli-seconds.

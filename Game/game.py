@@ -128,6 +128,8 @@ class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin,
 
         self.clouds_limit = 3
 
+        self.SOURCE = SOURCE
+
 
     def update(self, delta_time):
 

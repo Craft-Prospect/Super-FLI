@@ -1,9 +1,11 @@
 image: blang/latex
-build:
+Test:
+  stage: test
   script:
-    - latexmk -pdf -cd docs/dissertation/dissertation.tex
-  artifacts:
-    paths:
-     - "*.pdf"
+    - cd Game
+    - pip3 install -r requirements.txt
+    - xvfb-run -a python3 tests.py
+
+
 
 

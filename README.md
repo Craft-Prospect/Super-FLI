@@ -11,6 +11,12 @@ Arcade game that uses a Recurrent Neural Network. User and CPU compete to captur
 
 * Requires python 3 to run
 
+* Install dependencies
+
+'''
+apt update && sudo apt install -y python3-dev python3-pip libjpeg-dev zlib1g-dev python-gst-1.0
+'''
+
 * Clone repository
 
 ```
@@ -21,9 +27,15 @@ git clone "http://stgit.dcs.gla.ac.uk/tp3-2018-ese3/dissertation"
 
 [http://arcade.academy/installation.html](http://arcade.academy/installation.html)
 
+or alternatively use
+
+'''
+pip3 install -r requirements.txt
+'''
 
 **How to run**
 
+Inside the cloned reposistory, run the following commands
 ```
 cd Game
 python3 game.py

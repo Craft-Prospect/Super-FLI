@@ -79,6 +79,9 @@ class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin,
 
         texture = arcade.load_texture("images/instruct_1.png")
         self.instructions.append(texture)
+
+        texture = arcade.load_texture("images/about.png")
+        self.instructions.append(texture)
         #Menu buttons
         self.buttons = None
         self.start_button = None

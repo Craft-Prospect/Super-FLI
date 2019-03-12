@@ -20,13 +20,8 @@ class Mixin:
         self.player_sprite.center_y = PLAYER_START_Y
         self.player_list.append(self.player_sprite)
 
-        #Set up CPU
-        self.cpu_sprite= Satellite("images/cpu.png", SPRITE_SCALING_PLAYER)
-        self.cpu_sprite.center_x = CPU_START_X
-        self.cpu_sprite.center_y = CPU_START_Y
-        self.cpu_sprite.speed = CPU_SPEED
-        self.cpu_list.append(self.cpu_sprite)
-
+        self.setup_cpu()
+        
         self.level = 1
         self.source = self.SOURCE[self.level-1]
 
@@ -82,6 +77,8 @@ class Mixin:
             pygame.mixer.stop()
             pygame.mixer.music.load("Music/ResistorAnthemsII/end.mp3")
             pygame.mixer.music.play(-1)
+        if self.player_sprite.active:
+            self.player_score = self.player_sprite.score
 
     #Draw game over screen
     def draw_game_over(self):
@@ -101,6 +98,14 @@ class Mixin:
             health = 0
 
         return health
+
+    def setup_cpu(self):
+        #Set up CPU
+        self.cpu_sprite= Satellite("images/cpu.png", SPRITE_SCALING_PLAYER)
+        self.cpu_sprite.center_x = CPU_START_X
+        self.cpu_sprite.center_y = CPU_START_Y
+        self.cpu_sprite.speed = CPU_SPEED
+        self.cpu_list.append(self.cpu_sprite)
 
     def background_setup(self):
         #Set up background

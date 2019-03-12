@@ -381,6 +381,7 @@ class TestLevelingUp(unittest.TestCase):
 
         window.background_even.speed = 500
         window.background_odd.speed = 500
+        window.NNDir = "TestDir/"
         for i in range(20):
             update = window.background_even.update()
             update -= window.background_odd.update()

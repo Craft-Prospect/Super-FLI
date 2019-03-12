@@ -14,6 +14,14 @@ class Mixin:
         elif self.current_state == ENTER_NAME:
             self.enter_keyboard(key)
 
+        elif self.current_state >= 10:
+            if key == arcade.key.SPACE:
+                if self.current_state <19:
+                    self.current_state += 1
+                else:
+                    self.game_setup()
+                    self.current_state = GAME_PAGE
+
     def player_keyboard(self,key):
         """Pressing arrow keys """
         if key == arcade.key.UP:

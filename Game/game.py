@@ -19,12 +19,13 @@ import drawing
 import updateGame
 import updateIns
 import updateKeyboard
+import updateMenu
 import splash
 import levels
 import pygame
 
 #Main window
-class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin, levels.Mixin, splash.Mixin, updateGame.Mixin, updateIns.Mixin, updateKeyboard.Mixin, menu.Mixin, instructions.Mixin, demo.Mixin, runGame.Mixin,keyboard.Mixin,highscore.Mixin, arcade.Window):
+class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin, levels.Mixin, splash.Mixin, updateGame.Mixin, updateIns.Mixin, updateKeyboard.Mixin, menu.Mixin, instructions.Mixin, demo.Mixin, runGame.Mixin,keyboard.Mixin,highscore.Mixin,updateMenu.Mixin, arcade.Window):
     #Initalise game variables and window
     def __init__(self, width, height,test):
 
@@ -108,13 +109,12 @@ class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin,
         self.update_count = 0
 
         # Get a list of all the game controllers that are plugged in
-        joysticks = arcade.get_joysticks()
+        self.joysticks = arcade.get_joysticks()
 
         # If we have a game controller plugged in, grab it and
         # make an instance variable out of it.
-        joysticks = arcade.get_joysticks()
-        if joysticks:
-            self.joystick = joysticks[0]
+        if self.joysticks:
+            self.joystick = self.joysticks[0]
             self.joystick.open()
             self.joystick.on_joybutton_press = self.on_joybutton_press
             self.joystick.on_joybutton_release = self.on_joybutton_release
@@ -141,7 +141,12 @@ class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin,
 
     def update(self, delta_time):
 
-        if self.current_state == GAME_PAGE:
+        if self.current_state == START_PAGE:
+            if self.joysticks:
+                self.startMenu_update()
+            
+
+        elif self.current_state == GAME_PAGE:
             self.game_update()
 
         elif self.current_state == ENTER_NAME:

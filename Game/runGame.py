@@ -3,10 +3,10 @@ import pygame
 
 class Mixin:
    #Setgame variables
-    def setup(self):
+    def game_setup(self):
         if not self.Test:
                 pygame.mixer.music.load("Music/ResistorAnthemsII/main.mp3")
-                pygame.mixer.music.play(-3)
+                pygame.mixer.music.play(-1)
 
         # Sprite lists
         self.fire_list = arcade.SpriteList()
@@ -21,7 +21,7 @@ class Mixin:
         self.player_list.append(self.player_sprite)
 
         self.setup_cpu()
-        
+
         self.level = 1
         self.source = self.SOURCE[self.level-1]
 

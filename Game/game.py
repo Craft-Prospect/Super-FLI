@@ -128,6 +128,11 @@ class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin,
 
         if not self.Test:
             self.lvl_up =  pygame.mixer.Sound("Music/sounds/lvlup.wav")
+            self.player_sound = pygame.mixer.Sound("Music/sounds/Ching.wav")
+            self.cpu_sound =  pygame.mixer.Sound("Music/sounds/beep.wav")
+        else:
+            self.player_sound = None
+            self.cpu_sound = None
 
         self.clouds_limit = 3
 

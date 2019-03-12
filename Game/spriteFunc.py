@@ -48,13 +48,13 @@ class Mixin:
         hit_list = arcade.check_for_collision_with_list(sprite,self.fire_list)
 
         if sprite == self.player_sprite:
-            sound = arcade.sound.load_sound("Music/sounds/Ching.wav")
+            sound = self.player_sound
         else:
-            sound = arcade.sound.load_sound("Music/sounds/beep.wav")
+            sound = self.cpu_sound
 
         # Loop through each colliding fire, remove it, and add to the cpu_score.
         for fire in hit_list:
             if not self.Test:
-                arcade.sound.play_sound(sound)
+                sound.play()
             fire.kill()
             sprite.score += 100

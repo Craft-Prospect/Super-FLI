@@ -7,12 +7,9 @@ def main():
     pygame.init()
     pygame.mixer.init()
     window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT,False)
-    window.setup()
     #network()
     #window.set_update_rate(1/10)
     arcade.run()
 
 if __name__ == "__main__":
     main()
-  
-

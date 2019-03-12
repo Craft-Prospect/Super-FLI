@@ -39,23 +39,23 @@ class Satellite(arcade.Sprite):
 
             else:
                 if self.avoid[0] == "left":
-                    if self.left < 20:
+                    if self.left < 50:
                         self.center_x += 2*self.speed
                     else:
                         self.center_x -=2*self.speed
                 else:
-                    if self.right > SCREEN_WIDTH - 20:
+                    if self.right > SCREEN_WIDTH - 50:
                         self.center_x -= 2*self.speed
                     else:
                         self.center_x += 2*self.speed
 
                 if self.avoid[1] == "up":
-                    if self.top > SCREEN_HEIGHT - 20:
+                    if self.top > SCREEN_HEIGHT - 50:
                         self.center_y -= 2*self.speed
                     else:
                         self.center_y += 2*self.speed
                 else:
-                    if self.bottom < 20:
+                    if self.bottom < 50:
                         self.center_y += 2*self.speed
                     else:
                         self.center_y -= 2*self.speed

@@ -358,7 +358,7 @@ class TestLevelingUp(unittest.TestCase):
         window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
         window.current_state = game.GAME_PAGE
         window.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
-        window.setup()
+        window.game_setup()
 
         window.background_even.speed = 500
         window.background_odd.speed = 500
@@ -375,7 +375,7 @@ class TestLevelingUp(unittest.TestCase):
         window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
         window.current_state = game.GAME_PAGE
         window.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
-        window.setup()
+        window.game_setup()
 
         window.background_even.speed = 500
         window.background_odd.speed = 500
@@ -394,7 +394,7 @@ class TestLevelingUp(unittest.TestCase):
         window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
         window.current_state = game.GAME_PAGE
         window.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
-        window.setup()
+        window.game_setup()
 
         window.level_up()
         window.level_up()
@@ -494,7 +494,7 @@ def init(clouds=[],fire=[],source=["images/LVL1/background1.png","images/LVL1/ba
     window.source = source
     window.NNDir = "TestDir/"
     window.clouds_limit = 0
-    window.setup()
+    window.game_setup()
     change_game_sprites(window,clouds)
     change_game_sprites(window,fire)
     return window

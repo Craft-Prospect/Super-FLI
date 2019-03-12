@@ -45,5 +45,5 @@ class Mixin:
             global PLAYER_START_Y
             PLAYER_START_Y = self.player_sprite.center_y
 
-            self.setup()
+            self.game_setup()
             self.current_state = GAME_PAGE

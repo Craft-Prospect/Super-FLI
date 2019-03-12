@@ -1,3 +1,0 @@
-
- seen 64 
-images/sea.png: Predicted in 2410.950000 milli-seconds.

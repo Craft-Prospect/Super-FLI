@@ -19,35 +19,4 @@ Game/scores.txt
 Game/htmlcov
 
 #Neural Network files
-Game/3rdparty/
-Game/CMakeLists.txt
-Game/CMakeSettings.json
-Game/LICENSE
-Game/Makefile
-Game/README.md
-Game/appveyor.yml
-Game/backup/
-Game/build.ps1
-Game/build.sh
-Game/cfg/
-Game/cmake/
-Game/coords.txt
-Game/darknet
-Game/darknet.py
-Game/darknet_video.py
-Game/image_yolov2.sh
-Game/image_yolov3.sh
-Game/include/
-Game/json_mjpeg_streams.sh
-Game/net_cam_v3.sh
-Game/obj.names
-Game/obj/
-Game/predictions.jpg
-Game/scripts/
-Game/src/
-Game/test.txt
-Game/train.txt
-Game/video_v2.sh
-Game/video_yolov3.sh
-Game/yolo.weights
-
+Game/NNData/*

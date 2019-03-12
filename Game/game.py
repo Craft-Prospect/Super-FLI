@@ -136,13 +136,12 @@ class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin,
 
         self.clouds_limit = 3
 
-
     def update(self, delta_time):
 
         if self.current_state == START_PAGE:
             if self.joysticks:
                 self.startMenu_update()
-            
+
 
         elif self.current_state == GAME_PAGE:
             self.game_update()

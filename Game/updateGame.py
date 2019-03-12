@@ -93,14 +93,17 @@ class Mixin:
                 
                 #run the new image through the NN
                 print(self.background_index)
-                picture = 'background%d.png' % (self.background_index+1)
-                directory = 'images/LVL1/'
+                #picture = 'background%d.png' % (self.background_index+1)
+                #directory = 'images/LVL1/'
                 text_file = 'background%d-fire.txt' % (self.background_index+1)
-                if self.final_background_even == False:
+                
+                if self.background_index  <  len(self.source):
+                    picture = self.source[self.background_index]
+                    print(len(self.source))
                     with open("NNData/"+text_file, "wb") as out:
                         print(text_file)
                         print("**************************************")
-                        subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', directory+picture], stdout=out)
+                        subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
                 
                 
 
@@ -113,16 +116,18 @@ class Mixin:
                 if (self.background_index == len(self.source)):
                     self.final_background_odd = True
                 
-                picture = 'background%d.png' % (self.background_index+1)
-                directory = 'images/LVL1/'
+                #icture = 'background%d.png' % (self.background_index+1)
+                #directory = 'images/LVL1/'
+                #picture = self.source[self.background_index+1]
                 text_file = 'background%d-fire.txt' % (self.background_index+1)
 
-                if(self.final_background_odd == False):
+                if self.background_index < len(self.source):
                     print(text_file)
                     print("**************************************")
-                    
+                    picture = self.source[self.background_index]
+
                     with open("NNData/"+text_file, "wb") as out:
-                        subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', directory+picture], stdout=out)
+                        subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
                     #run the new image through the NN
                     print(self.background_index)
             

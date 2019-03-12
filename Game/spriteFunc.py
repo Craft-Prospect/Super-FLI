@@ -35,6 +35,8 @@ class Mixin:
                     self.clouds_list.append(detected)
 
     def add_new_data(self):
+        print("Background index")
+        print(self.background_index)
         fileName = self.NNDir + "background" + str(self.background_index) + "-fire.txt"
         picture = "images/" + "LVL1/" + "background" + str(self.background_index) + ".png"
         Network_command = "cd ../yolo_tiny/ && ./darknet detector test cfg/obj.data cfg/tiny-yolo.cfg backup/tiny-yolo_2000.weights screenshot236.png"
@@ -42,10 +44,10 @@ class Mixin:
 
         with open(fileName) as f:
             lines = f.readlines()
-
             line = lines[-1].strip()
-            line = eval(line, {"__builtins__": {}})
-            self.add_sprite("fire",(line[0] + SCREEN_WIDTH, SCREEN_HEIGHT - line[1]))
+            if line[0] == '(':
+                line = eval(line, {"__builtins__": {}})
+                self.add_sprite("fire",(line[0] + SCREEN_WIDTH, SCREEN_HEIGHT - line[1]))
 
     def check_fire_collison(self,sprite):
         # Generate a list of all emergencies that collided with the satellite.

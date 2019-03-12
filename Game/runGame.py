@@ -123,12 +123,10 @@ class Mixin:
         self.final_background_odd = False
         self.final_background_even = False
         
-        picture = "images/" + "LVL1/" + "background" + str(self.background_index) + ".png"
-        """
+        #Look at the second picture while the game is booting up
+        picture = self.source[2]
         print(str(self.background_index))
         if self.background_index == 1:
-            print("FIRST BACKGROUND************************************************")
-            with open("NNData/stdout.txt", "wb") as out:
+            with open("NNData/background2-fire.txt", "wb") as out:
                 subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
-        """
         self.add_new_data()

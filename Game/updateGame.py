@@ -93,11 +93,11 @@ class Mixin:
                 
                 #run the new image through the NN
                 print(self.background_index)
-                picture = 'images/LVL1/background%d.png' % self.background_index
-                
-                
-                with open("NNData/stdout.txt", "wb") as out:
-                    subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
+                picture = 'background%d.png' % (self.background_index+1)
+                directory = 'images/LVL1/'
+                text_file = 'background%d-fire.txt' % (self.background_index+1)
+                with open("NNData/"+text_file, "wb") as out:
+                    subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', directory+picture], stdout=out)
                 
                 
 

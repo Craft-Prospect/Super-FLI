@@ -451,14 +451,16 @@ class TestSpriteMovementHandling(unittest.TestCase):
     def test_CPU_avoids_cloud_right_below(self):
         game.STATE = game.GAME_PAGE
         window = init(clouds = [("cloud", (0,0))])
+        window.cpu_sprite.center_x = 300
+        window.cpu_sprite.center_y = 300
         window.clouds_list[0].center_x = window.cpu_sprite.center_x + 10
         window.clouds_list[0].center_y = window.cpu_sprite.center_y - 10
 
         window.cloud_damages(window.cpu_sprite)
         window.cpu_sprite.cpu_update(window.player_sprite)
         self.assertEqual(window.cpu_sprite.avoid, ["left", "up"])
-        self.assertEqual(window.cpu_sprite.center_x, game.CPU_START_X-game.CPU_SPEED)
-        self.assertEqual(window.cpu_sprite.center_y, game.CPU_START_Y+game.CPU_SPEED)
+        self.assertEqual(window.cpu_sprite.center_x, 300-2*game.CPU_SPEED)
+        self.assertEqual(window.cpu_sprite.center_y, 300+2*game.CPU_SPEED)
 
         finish()
 
@@ -471,17 +473,20 @@ class TestSpriteMovementHandling(unittest.TestCase):
         window.cloud_damages(window.cpu_sprite)
         window.cpu_sprite.cpu_update(window.player_sprite)
         self.assertEqual(window.cpu_sprite.avoid, ["right", "down"])
-        self.assertEqual(window.cpu_sprite.center_x, game.CPU_START_X+game.CPU_SPEED)
-        self.assertEqual(window.cpu_sprite.center_y, game.CPU_START_Y-game.CPU_SPEED)
+        self.assertEqual(window.cpu_sprite.center_x, game.CPU_START_X+2*game.CPU_SPEED)
+        self.assertEqual(window.cpu_sprite.center_y, game.CPU_START_Y-2*game.CPU_SPEED)
 
         finish()
 
 class TestDemoVideo(unittest.TestCase):
     def test_helper_counting(self):
         window = init()
+        window.current_state = 3
         window.counting(2)
         window.counting(2)
         window.counting(2)
+        self.assertEqual(window.current_state,4)
+        finish()
 #Helper Functions
 
 #Set up game

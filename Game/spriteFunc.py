@@ -9,7 +9,7 @@ class Mixin:
     #Will be used by NN to generate newly identified events
     def add_sprite(self,event,coOrds = None):
 
-     if (coOrds == None) or (coOrds[0] >= 0 and coOrds[1] >=0 and coOrds[1] < SCREEN_HEIGHT): 
+     if (coOrds == None) or (coOrds[0] >= 0 and coOrds[1] >=0 and coOrds[1] < SCREEN_HEIGHT):
 
                 if  event == "fire":
                     # Create the fire instance
@@ -35,12 +35,10 @@ class Mixin:
                     self.clouds_list.append(detected)
 
     def add_new_data(self):
-        print("Background index")
-        print(self.background_index)
         fileName = self.NNDir + "background" + str(self.background_index) + "-fire.txt"
         picture = "images/" + "LVL1/" + "background" + str(self.background_index) + ".png"
         Network_command = "cd ../yolo_tiny/ && ./darknet detector test cfg/obj.data cfg/tiny-yolo.cfg backup/tiny-yolo_2000.weights screenshot236.png"
-        
+
 
         with open(fileName) as f:
             lines = f.readlines()

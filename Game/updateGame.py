@@ -75,9 +75,6 @@ class Mixin:
                 return
 
             background =  Background(self.source[self.background_index], BACKGROUND_SCALING)
-            print("**************************")
-            print(self.background_index)
-            print("**************************")
             background.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
             background.center_y = SCREEN_HEIGHT/2
 
@@ -87,23 +84,20 @@ class Mixin:
                 #Else create a new even background, off screen, to scroll after the next odd one
                 self.background_even = background
                 self.background_list.append(self.background_even)
-                
+
                 if (self.background_index == len(self.source)):
                     self.final_background_even = True
-                
+
                 #run the new image through the NN
-                print(self.background_index)
-                #picture = 'background%d.png' % (self.background_index+1)
-                #directory = 'images/LVL1/'
                 text_file = 'background%d-fire.txt' % (self.background_index+1)
-                
-                #look one further image ahead and run it thorugh the network 
-                if self.background_index  <  len(self.source):
+
+                #look one further image ahead and run it thorugh the network
+                if self.background_index  <  len(self.source) and not self.Test:
                     picture = self.source[self.background_index]
                     with open("NNData/"+text_file, "wb") as out:
                         subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
-                
-                
+
+
 
             #If the odd background has reached the end of the screen
             elif(update == -1):
@@ -113,19 +107,19 @@ class Mixin:
 
                 if (self.background_index == len(self.source)):
                     self.final_background_odd = True
-                
-                
+
+
                 #look one image further ahead and run it through the network
                 text_file = 'background%d-fire.txt' % (self.background_index+1)
-                if self.background_index < len(self.source):
+                if self.background_index < len(self.source) and not self.Test:
                     picture = self.source[self.background_index]
                     with open("NNData/"+text_file, "wb") as out:
                         subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
-                    
-            
+
+
             #Get NN data and add fires
             self.add_new_data()
-            
+
 
 
     def cloud_damages(self,sprite):

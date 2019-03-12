@@ -1,12 +1,15 @@
 from sprites import *
 import pygame
 import random
+import os
+import subprocess
+
 
 class Mixin:
     #Will be used by NN to generate newly identified events
     def add_sprite(self,event,coOrds = None):
 
-     if (coOrds == None) or (coOrds[0] >= 0 and coOrds[1] >=0 and coOrds[1] < SCREEN_HEIGHT):
+     if (coOrds == None) or (coOrds[0] >= 0 and coOrds[1] >=0 and coOrds[1] < SCREEN_HEIGHT): 
 
                 if  event == "fire":
                     # Create the fire instance
@@ -16,8 +19,6 @@ class Mixin:
                     #Create cloud instance
                     detected=Cloud("images/clouds.png", SPRITE_SCALING_CLOUD)
                     detected.damage = self.cloud_damage
-                    detected.points = ((-161, 0), (-128.5, 26.0), (-91.5, 51.0), (-66.5, 50.0),(-11.5,50), (33.5,66), (65.5,47), (120.5,26),(144.5,-26),(133.5,-78),(-47.5,-73),(-74.5,-39), (-114.5,-20), (-128.5, -26.0))
-
 
                 # Position the fire
                 if coOrds != None:
@@ -34,14 +35,19 @@ class Mixin:
                     self.clouds_list.append(detected)
 
     def add_new_data(self):
+        print("Background index")
+        print(self.background_index)
         fileName = self.NNDir + "background" + str(self.background_index) + "-fire.txt"
+        picture = "images/" + "LVL1/" + "background" + str(self.background_index) + ".png"
+        Network_command = "cd ../yolo_tiny/ && ./darknet detector test cfg/obj.data cfg/tiny-yolo.cfg backup/tiny-yolo_2000.weights screenshot236.png"
+        
 
         with open(fileName) as f:
             lines = f.readlines()
-
             line = lines[-1].strip()
-            line = eval(line, {"__builtins__": {}})
-            self.add_sprite("fire",(line[0] + SCREEN_WIDTH, SCREEN_HEIGHT - line[1]))
+            if line[0] == '(':
+                line = eval(line, {"__builtins__": {}})
+                self.add_sprite("fire",(line[0] + SCREEN_WIDTH, SCREEN_HEIGHT - line[1]))
 
     def check_fire_collison(self,sprite):
         # Generate a list of all emergencies that collided with the satellite.

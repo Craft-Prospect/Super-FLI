@@ -1,5 +1,7 @@
 from sprites import *
 import random
+import subprocess
+import sys
 
 class Mixin:
     def game_update(self):
@@ -29,15 +31,19 @@ class Mixin:
                 self.cpu_sprite.cpu_update(self.player_sprite)
             self.cpu_list.update()
 
-            self.check_fire_collison(self.cpu_sprite)
             self.cloud_damages(self.cpu_sprite)
 
+            self.check_fire_collison(self.cpu_sprite)
+
         if not self.cpu_sprite.active and not self.player_sprite.active:
-            self.game_over_setup()
             self.current_state=END_PAGE
 
         if len(self.clouds_list) <=self.clouds_limit:
             self.add_sprite("cloud")
+
+
+
+
 
     def game_joystick_update(self):
         # Set a "dead zone" to prevent drive from a centered joystick
@@ -59,6 +65,7 @@ class Mixin:
             self.level_up()
             return
 
+
         #Else if background has scrolled off
         elif(update != 0):
 
@@ -68,6 +75,9 @@ class Mixin:
                 return
 
             background =  Background(self.source[self.background_index], BACKGROUND_SCALING)
+            print("**************************")
+            print(self.background_index)
+            print("**************************")
             background.center_x = SCREEN_WIDTH + SCREEN_WIDTH/2
             background.center_y = SCREEN_HEIGHT/2
 
@@ -77,9 +87,23 @@ class Mixin:
                 #Else create a new even background, off screen, to scroll after the next odd one
                 self.background_even = background
                 self.background_list.append(self.background_even)
-
+                
                 if (self.background_index == len(self.source)):
                     self.final_background_even = True
+                
+                #run the new image through the NN
+                print(self.background_index)
+                #picture = 'background%d.png' % (self.background_index+1)
+                #directory = 'images/LVL1/'
+                text_file = 'background%d-fire.txt' % (self.background_index+1)
+                
+                #look one further image ahead and run it thorugh the network 
+                if self.background_index  <  len(self.source):
+                    picture = self.source[self.background_index]
+                    with open("NNData/"+text_file, "wb") as out:
+                        subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
+                
+                
 
             #If the odd background has reached the end of the screen
             elif(update == -1):
@@ -89,9 +113,19 @@ class Mixin:
 
                 if (self.background_index == len(self.source)):
                     self.final_background_odd = True
-
+                
+                
+                #look one image further ahead and run it through the network
+                text_file = 'background%d-fire.txt' % (self.background_index+1)
+                if self.background_index < len(self.source):
+                    picture = self.source[self.background_index]
+                    with open("NNData/"+text_file, "wb") as out:
+                        subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
+                    
+            
             #Get NN data and add fires
             self.add_new_data()
+            
 
 
     def cloud_damages(self,sprite):
@@ -101,8 +135,6 @@ class Mixin:
             sprite.health -= cloud.damage
             if sprite.health <= 0:
                 sprite.active = False
-                if sprite == self.player_sprite:
-                    self.player_score = self.player_sprite.score
                 sprite.kill()
             if sprite == self.cpu_sprite:
                 self.avoid_cloud(sprite,cloud)

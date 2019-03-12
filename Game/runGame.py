@@ -75,8 +75,8 @@ class Mixin:
         lvl= f"Level: {self.level}"
         arcade.draw_text((lvl), SCREEN_WIDTH//2-10, SCREEN_HEIGHT-20, arcade.color.WHITE, 14)
 
-    #Draw game over screen
-    def draw_game_over(self):
+
+    def setup_game_over(self):
         if not self.Test:
             pygame.mixer.stop()
             pygame.mixer.music.load("Music/ResistorAnthemsII/end.mp3")
@@ -84,6 +84,8 @@ class Mixin:
         if self.player_sprite.active:
             self.player_score = self.player_sprite.score
 
+    #Draw game over screen
+    def draw_game_over(self):
 
         output = "Game Over"
         arcade.draw_text(output, 240, 400, arcade.color.WHITE, 54)

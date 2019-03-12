@@ -37,6 +37,7 @@ class Mixin:
 
         if not self.cpu_sprite.active and not self.player_sprite.active:
             self.current_state=END_PAGE
+            self.setup_game_over()
 
         if len(self.clouds_list) <=self.clouds_limit:
             self.add_sprite("cloud")
@@ -128,6 +129,8 @@ class Mixin:
         for cloud in hit_list:
             sprite.health -= cloud.damage
             if sprite.health <= 0:
+                if sprite == self.player_sprite:
+                    self.player_score = sprite.score
                 sprite.active = False
                 sprite.kill()
             if sprite == self.cpu_sprite:

@@ -5,6 +5,7 @@ class Mixin:
         self.level +=1
         if self.level > len(SOURCE) or  not self.player_sprite.active:
             self.current_state = END_PAGE
+            self.setup_game_over()
         else:
             self.cloud_damage = self.cloud_damage * 2
             self.clouds_list = arcade.SpriteList()

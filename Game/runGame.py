@@ -1,5 +1,6 @@
 from sprites import *
 import pygame
+import subprocess
 
 class Mixin:
    #Setgame variables
@@ -8,6 +9,8 @@ class Mixin:
                 pygame.mixer.music.load("Music/ResistorAnthemsII/main.mp3")
                 pygame.mixer.music.play(-1)
 
+        #s = arcade.sound.load_sound("Music/ResistorAnthems/test.mp3")
+        #arcade.sound.play_sound(s)
         # Sprite lists
         self.fire_list = arcade.SpriteList()
         self.clouds_list = arcade.SpriteList()
@@ -22,14 +25,14 @@ class Mixin:
 
         self.setup_cpu()
 
-        self.level = 1
-        self.source = self.SOURCE[self.level-1]
-
         #Set up background
         self.background_setup()
 
         for i in range(0,self.clouds_limit):
                 self.add_sprite("cloud")
+
+
+        self.level = 1
 
     def draw_game(self):
 
@@ -72,7 +75,8 @@ class Mixin:
         lvl= f"Level: {self.level}"
         arcade.draw_text((lvl), SCREEN_WIDTH//2-10, SCREEN_HEIGHT-20, arcade.color.WHITE, 14)
 
-    def game_over_setup(self):
+    #Draw game over screen
+    def draw_game_over(self):
         if not self.Test:
             pygame.mixer.stop()
             pygame.mixer.music.load("Music/ResistorAnthemsII/end.mp3")
@@ -80,14 +84,15 @@ class Mixin:
         if self.player_sprite.active:
             self.player_score = self.player_sprite.score
 
-    #Draw game over screen
-    def draw_game_over(self):
 
         output = "Game Over"
         arcade.draw_text(output, 240, 400, arcade.color.WHITE, 54)
 
         output = "Click to restart"
         arcade.draw_text(output, 310, 300, arcade.color.WHITE, 24)
+
+        if self.player_sprite.active:
+            self.player_score = self.player_sprite.score
 
     def round_health(self,sprite):
         # Player Health
@@ -125,4 +130,11 @@ class Mixin:
         self.background_index = 1
         self.final_background_odd = False
         self.final_background_even = False
+        
+        #Look at the second picture while the game is booting up
+        picture = self.source[2]
+        print(str(self.background_index))
+        if self.background_index == 1:
+            with open("NNData/background2-fire.txt", "wb") as out:
+                subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
         self.add_new_data()

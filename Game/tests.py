@@ -355,6 +355,7 @@ class TestHelpers(unittest.TestCase):
 
 class TestLevelingUp(unittest.TestCase):
     def test_level_up_even(self):
+        game.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
         window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
         window.current_state = game.GAME_PAGE
         window.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
@@ -372,6 +373,7 @@ class TestLevelingUp(unittest.TestCase):
 
 
     def test_level_up_odd(self):
+        game.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
         window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
         window.current_state = game.GAME_PAGE
         window.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
@@ -379,8 +381,7 @@ class TestLevelingUp(unittest.TestCase):
 
         window.background_even.speed = 500
         window.background_odd.speed = 500
-
-        for i in range(15):
+        for i in range(20):
             update = window.background_even.update()
             update -= window.background_odd.update()
             window.game_background_update(update)
@@ -391,6 +392,7 @@ class TestLevelingUp(unittest.TestCase):
         finish()
 
     def test_game_over_lvl(self):
+        game.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
         window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
         window.current_state = game.GAME_PAGE
         window.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
@@ -449,32 +451,28 @@ class TestSpriteMovementHandling(unittest.TestCase):
     def test_CPU_avoids_cloud_right_below(self):
         game.STATE = game.GAME_PAGE
         window = init(clouds = [("cloud", (0,0))])
-        window.cpu_sprite.center_x = game.SCREEN_WIDTH//2
-        window.cpu_sprite.center_y = game.SCREEN_HEIGHT//2
         window.clouds_list[0].center_x = window.cpu_sprite.center_x + 10
         window.clouds_list[0].center_y = window.cpu_sprite.center_y - 10
 
         window.cloud_damages(window.cpu_sprite)
         window.cpu_sprite.cpu_update(window.player_sprite)
         self.assertEqual(window.cpu_sprite.avoid, ["left", "up"])
-        self.assertEqual(window.cpu_sprite.center_x, game.SCREEN_WIDTH//2-2*game.CPU_SPEED)
-        self.assertEqual(window.cpu_sprite.center_y, game.SCREEN_HEIGHT//2+2*game.CPU_SPEED)
+        self.assertEqual(window.cpu_sprite.center_x, game.CPU_START_X-game.CPU_SPEED)
+        self.assertEqual(window.cpu_sprite.center_y, game.CPU_START_Y+game.CPU_SPEED)
 
         finish()
 
     def test_CPU_avoids_cloud_left_above(self):
         game.STATE = game.GAME_PAGE
         window = init(clouds = [("cloud", (0,0))])
-        window.cpu_sprite.center_x = game.SCREEN_WIDTH//2
-        window.cpu_sprite.center_y = game.SCREEN_HEIGHT//2
         window.clouds_list[0].center_x = window.cpu_sprite.center_x - 10
         window.clouds_list[0].center_y = window.cpu_sprite.center_y + 10
 
         window.cloud_damages(window.cpu_sprite)
         window.cpu_sprite.cpu_update(window.player_sprite)
         self.assertEqual(window.cpu_sprite.avoid, ["right", "down"])
-        self.assertEqual(window.cpu_sprite.center_x, game.SCREEN_WIDTH//2+2*game.CPU_SPEED)
-        self.assertEqual(window.cpu_sprite.center_y, game.SCREEN_HEIGHT//2-2*game.CPU_SPEED)
+        self.assertEqual(window.cpu_sprite.center_x, game.CPU_START_X+game.CPU_SPEED)
+        self.assertEqual(window.cpu_sprite.center_y, game.CPU_START_Y-game.CPU_SPEED)
 
         finish()
 

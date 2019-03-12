@@ -10,7 +10,6 @@ class Satellite(arcade.Sprite):
     speed = MOVEMENT_SPEED
     track_speed = CPU_TRACK_SPEED
     avoid = None
-    last_avoid = None
     difficulty = 10
 
     #Normal update called when screen is refreshed
@@ -33,10 +32,13 @@ class Satellite(arcade.Sprite):
     def cpu_update(self, Player, Fire = None):
 
         if self.avoid != None:
-            if self.last_avoid != None and ((self.avoid[1] != self.last_avoid[1]) or (self.avoid[0] != self.last_avoid[0])):
-                self.center_x += 2*self.speed
+            if self.avoid[0] == "left":
+                self.center_x -=self.speed
+            else:
+                self.center_x += self.speed
 
-
+            if self.avoid[1] == "up":
+                self.center_y += self.speed
             else:
                 if self.avoid[0] == "left":
                     if self.left < 50:
@@ -61,6 +63,7 @@ class Satellite(arcade.Sprite):
                         self.center_y -= 2*self.speed
 
         #If fire is there, track it else, track player
+
         #For X co-ordinates if the cpu is furhter left that the fire and there's a fire on the screen
         else:
             if (Fire and self.center_x <Fire.center_x and Fire.center_x < (SCREEN_WIDTH-10)):
@@ -87,7 +90,6 @@ class Satellite(arcade.Sprite):
                 elif(self.center_y > Player.center_y):
                     self.center_y -= self.track_speed
 
-        self.last_avoid = self.avoid
 #Class for scrolling back ground image
 class Background(arcade.Sprite):
 

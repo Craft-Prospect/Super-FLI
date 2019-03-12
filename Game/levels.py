@@ -3,14 +3,12 @@ from sprites import *
 class Mixin:
     def level_up(self):
         self.level +=1
-        if self.level > len(self.SOURCE) or not self.player_sprite.active:
-            self.level = 1
-            self.game_over_setup()
+        if self.level > len(SOURCE) or  not self.player_sprite.active:
             self.current_state = END_PAGE
         else:
             self.cloud_damage = self.cloud_damage * 2
             self.clouds_list = arcade.SpriteList()
-            self.source = self.SOURCE[self.level-1]
+            self.source = SOURCE[self.level-1]
             if not self.Test:
                 self.lvl_up.play()
             if self.player_sprite.active:

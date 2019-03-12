@@ -19,3 +19,4 @@ Game/htmlcov
 
 #Neural Network files
 Game/NNData/*
+Game/predictions.jpg

@@ -15,12 +15,7 @@ class Mixin:
             self.enter_keyboard(key)
 
         elif self.current_state >= 10:
-            if key == arcade.key.SPACE:
-                if self.current_state <19:
-                    self.current_state += 1
-                else:
-                    self.game_setup()
-                    self.current_state = GAME_PAGE
+            self.ins_skip(key)
 
     def player_keyboard(self,key):
         """Pressing arrow keys """
@@ -110,6 +105,9 @@ class Mixin:
             if self.current_state == GAME_PAGE:
                 self.check_fire_collison(self.player_sprite)
 
+            if self.current_state >= 10:
+                self.ins_skip(arcade.key.SPACE)
+
         if button == 0:
             self.change_state()
 
@@ -119,3 +117,11 @@ class Mixin:
 
     def on_joyhat_motion(self, joystick, hat_x, hat_y):
         print("Hat ({}, {})".format(hat_x, hat_y))
+
+    def ins_skip(self,key):
+        if key == arcade.key.SPACE:
+                if self.current_state <19:
+                    self.current_state += 1
+                else:
+                    self.game_setup()
+                    self.current_state = GAME_PAGE

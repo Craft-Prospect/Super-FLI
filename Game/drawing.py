@@ -19,6 +19,9 @@ class Mixin:
         elif self.current_state == INSTRUCT2:
             self.draw_page(2)
 
+        elif self.current_state == ABOUT:
+            self.draw_about()
+
         elif self.current_state == GAME_PAGE:
             self.draw_game()
 

@@ -207,6 +207,7 @@ class TestPlayerEvents(unittest.TestCase):
 
         self.assertEqual(window.current_state,game.START_PAGE)
 
+        finish()
 #Test PLayer and Satellite Deaths
 class TestDeaths(unittest.TestCase):
 
@@ -272,6 +273,7 @@ class TestDeaths(unittest.TestCase):
         window.update(1)
 
         self.assertEqual(window.current_state, game.END_PAGE)
+        finish()
 
     def test_neg_health_rounds(self):
         game.STATE = game.GAME_PAGE
@@ -279,6 +281,8 @@ class TestDeaths(unittest.TestCase):
         window.player_sprite.health = -100.75
 
         self.assertEqual(window.round_health(window.player_sprite), 0)
+
+        finish()
 
 #Test menu selection screen works
 class TestMenuSystem(unittest.TestCase):
@@ -317,7 +321,7 @@ class TestMenuSystem(unittest.TestCase):
         window = init([])
         window.start_page_setup()
         window.draw_start_page()
-        for i in range(game.BUTTON):
+        for i in range(len(window.buttons)):
             window.on_key_press(arcade.key.SPACE,0)
         self.assertEqual(window.selected,window.start_button)
         finish()
@@ -354,7 +358,8 @@ class TestLevelingUp(unittest.TestCase):
         game.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
         window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
         window.current_state = game.GAME_PAGE
-        window.setup()
+        window.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
+        window.game_setup()
 
         window.background_even.speed = 500
         window.background_odd.speed = 500
@@ -371,7 +376,8 @@ class TestLevelingUp(unittest.TestCase):
         game.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
         window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
         window.current_state = game.GAME_PAGE
-        window.setup()
+        window.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
+        window.game_setup()
 
         window.background_even.speed = 500
         window.background_odd.speed = 500
@@ -389,12 +395,13 @@ class TestLevelingUp(unittest.TestCase):
         game.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
         window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
         window.current_state = game.GAME_PAGE
-        window.setup()
+        window.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
+        window.game_setup()
 
         window.level_up()
         window.level_up()
 
-        self.assertEqual(window.current_state, 4)
+        self.assertEqual(window.current_state, game.END_PAGE)
         finish()
 
 class TestSpriteMovementHandling(unittest.TestCase):
@@ -485,7 +492,7 @@ def init(clouds=[],fire=[],source=["images/LVL1/background1.png","images/LVL1/ba
     window.source = source
     window.NNDir = "TestDir/"
     window.clouds_limit = 0
-    window.setup()
+    window.game_setup()
     change_game_sprites(window,clouds)
     change_game_sprites(window,fire)
     return window

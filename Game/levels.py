@@ -13,7 +13,10 @@ class Mixin:
                 self.lvl_up.play()
             if self.player_sprite.active:
                 self.player_sprite.health = 100
+
             if self.cpu_sprite.active:
                 self.cpu_sprite.health = 100
+            else:
+                self.setup_cpu()
 
             self.background_setup()

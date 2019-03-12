@@ -32,7 +32,7 @@ class Mixin:
 
     def menu_keyboard(self,key):
         if key == arcade.key.SPACE:
-            self.selected_index = (self.selected_index+1)%2
+            self.selected_index = (self.selected_index+1)%3
             self.selected = self.buttons[self.selected_index]
             self.pointer.center_y = self.selected.center_y
 

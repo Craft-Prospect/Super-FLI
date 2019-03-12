@@ -28,10 +28,7 @@ SCROLL_SPEED = 1 + RASP #Speed of background_sprite, clouds and fire sprites
 CLOUD_DAMAGE = 0.1*(RASP +1)
 HEALTH = 100
 
-#Number of buttons in the menu
-BUTTON = 2
-
-#Image source (global variable so can be used in testing)
+#Image sources
 LVL1=["images/LVL1/lvl1.png", "images/LVL1/background1.png","images/LVL1/background2.png", "images/LVL1/background3.png", "images/LVL1/background4.png","images/sea.png"]
 LVL2=["images/LVL2/lvl2.png", "images/LVL2/background1.png","images/LVL2/background2.png", "images/LVL2/background3.png", "images/LVL2/background4.png","images/sea.png"]
 SOURCE = [LVL1,LVL2]
@@ -44,11 +41,12 @@ SPLASH = -1
 START_PAGE = 0
 INSTRUCT1 = 1
 INSTRUCT2 = 2
-GAME_PAGE = 3
-END_PAGE = 4
-ENTER_NAME = 5
-HIGH_SCORE_PAGE = 6
-FEEDBACK_PAGE = 7
+ABOUT = 3
+GAME_PAGE = 4
+END_PAGE = 5
+ENTER_NAME = 6
+HIGH_SCORE_PAGE = 7
+FEEDBACK_PAGE = 8
 
 #Demo states
 #Game states

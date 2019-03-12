@@ -12,10 +12,12 @@ class Mixin:
             #Change state depending on button selected
             if self.selected == self.inst_button:
                 self.current_state = INSTRUCT1
-            else:
+            elif self.selected == self.start_button:
                 self.demo_setup()
                 self.draw_demo()
                 self.current_state = INS0
+            elif self.selected == self.about_button:
+                self.current_state = ABOUT
 
         elif self.current_state == INSTRUCT1:
             self.current_state = INSTRUCT2
@@ -42,11 +44,6 @@ class Mixin:
 
             global PLAYER_START_Y
             PLAYER_START_Y = self.player_sprite.center_y
-            if not self.Test:
-                pygame.mixer.stop()
-                pygame.mixer.music.load("Music/ResistorAnthemsII/main.mp3")
-                pygame.mixer.music.play(-1)
 
-
-            self.setup()
+            self.game_setup()
             self.current_state = GAME_PAGE

@@ -40,7 +40,27 @@ class Satellite(arcade.Sprite):
             if self.avoid[1] == "up":
                 self.center_y += self.speed
             else:
-                self.center_y -= self.speed
+                if self.avoid[0] == "left":
+                    if self.left < 50:
+                        self.center_x += 2*self.speed
+                    else:
+                        self.center_x -=2*self.speed
+                else:
+                    if self.right > SCREEN_WIDTH - 50:
+                        self.center_x -= 2*self.speed
+                    else:
+                        self.center_x += 2*self.speed
+
+                if self.avoid[1] == "up":
+                    if self.top > SCREEN_HEIGHT - 50:
+                        self.center_y -= 2*self.speed
+                    else:
+                        self.center_y += 2*self.speed
+                else:
+                    if self.bottom < 50:
+                        self.center_y += 2*self.speed
+                    else:
+                        self.center_y -= 2*self.speed
 
         #If fire is there, track it else, track player
 

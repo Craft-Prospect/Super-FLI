@@ -1,5 +1,0 @@
-
- seen 64 
-screenshot236.png: Predicted in 1857.951000 milli-seconds.
-Fire: 52%
-(782,153)

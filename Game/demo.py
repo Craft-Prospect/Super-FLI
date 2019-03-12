@@ -64,4 +64,4 @@ class Mixin:
         health_cpu= f"CPU Power: {cpu_health}"
         arcade.draw_text(health_cpu, SCREEN_WIDTH-200, 50, arcade.color.RED, 14)
 
-        arcade.draw_text(("Click {} to start"),SCREEN_WIDTH//2-50,50,arcade.color.ORANGE, 15)
+        arcade.draw_text(("Click [] to skip instruction \n Click {} to start Game"),SCREEN_WIDTH//2-50,50,arcade.color.ORANGE, 15)

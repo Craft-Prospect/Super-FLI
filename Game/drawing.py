@@ -57,6 +57,8 @@ class Mixin:
             elif self.current_state == INS7:
                 self.draw_ins("Capture a fire by pressing the [] button\n Your score will increase by £100")
 
+            elif self.current_state == INS9:
+                self.draw_ins("Press {} to start!")
 #Draw instruction on screen
     def draw_ins(self,text):
         arcade.draw_text((text),SCREEN_WIDTH//2-450,SCREEN_HEIGHT//2-100,arcade.color.ORANGE, 15)

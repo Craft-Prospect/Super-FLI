@@ -16,6 +16,9 @@ class Mixin:
 
         #Move the clouds close the player
         elif self.current_state == INS3:
+            #To account for player skipping
+            if len(self.fire_list) == 0:
+                self.add_sprite("fire",(SCREEN_WIDTH//2,SCREEN_HEIGHT//2))
             self.clouds_list.update()
             self.counting(80)
 
@@ -35,15 +38,14 @@ class Mixin:
         #Move player close to fire
         elif self.current_state == INS6:
             self.player_sprite.cpu_update(self.cpu_sprite, self.fire_list[0])
-            self.update_count += 1
-
-            self.counting(300)
+            self.counting(375)
 
         #Capture fire and add to player score
         elif self.current_state == INS8:
             self.fire_list[0].kill()
             self.player_sprite.score += 100
             self.current_state += 1
+
 
         elif self.current_state == SPLASH:
             self.counting(100)

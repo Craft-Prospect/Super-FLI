@@ -33,32 +33,30 @@ class Mixin:
 
             self.cloud_damages(self.cpu_sprite)
 
-            self.check_fire_collison(self.cpu_sprite)
+            self.check_fire_collison(self.cpu_sprite) #see spriteFunc.py
 
+        #End game when both sprite and player are dead
         if not self.cpu_sprite.active and not self.player_sprite.active:
             self.current_state=END_PAGE
-            self.setup_game_over()
+            self.setup_game_over() # see runGame.py
 
+        #Add new clouds if clouds have scorlled off
         if len(self.clouds_list) <=self.clouds_limit:
-            self.add_sprite("cloud")
+            self.add_sprite("cloud") #see spriteFunc.py
 
-
-
-
-
+    #Update the player if the joystick moves
     def game_joystick_update(self):
         # Set a "dead zone" to prevent drive from a centered joystick
         if abs(self.joystick.x) < DEAD_ZONE:
             self.player_sprite.change_x = 0
         else:
             self.player_sprite.change_x = self.joystick.x * self.player_sprite.speed
-            # Set a "dead zone" to prevent drive from a centered joystick
+
+        # Set a "dead zone" to prevent drive from a centered joystick
         if abs(self.joystick.y) < DEAD_ZONE:
             self.player_sprite.change_y = 0
         else:
             self.player_sprite.change_y = -self.joystick.y * self.player_sprite.speed
-
-        self.player_sprite.update()
 
     def game_background_update(self, update):
 
@@ -89,19 +87,6 @@ class Mixin:
                 if (self.background_index == len(self.source)):
                     self.final_background_even = True
 
-                #create varibles from the constants file for the neural network
-                text_file = 'background%d-fire.txt' % (self.background_index+1)
-
-                #look one further image ahead and run it thorugh the network
-                if self.background_index  <  len(self.source) and not self.Test:
-                    picture = self.source[self.background_index]
-                    NN_command = COMMAND + [picture]
-
-                    with open("NNData/"+text_file, "wb") as out:
-                        #Run Neural Network locally
-                        subprocess.Popen(NN_command, stdout=out)
-
-
             #If the odd background has reached the end of the screen
             elif(update == -1):
                 #Create a new odd background, opff screen, ready to scroll in after the next even one
@@ -112,37 +97,44 @@ class Mixin:
                     self.final_background_odd = True
 
 
-                #look one image further ahead and run it through the network
-                text_file = 'background%d-fire.txt' % (self.background_index+1)
+            #look one image further ahead and run it through the network
+            text_file = 'background%d-fire.txt' % (self.background_index+1)
 
-                if self.background_index < len(self.source) and not self.Test:
-                    picture = self.source[self.background_index]
-                    NN_command = COMMAND + [picture]
+            #if image exits and not running heedless tests, run Neural Network
+            if self.background_index < len(self.source) and not self.Test:
+                picture = self.source[self.background_index]
+                NN_command = COMMAND + [picture]
 
-                    with open("NNData/"+text_file, "wb") as out:
-                        subprocess.Popen(NN_command, stdout=out)
+                with open("NNData/"+text_file, "wb") as out:
+                    subprocess.Popen(NN_command, stdout=out)
 
             #Get NN data and add fires
             self.add_new_data()
 
 
-
+    #Check if sprite damaged by cloud
     def cloud_damages(self,sprite):
+        #Get colliding clouds
         hit_list = arcade.check_for_collision_with_list(sprite,self.clouds_list)
-        # Loop through each colliding cloud, decrease CPU health.
+        # Loop through each colliding cloud, decrease sprite health.
         for cloud in hit_list:
             sprite.health -= cloud.damage
             if sprite.health <= 0:
+                #If player dies, update player final score
                 if sprite == self.player_sprite:
                     self.player_score = sprite.score
                 sprite.active = False
                 sprite.kill()
+
+            #Take note of how CPU should avoid clouds
             if sprite == self.cpu_sprite:
                 self.avoid_cloud(sprite,cloud)
+
+        #If no clouds to avoid, reset avoid
         if sprite == self.cpu_sprite and len(hit_list) == 0:
             sprite.avoid = None
 
-
+    #Decided how CPU should avoid cloud
     def avoid_cloud(self,sprite,cloud):
 
         if sprite.center_x <= cloud.center_x:

@@ -89,18 +89,22 @@ class Mixin:
                 if (self.background_index == len(self.source)):
                     self.final_background_even = True
 
-                #run the new image through the NN
+                #create varibles from the constants file for the neural network
                 text_file = 'background%d-fire.txt' % (self.background_index+1)
 
                 #look one further image ahead and run it thorugh the network
                 if self.background_index  <  len(self.source) and not self.Test:
                     picture = self.source[self.background_index]
-                    with open("NNData/"+text_file, "wb") as out:
-                        subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
-                        """
-                        subprocess.Popen(['ssh', 'andrew@10.42.0.1', 'cd', '/home/andrew/testing_tiny/darknet2/darknet', ';', './darknet', 'detector', 'test', 'cfg/obj.data', 'cfg/tiny-yolo.cfg', 'backup/tiny-yolo_2000.weights', picture], stdout=out)
-                        """
+                    local_NN_command = LOCAL_COMMAND + [picture]
+                    remote_NN_command = REMOTE_COMMAND + [picture]
                     
+                    with open("NNData/"+text_file, "wb") as out:
+                        #Run Neural Network locally
+                        subprocess.Popen(local_NN_command, stdout=out)
+                        #run Neural Network remotely
+                        #subprocess.Popen(remote_NN_command, stdout=out)
+
+
             #If the odd background has reached the end of the screen
             elif(update == -1):
                 #Create a new odd background, opff screen, ready to scroll in after the next even one
@@ -113,14 +117,17 @@ class Mixin:
 
                 #look one image further ahead and run it through the network
                 text_file = 'background%d-fire.txt' % (self.background_index+1)
+
                 if self.background_index < len(self.source) and not self.Test:
                     picture = self.source[self.background_index]
+                    local_NN_command = LOCAL_COMMAND + [picture]
+                    remote_NN_command = REMOTE_COMMAND + [picture]
+
                     with open("NNData/"+text_file, "wb") as out:
-                        subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
-                        
-                        """
-                        subprocess.Popen(['ssh', 'andrew@10.42.0.1', 'cd', '/home/andrew/testing_tiny/darknet2/darknet', ';', './darknet', 'detector', 'test', 'cfg/obj.data', 'cfg/tiny-yolo.cfg', 'backup/tiny-yolo_2000.weights', picture], stdout=out)
-                        """
+                        #Run Neural Network locally
+                        subprocess.Popen(local_NN_command, stdout=out)
+                        #run Neural Network remotely
+                        #subprocess.Popen(remote_NN_command, stdout=out)
 
             #Get NN data and add fires
             self.add_new_data()

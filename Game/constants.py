@@ -79,7 +79,6 @@ CPU_START_Y = SCREEN_HEIGHT - 50
 #Variables used for joystick movement
 DEAD_ZONE = 0.02
 
-
 #Text for about page
 
 ABOUT_TEXT = [
@@ -91,3 +90,9 @@ ABOUT_TEXT = [
 "applications. Our goal is to bring autonomy and ",
 "capability to the next generation of small satellites.",
 ]
+
+#Local and Remote Neural Network Commands
+REMOTE_COMMAND = ['ssh', 'andrew@10.42.0.1', 'cd', '/home/andrew/testing_tiny/darknet2/darknet', ';', './darknet', 'detector', 'test', 'cfg/obj.data', 'cfg/tiny-yolo.cfg', 'backup/tiny-yolo_2000.weights']
+
+LOCAL_COMMAND = ['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights']
+

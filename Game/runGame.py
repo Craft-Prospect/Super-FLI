@@ -23,6 +23,9 @@ class Mixin:
         self.player_sprite.center_y = PLAYER_START_Y
         self.player_list.append(self.player_sprite)
 
+        self.level = 1
+        self.source = self.SOURCE[0]
+
         self.setup_cpu()
 
         #Set up background
@@ -31,8 +34,6 @@ class Mixin:
         for i in range(0,self.clouds_limit):
                 self.add_sprite("cloud")
 
-
-        self.level = 1
 
     def draw_game(self):
 
@@ -55,8 +56,8 @@ class Mixin:
         arcade.draw_text(score_player, 10, 20, arcade.color.WHITE, 14)
 
         #CPU Score
-        score_cpu= f"CPU Money: £{self.cpu_sprite.score}"
-        arcade.draw_text(score_cpu, SCREEN_WIDTH-200, 20, arcade.color.RED, 14)
+        score_cpu= f"Neural Network Score: £{self.cpu_sprite.score}"
+        arcade.draw_text(score_cpu, SCREEN_WIDTH-300, 20, arcade.color.RED, 14)
 
         # Player Health
         player_health = self.round_health(self.player_sprite)
@@ -65,11 +66,11 @@ class Mixin:
         cpu_health = self.round_health(self.cpu_sprite)
 
         #Display cpu health on the screen
-        health_cpu= f"CPU Power: {cpu_health}"
-        arcade.draw_text(health_cpu, SCREEN_WIDTH-200, 50, arcade.color.RED, 14)
+        health_cpu= f"Neural Network Power: {cpu_health} %"
+        arcade.draw_text(health_cpu, SCREEN_WIDTH-300, 50, arcade.color.RED, 14)
 
         #Display player health on the screen
-        health_player= f"Player Power: {player_health}"
+        health_player= f"Player Power: {player_health} %"
         arcade.draw_text((health_player), 10, 50, arcade.color.WHITE, 14)
 
         lvl= f"Level: {self.level}"
@@ -135,7 +136,12 @@ class Mixin:
 
         #Look at the second picture while the game is booting up
         picture = self.source[1]
+        local_NN_command = LOCAL_COMMAND + [picture]
+        remote_NN_command = REMOTE_COMMAND + [picture]
         if self.background_index == 1 and not self.Test:
             with open("NNData/background2-fire.txt", "wb") as out:
-                subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
+                #Run Neural Network locally
+                subprocess.Popen(local_NN_command, stdout=out)
+                #run Neural Network remotely
+                #subprocess.Popen(remote_NN_command, stdout=out)
         self.add_new_data()

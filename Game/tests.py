@@ -518,8 +518,17 @@ class TestOnscreenKeyboard(unittest.TestCase):
         window.keyboard_setup()
         for i in range(10):
             window.on_key_press(arcade.key.T,0)
-
         self.assertEqual(len(window.name),4)
+
+    def test_enter_key_works(self):
+        window = init()
+        window.current_state = game.ENTER_NAME
+        window.change_state()
+        window.keyboard_setup()
+        window.on_key_press(arcade.key.ENTER,0)
+        self.assertEqual(window.current_state,game.HIGH_SCORE_PAGE)
+        
+
 
 
     

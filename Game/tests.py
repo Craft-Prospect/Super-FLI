@@ -499,6 +499,20 @@ class TestOnscreenKeyboard(unittest.TestCase):
         window.on_key_press(arcade.key.T, 0)
         self.assertEqual(window.name, ['t'])
 
+    def test_caps(self):
+        window = init()
+        window.current_state = game.ENTER_NAME
+        window.change_state()
+        window.keyboard_setup()
+        window.on_key_press(arcade.key.CAPSLOCK,0)
+        window.on_key_press(arcade.key.T,0)
+        window.on_key_press(arcade.key.E,0)
+        window.on_key_press(arcade.key.CAPSLOCK,0)
+        window.on_key_press(arcade.key.S,0)
+        self.assertEqual(window.name,['T','E','s'])
+
+    
+
 #Helper Functions
 
 #Set up game

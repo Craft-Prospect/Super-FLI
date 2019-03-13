@@ -18,6 +18,8 @@ class Mixin:
                 self.current_state = INS0
             elif self.selected == self.about_button:
                 self.current_state = ABOUT
+            elif self.selected == self.feedback_button:
+                self.current_state = FEEDBACK_PAGE
 
         elif self.current_state == INSTRUCT1:
             self.current_state = INSTRUCT2
@@ -26,6 +28,10 @@ class Mixin:
                 self.demo_setup()
                 self.draw_demo()
                 self.current_state = INS0
+
+        elif self.current_state == ABOUT:
+            self.start_page_setup()
+            self.current_state = START_PAGE
 
         elif self.current_state == END_PAGE:
             self.current_state = ENTER_NAME

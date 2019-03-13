@@ -40,8 +40,15 @@ class Mixin:
 
         elif self.current_state >= 10:
             self.draw_demo()
+            self.draw_ins_state()
 
-            #Draw different text depending on stage
+
+        #Draw instruction on screen
+    def draw_ins(self,text):
+        arcade.draw_text((text),SCREEN_WIDTH//2-450,SCREEN_HEIGHT//2-100,arcade.color.ORANGE, 15)
+
+    def draw_ins_state(self):
+    #Draw different text depending on stage
             if self.current_state == INS0:
                 self.draw_ins("You will be controlling the blue satellite. \nThe neural network will be controlling the red satellite.")
 
@@ -59,6 +66,3 @@ class Mixin:
 
             elif self.current_state == INS9:
                 self.draw_ins("Press {} to start!")
-#Draw instruction on screen
-    def draw_ins(self,text):
-        arcade.draw_text((text),SCREEN_WIDTH//2-450,SCREEN_HEIGHT//2-100,arcade.color.ORANGE, 15)

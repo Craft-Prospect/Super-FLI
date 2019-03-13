@@ -14,7 +14,7 @@ class Mixin:
         elif self.current_state == ENTER_NAME:
             self.enter_keyboard(key)
 
-        elif self.current_state >= 10:
+        elif self.current_state > 9:
             self.ins_skip(key)
 
     def player_keyboard(self,key):
@@ -35,7 +35,7 @@ class Mixin:
 
     def menu_keyboard(self,key):
         if key == arcade.key.SPACE:
-            self.selected_index = (self.selected_index+1)%3
+            self.selected_index = (self.selected_index+1)%len(self.buttons)
             self.selected = self.buttons[self.selected_index]
             self.pointer.center_y = self.selected.center_y
 

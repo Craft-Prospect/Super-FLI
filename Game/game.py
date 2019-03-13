@@ -103,7 +103,8 @@ class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin,
         #Keyboard values
         self.key_list = None
 
-        self.source = SOURCE[0]
+        self.SOURCE = SOURCE
+        self.source = self.SOURCE[0]
         self.NNDir = NNDir
 
         self.update_count = 0

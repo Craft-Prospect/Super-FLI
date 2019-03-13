@@ -78,3 +78,16 @@ CPU_START_Y = SCREEN_HEIGHT - 50
 
 #Variables used for joystick movement
 DEAD_ZONE = 0.02
+
+
+#Text for about page
+
+ABOUT_TEXT = [
+"Craft Prospect is a space engineering practice, founded",
+"on the principal of bringing together NewSpace",
+"professionals and experts in the latest technologies to",
+"advance the NewSpace state of the art. Our focus is on",
+"developing adaptive mission architectures, space",
+"applications. Our goal is to bring autonomy and ",
+"capability to the next generation of small satellites.",
+]

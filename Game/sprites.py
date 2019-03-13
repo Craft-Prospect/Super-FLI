@@ -33,9 +33,19 @@ class Satellite(arcade.Sprite):
     def cpu_update(self, Player, Fire = None):
 
         if self.avoid != None:
-            if self.last_avoid != None and self.last_avoid != self.avoid:
-                self.center_x += 2*self.speed
+            self.avoid_clouds(Player,Fire)
+        else:
+            self.track_player_or_fire(Player,Fire)
 
+        self.last_avoid = self.avoid
+
+    def avoid_clouds(self,Player,Fire):
+        if self.last_avoid != None and self.last_avoid != self.avoid:
+            self.center_x += 2*self.speed
+
+        else:
+            if Fire and (self.center_x - Fire.center_x < 50 and self.center_y - Fire.center_y < 50) and self.health > 40:
+                self.track_player_or_fire(Player,Fire)
             else:
                 if self.avoid[0] == "left":
                     if self.left < 50:
@@ -59,35 +69,30 @@ class Satellite(arcade.Sprite):
                     else:
                         self.center_y -= 2*self.speed
 
-        #If fire is there, track it else, track player
-
-        #For X co-ordinates if the cpu is furhter left that the fire and there's a fire on the screen
-        else:
-            if (Fire and self.center_x <Fire.center_x and Fire.center_x < (SCREEN_WIDTH-10)):
-                self.center_x += self.speed
+    def track_player_or_fire(self,Player,Fire):
+        if (Fire and self.center_x <Fire.center_x and Fire.center_x < (SCREEN_WIDTH-10)):
+            self.center_x += self.speed
                 #Else if there's a fire on the screen and the CPU is to the right of it
-            elif (Fire and self.center_x > Fire.center_x and Fire.center_x < (SCREEN_WIDTH-10)):
-                self.center_x -= self.speed
+        elif (Fire and self.center_x > Fire.center_x and Fire.center_x < (SCREEN_WIDTH-10)):
+            self.center_x -= self.speed
 
                 #Else if the fire is off-screen, follow the player
-            else:
-                if (self.center_x <Player.center_x):
-                    self.center_x += self.track_speed
-                elif(self.center_x > Player.center_x):
-                    self.center_x -= self.track_speed
+        else:
+            if (self.center_x <Player.center_x):
+                self.center_x += self.track_speed
+            elif(self.center_x > Player.center_x):
+                self.center_x -= 2*self.track_speed
 
             #Same as above except for Y co-ordinates
-            if (Fire and self.center_y <Fire.center_y and Fire.center_x < (SCREEN_WIDTH-10)):
-                self.center_y +=self.speed
-            elif (Fire and self.center_y > Fire.center_y and Fire.center_x < (SCREEN_WIDTH-10)):
-                self.center_y -= self.speed
-            else:
-                if (self.center_y <Player.center_y):
-                    self.center_y += self.track_speed
-                elif(self.center_y > Player.center_y):
+        if (Fire and self.center_y <Fire.center_y and Fire.center_x < (SCREEN_WIDTH-10)):
+            self.center_y +=self.speed
+        elif (Fire and self.center_y > Fire.center_y and Fire.center_x < (SCREEN_WIDTH-10)):
+            self.center_y -= self.speed
+        else:
+            if (self.center_y <Player.center_y):
+                self.center_y += self.track_speed
+            elif(self.center_y > Player.center_y):
                     self.center_y -= self.track_speed
-
-        self.last_avoid = self.avoid
 
 #Class for scrolling back ground image
 class Background(arcade.Sprite):

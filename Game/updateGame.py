@@ -95,14 +95,11 @@ class Mixin:
                 #look one further image ahead and run it thorugh the network
                 if self.background_index  <  len(self.source) and not self.Test:
                     picture = self.source[self.background_index]
-                    local_NN_command = LOCAL_COMMAND + [picture]
-                    remote_NN_command = REMOTE_COMMAND + [picture]
-                    
+                    NN_command = COMMAND + [picture]
+
                     with open("NNData/"+text_file, "wb") as out:
                         #Run Neural Network locally
-                        subprocess.Popen(local_NN_command, stdout=out)
-                        #run Neural Network remotely
-                        #subprocess.Popen(remote_NN_command, stdout=out)
+                        subprocess.Popen(NN_command, stdout=out)
 
 
             #If the odd background has reached the end of the screen
@@ -120,14 +117,10 @@ class Mixin:
 
                 if self.background_index < len(self.source) and not self.Test:
                     picture = self.source[self.background_index]
-                    local_NN_command = LOCAL_COMMAND + [picture]
-                    remote_NN_command = REMOTE_COMMAND + [picture]
+                    NN_command = COMMAND + [picture]
 
                     with open("NNData/"+text_file, "wb") as out:
-                        #Run Neural Network locally
-                        subprocess.Popen(local_NN_command, stdout=out)
-                        #run Neural Network remotely
-                        #subprocess.Popen(remote_NN_command, stdout=out)
+                        subprocess.Popen(NN_command, stdout=out)
 
             #Get NN data and add fires
             self.add_new_data()

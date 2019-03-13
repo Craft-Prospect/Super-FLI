@@ -1,15 +1,12 @@
-#Scaling for sprites
+#Scaling for sprites(a multiplication factor i.e scaling*(sprite_image_size) )
 SPRITE_SCALING_POINTER = 1
 SPRITE_SCALING_KEY = 1
-
-#Set sprite sizes
 SPRITE_SCALING_PLAYER = 1
 SPRITE_SCALING_FIRE = 1
 SPRITE_SCALING_CLOUD = 1
 SPRITE_SCALING_BUTTON = 1
 BACKGROUND_SCALING = 1
 
-#Set number of elements to appear on screen (This will be removed when sprites are generated from co-ordinates)
 #Window size
 SCREEN_WIDTH = 1040
 SCREEN_HEIGHT = 597
@@ -92,7 +89,7 @@ ABOUT_TEXT = [
 ]
 
 #Local and Remote Neural Network Commands
-REMOTE_COMMAND = ['ssh', 'andrew@10.42.0.1', 'cd', '/home/andrew/testing_tiny/darknet2/darknet', ';', './darknet', 'detector', 'test', 'cfg/obj.data', 'cfg/tiny-yolo.cfg', 'backup/tiny-yolo_2000.weights']
 
-LOCAL_COMMAND = ['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights']
+COMMAND = ['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights']
 
+#COMMAND = ['ssh', 'andrew@10.42.0.1', 'cd', '/home/andrew/testing_tiny/darknet2/darknet', ';', './darknet', 'detector', 'test', 'cfg/obj.data', 'cfg/tiny-yolo.cfg', 'backup/tiny-yolo_2000.weights']

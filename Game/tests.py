@@ -488,6 +488,53 @@ class TestDemoVideo(unittest.TestCase):
         window.counting(2)
         self.assertEqual(window.current_state,4)
         finish()
+
+
+class TestOnscreenKeyboard(unittest.TestCase):
+    def test_input(self):
+        window = init()
+        window.current_state = game.ENTER_NAME
+        window.change_state()
+        window.keyboard_setup()
+        window.on_key_press(arcade.key.T, 0)
+        self.assertEqual(window.name, ['t'])
+
+    def test_caps(self):
+        window = init()
+        window.current_state = game.ENTER_NAME
+        window.change_state()
+        window.keyboard_setup()
+        window.on_key_press(arcade.key.CAPSLOCK,0)
+        window.on_key_press(arcade.key.T,0)
+        window.on_key_press(arcade.key.E,0)
+        window.on_key_press(arcade.key.CAPSLOCK,0)
+        window.on_key_press(arcade.key.S,0)
+        self.assertEqual(window.name,['T','E','s'])
+
+    def test_max_input_length(self):
+        window = init()
+        window.current_state = game.ENTER_NAME
+        window.change_state()
+        window.keyboard_setup()
+        for i in range(10):
+            window.on_key_press(arcade.key.T,0)
+        self.assertEqual(len(window.name),4)
+
+    def test_enter_key_works(self):
+        window = init()
+        window.current_state = game.ENTER_NAME
+        window.change_state()
+        window.keyboard_setup()
+        window.on_key_press(arcade.key.ENTER,0)
+        self.assertEqual(window.current_state,game.HIGH_SCORE_PAGE)
+
+    
+        
+
+
+
+    
+
 #Helper Functions
 
 #Set up game

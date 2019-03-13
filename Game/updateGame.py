@@ -97,9 +97,10 @@ class Mixin:
                     picture = self.source[self.background_index]
                     with open("NNData/"+text_file, "wb") as out:
                         subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
-
-
-
+                        """
+                        subprocess.Popen(['ssh', 'andrew@10.42.0.1', 'cd', '/home/andrew/testing_tiny/darknet2/darknet', ';', './darknet', 'detector', 'test', 'cfg/obj.data', 'cfg/tiny-yolo.cfg', 'backup/tiny-yolo_2000.weights', picture], stdout=out)
+                        """
+                    
             #If the odd background has reached the end of the screen
             elif(update == -1):
                 #Create a new odd background, opff screen, ready to scroll in after the next even one
@@ -116,7 +117,10 @@ class Mixin:
                     picture = self.source[self.background_index]
                     with open("NNData/"+text_file, "wb") as out:
                         subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
-
+                        
+                        """
+                        subprocess.Popen(['ssh', 'andrew@10.42.0.1', 'cd', '/home/andrew/testing_tiny/darknet2/darknet', ';', './darknet', 'detector', 'test', 'cfg/obj.data', 'cfg/tiny-yolo.cfg', 'backup/tiny-yolo_2000.weights', picture], stdout=out)
+                        """
 
             #Get NN data and add fires
             self.add_new_data()

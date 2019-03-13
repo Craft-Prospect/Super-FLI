@@ -135,7 +135,12 @@ class Mixin:
 
         #Look at the second picture while the game is booting up
         picture = self.source[1]
+        local_NN_command = LOCAL_COMMAND + [picture]
+        remote_NN_command = REMOTE_COMMAND + [picture]
         if self.background_index == 1 and not self.Test:
             with open("NNData/background2-fire.txt", "wb") as out:
-                subprocess.Popen(['../yolo_tiny/darknet', 'detector', 'test', '../yolo_tiny/cfg/obj.data', '../yolo_tiny/cfg/tiny-yolo.cfg', '../yolo_tiny/backup/tiny-yolo_2000.weights', picture], stdout=out)
+                #Run Neural Network locally
+                subprocess.Popen(local_NN_command, stdout=out)
+                #run Neural Network remotely
+                #subprocess.Popen(remote_NN_command, stdout=out)
         self.add_new_data()

@@ -38,9 +38,32 @@ class Mixin:
     def menu_keyboard(self,key):
         if key == arcade.key.SPACE:
             self.selected_index = (self.selected_index+1)%len(self.buttons)
-            self.selected = self.buttons[self.selected_index]
-            self.pointer.center_y = self.selected.center_y
 
+        if key == arcade.key.BACKSPACE:
+            self.selected_index = (self.selected_index-1)
+
+            if self.selected_index == -1:
+                self.selected_index = len(self.buttons) -1
+
+        self.selected = self.buttons[self.selected_index]
+        self.pointer.center_y = self.selected.center_y
+
+    #Moves pointer up or down, depending on joystick direction
+    def menu_jopystick_update(self):
+        # If centered set boolean to 0
+        if abs(self.joystick.y) < DEAD_ZONE:
+            self.check = 0
+            return
+
+        #If joystick pushed up update selected button and pointer position
+        if self.joystick.y < 0 and self.check == 0:
+            self.menu_keyboard(arcade.key.BACKSPACE)
+            self.check = 1
+
+        #Otherwise move pointer down and update selected button
+        elif self.check == 0:
+                self.menu_keyboard(arcade.key.SPACE)
+                self.check = 1
     #Controls for entering name for highscore
     def enter_keyboard(self,key):
         # 65293 value for **ENTER**
@@ -95,6 +118,7 @@ class Mixin:
             if self.current_state == GAME_PAGE:
                 self.check_fire_collison(self.player_sprite)
 
+
             elif self.current_state == ENTER_NAME:
                 character_hit_list = arcade.check_for_collision_with_list(self.pointer_sprite,self.key_list)
 
@@ -108,19 +132,15 @@ class Mixin:
 
                     elif len(self.name) <= 3:self.name.append(Key.character.upper())
 
+            elif self.current_state == MENU_PAGE:
+                    self.menu_keyboard(arcade.key.SPACE)
+
             elif self.current_state >= 10:
                 self.ins_skip(arcade.key.SPACE)
 
-        #if blue button pressed, try change state
+        #if BUTTON button pressed, try change state
         if button == 0:
             self.change_state() #see changeState.py
-
-    # Arcade academy throws errors if these functions aren't implemented
-    def on_joybutton_release(self, joystick, button):
-        print("Button {} up".format(button))
-
-    def on_joyhat_motion(self, joystick, hat_x, hat_y):
-        print("Hat ({}, {})".format(hat_x, hat_y))
 
     #Skips current instruction in demo video
     def ins_skip(self,key):
@@ -132,3 +152,10 @@ class Mixin:
                     #Go to start game
                     self.game_setup()
                     self.current_state = GAME_PAGE
+
+    # Arcade academy throws errors if these functions aren't implemented
+    def on_joybutton_release(self, joystick, button):
+        pass
+
+    def on_joyhat_motion(self, joystick, hat_x, hat_y):
+        pass

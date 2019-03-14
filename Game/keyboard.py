@@ -78,6 +78,7 @@ class Mixin:
 
         #Prints input text
         arcade.draw_text(''.join(self.name),350,350, arcade.color.BLACK, 40)
+        arcade.draw_text(BUTTON2 + ": Select Char", SCREEN_WIDTH - 250, SCREEN_HEIGHT - 100, arcade.color.WHITE, 15)
 
         # Call draw() on all keyboard keys
         self.pointer_list.draw()

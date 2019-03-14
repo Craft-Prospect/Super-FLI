@@ -33,6 +33,12 @@ class Mixin:
             self.menu_setup()
             self.current_state = MENU_PAGE
 
+        elif self.current_state == GAME_PAGE:
+            if not self.player_sprite.active:
+                self.current_state = ENTER_NAME
+                self.keyboard_setup()
+                print(self.player_sprite.active)
+
         elif self.current_state == END_PAGE:
             self.current_state = ENTER_NAME
             self.keyboard_setup()

@@ -3,7 +3,7 @@ from sprites import *
 class Mixin:
     #Display top ten high scores
     def draw_highscore(self):
-        page_texture = arcade.load_texture("images/hs.jpeg")
+        page_texture = arcade.load_texture(IMG_HIGHSCORE)
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
                                       page_texture.width,
                                       page_texture.height, page_texture, 0)
@@ -23,9 +23,9 @@ class Mixin:
 
     #Displays QR feedback page
     def draw_feedback(self):
-        page_texture = arcade.load_texture("images/feedback.png")
+        page_texture = arcade.load_texture(IMG_FEEDBACK)
         arcade.draw_texture_rectangle(SCREEN_WIDTH//2, SCREEN_HEIGHT//2, page_texture.width, page_texture.height, page_texture, 0)
 
         arcade.draw_text(("Please leave some feedback"), SCREEN_WIDTH//2-380, 3*SCREEN_HEIGHT/4, arcade.color.RED, 40)
 
-        arcade.draw_text(("craftprospect.com/super-fli-feedback"),SCREEN_WIDTH//2-300, 40, arcade.color.RED, 25)
+        arcade.draw_text((FEEDBACK_LINK),SCREEN_WIDTH//2-300, 40, arcade.color.RED, 25)

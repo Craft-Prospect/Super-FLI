@@ -12,11 +12,11 @@ class Mixin:
 
                 if event == "fire":
                     # Create the fire instance
-                    detected = Fire("images/fire_sprite.png", SPRITE_SCALING_FIRE)
+                    detected = Fire(IMG_FIRE, SPRITE_SCALING_FIRE)
 
                 else:
                     #Create cloud instance
-                    detected=Cloud("images/clouds.png", SPRITE_SCALING_CLOUD)
+                    detected=Cloud(IMG_CLOUD, SPRITE_SCALING_CLOUD)
                     detected.damage = self.cloud_damage
                     detected.points = ((-161, 0), (-128.5, 26.0), (-91.5, 51.0), (-66.5, 50.0),(-11.5,50), (33.5,66), (65.5,47), (120.5,26),(144.5,-26),(133.5,-78),(-47.5,-73),(-74.5,-39), (-114.5,-20), (-128.5, -26.0))
 
@@ -39,7 +39,7 @@ class Mixin:
     def add_new_data(self):
         #Relevant file names
         fileName = self.NNDir + "background" + str(self.background_index) + "-fire.txt"
-        picture = "images/" + "LVL1/" + "background" + str(self.background_index) + ".png"
+        picture =  self.source[self.background_index-1]
 
         with open(fileName) as f:
             lines = f.readlines()

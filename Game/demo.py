@@ -10,13 +10,13 @@ class Mixin:
         self.player_list = arcade.SpriteList()
 
         # Set up the player
-        self.player_sprite = Satellite("images/satellite.png", SPRITE_SCALING_PLAYER)
+        self.player_sprite = Satellite(IMG_PLAYER, SPRITE_SCALING_PLAYER)
         self.player_sprite.center_x = STARTX
         self.player_sprite.center_y = STARTY
         self.player_list.append(self.player_sprite)
 
         #Set up CPU
-        self.cpu_sprite= Satellite("images/cpu.png", SPRITE_SCALING_PLAYER)
+        self.cpu_sprite= Satellite(IMG_CPU, SPRITE_SCALING_PLAYER)
         self.cpu_sprite.center_x = CPU_START_X
         self.cpu_sprite.center_y = CPU_START_Y
         self.cpu_list.append(self.cpu_sprite)
@@ -25,7 +25,7 @@ class Mixin:
         self.add_sprite("cloud",(300,50))
 
         #Set up background
-        self.background = arcade.load_texture("images/fire.jpg")
+        self.background = arcade.load_texture(IMG_DEMO)
 
         #For counting when the next instruction shoul be displayed
         self.update_count = 0

@@ -7,7 +7,7 @@ class Mixin:
     def game_setup(self):
         #Play main game music if not running tests with not display(headless)
         if not self.Test:
-                pygame.mixer.music.load("Music/ResistorAnthemsII/main.mp3")
+                pygame.mixer.music.load(SND_GAME)
                 pygame.mixer.music.play(-1)
 
         # Sprite lists
@@ -17,7 +17,7 @@ class Mixin:
         self.player_list = arcade.SpriteList()
 
         # Set up the player
-        self.player_sprite = Satellite("images/satellite.png", SPRITE_SCALING_PLAYER)
+        self.player_sprite = Satellite(IMG_PLAYER, SPRITE_SCALING_PLAYER)
         self.player_sprite.center_x = PLAYER_START_X
         self.player_sprite.center_y = PLAYER_START_Y
         self.player_list.append(self.player_sprite)
@@ -56,7 +56,7 @@ class Mixin:
     def setup_game_over(self):
         if not self.Test:
             pygame.mixer.stop()
-            pygame.mixer.music.load("Music/ResistorAnthemsII/end.mp3")
+            pygame.mixer.music.load(SND_END)
             pygame.mixer.music.play(-1)
 
         if self.player_sprite.active:
@@ -112,7 +112,7 @@ class Mixin:
     #Configure CPU (also used in levels.py)
     def setup_cpu(self):
         #Set up CPU
-        self.cpu_sprite= Satellite("images/cpu.png", SPRITE_SCALING_PLAYER)
+        self.cpu_sprite= Satellite(IMG_CPU, SPRITE_SCALING_PLAYER)
         self.cpu_sprite.center_x = CPU_START_X
         self.cpu_sprite.center_y = CPU_START_Y
         self.cpu_sprite.speed = CPU_SPEED

@@ -53,6 +53,9 @@ ENTER_NAME = 6
 HIGH_SCORE_PAGE = 7
 FEEDBACK_PAGE = 8
 
+#LInk for forum redirection
+FEEDBACK_LINK = "craftprospect.com/super-fli-feedback"
+
 #Demo states
 INS0 = 10
 INS1 = 11
@@ -83,8 +86,8 @@ STARTY = 50
 #Variables used for joystick movement(may need changing if different joystick used)
 DEAD_ZONE = 0.02
 
-#Symbol for score value
-SYMBOL = "£"
+SYMBOL = "£" #Symbol for score value
+SCOREINC = 100 #(How much the score inscreases by)
 
 #Text for about page (for align and fitting inside box, each line shouldn't be more than 46 characters long)
 ABOUT_TEXT = [
@@ -96,3 +99,29 @@ ABOUT_TEXT = [
 "applications. Our goal is to bring autonomy and ",
 "capability to the next generation of small satellites.",
 ]
+
+
+#images
+IMG_CPU = "images/cpu.png"
+IMG_PLAYER = "images/satellite.png"
+IMG_CLOUD = "images/clouds.png"
+IMG_FIRE = "images/fire_sprite.png"
+IMG_FEEDBACK = "images/feedback.png"
+IMG_MAIN_MENU = "images/menu.png"
+IMG_INS0 = "images/instruct_0.png"
+IMG_INS1 = "images/instruct_1.png"
+IMG_HIGHSCORE = "images/hs.jpeg"
+IMG_BUTTON = "images/button.png"
+IMG_POINTER = "images/arrow.png"
+IMG_DEMO = "images/fire.jpg"
+IMG_ABOUT = "images/about.png"
+IMG_SPLASH = "images/splashscreen.png"
+
+#sounds
+SND_SPLASH = "Music/sounds/poweron.wav"
+SND_LVL = "Music/sounds/lvlup.wav"
+SND_PLAYER = "Music/sounds/Ching.wav"
+SND_CPU = "Music/sounds/beep.wav"
+SND_MENU = "Music/music/menu.mp3"
+SND_GAME = "Music/music/main.mp3"
+SND_END =  "Music/music/end.mp3"

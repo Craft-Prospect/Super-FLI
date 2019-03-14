@@ -72,16 +72,16 @@ class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin,
         self.textures = []
 
         #Setup background textures
-        texture = arcade.load_texture("images/menu.png")
+        texture = arcade.load_texture(IMG_MAIN_MENU)
         self.textures.append(texture)
 
-        texture = arcade.load_texture("images/instruct_0.png")
+        texture = arcade.load_texture(IMG_INS0)
         self.textures.append(texture)
 
-        texture = arcade.load_texture("images/instruct_1.png")
+        texture = arcade.load_texture(IMG_INS1)
         self.textures.append(texture)
 
-        texture = arcade.load_texture("images/about.png")
+        texture = arcade.load_texture(IMG_ABOUT)
         self.textures.append(texture)
         #Menu buttons
         self.buttons = None
@@ -128,9 +128,9 @@ class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin,
 
         #If not running headless display test (on Continous Intergrator), load sounds for pygame to play later(see level.py and spriteFunc.py)
         if not self.Test:
-            self.lvl_up =  pygame.mixer.Sound("Music/sounds/lvlup.wav")
-            self.player_sound = pygame.mixer.Sound("Music/sounds/Ching.wav")
-            self.cpu_sound =  pygame.mixer.Sound("Music/sounds/beep.wav")
+            self.lvl_up =  pygame.mixer.Sound(SND_LVL)
+            self.player_sound = pygame.mixer.Sound(SND_PLAYER)
+            self.cpu_sound =  pygame.mixer.Sound(SND_CPU)
         else:
             self.player_sound = None
             self.cpu_sound = None

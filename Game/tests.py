@@ -79,7 +79,7 @@ class TestEventsCPU(unittest.TestCase):
 
         window.update(1)
 
-        self.assertEqual(window.cpu_sprite.score, 100)
+        self.assertEqual(window.cpu_sprite.score, game.SCOREINC)
         finish()
 
     def test_tracking_fire_above_left(self):
@@ -167,7 +167,7 @@ class TestPlayerEvents(unittest.TestCase):
         for i in range(100):
             window.update(1)
             window.on_key_press(arcade.key.SPACE, 0)
-        self.assertEqual(window.player_sprite.score, 100)
+        self.assertEqual(window.player_sprite.score, game.SCOREINC)
         finish()
 
 
@@ -360,6 +360,7 @@ class TestLevelingUp(unittest.TestCase):
         game.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
         window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
         window.current_state = game.GAME_PAGE
+        window.NNDir = 'TestDir/'
         window.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
         window.game_setup()
 
@@ -500,6 +501,7 @@ class TestOnscreenKeyboard(unittest.TestCase):
         window.keyboard_setup()
         window.on_key_press(arcade.key.T, 0)
         self.assertEqual(window.name, ['t'])
+        finish()
 
     def test_caps(self):
         window = init()
@@ -512,6 +514,7 @@ class TestOnscreenKeyboard(unittest.TestCase):
         window.on_key_press(arcade.key.CAPSLOCK,0)
         window.on_key_press(arcade.key.S,0)
         self.assertEqual(window.name,['T','E','s'])
+        finish()
 
     def test_max_input_length(self):
         window = init()
@@ -521,6 +524,7 @@ class TestOnscreenKeyboard(unittest.TestCase):
         for i in range(10):
             window.on_key_press(arcade.key.T,0)
         self.assertEqual(len(window.name),4)
+        finish()
 
     def test_enter_key_works(self):
         window = init()
@@ -529,7 +533,7 @@ class TestOnscreenKeyboard(unittest.TestCase):
         window.keyboard_setup()
         window.on_key_press(arcade.key.ENTER,0)
         self.assertEqual(window.current_state,game.HIGH_SCORE_PAGE)
-
+        finish()
 #Helper Functions
 
 #Set up game

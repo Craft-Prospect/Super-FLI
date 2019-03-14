@@ -5,7 +5,7 @@ class Mixin:
     def menu_setup(self):
         if not self.Test :
             pygame.mixer.stop()
-            pygame.mixer.music.load("Music/ResistorAnthemsII/menu.mp3")
+            pygame.mixer.music.load(SND_MENU)
             pygame.mixer.music.play(-1)
 
 
@@ -14,20 +14,20 @@ class Mixin:
         self.pointer_list = arcade.SpriteList()
 
         #Setup button for launching game
-        self.start_button = Button("images/button.png", SPRITE_SCALING_BUTTON)
+        self.start_button = Button(IMG_BUTTON, SPRITE_SCALING_BUTTON)
         self.start_button.center_x = SCREEN_WIDTH//2
         self.start_button.center_y = SCREEN_HEIGHT//2 + 50
 
         #Setup button for displaying
-        self.inst_button = Button("images/button.png", SPRITE_SCALING_BUTTON)
+        self.inst_button = Button(IMG_BUTTON, SPRITE_SCALING_BUTTON)
         self.inst_button.center_x = SCREEN_WIDTH//2
         self.inst_button.center_y = SCREEN_HEIGHT//2 - 50
 
-        self.about_button = Button("images/button.png", SPRITE_SCALING_BUTTON)
+        self.about_button = Button(IMG_BUTTON, SPRITE_SCALING_BUTTON)
         self.about_button.center_x = SCREEN_WIDTH//2
         self.about_button.center_y = SCREEN_HEIGHT//2 - 150
 
-        self.feedback_button = Button("images/button.png", SPRITE_SCALING_BUTTON)
+        self.feedback_button = Button(IMG_BUTTON, SPRITE_SCALING_BUTTON)
         self.feedback_button.center_x = SCREEN_WIDTH//2
         self.feedback_button.center_y = SCREEN_HEIGHT//2 - 250
 
@@ -37,7 +37,7 @@ class Mixin:
         self.buttons.append(self.feedback_button)
 
         #Set up indicator for selected button
-        self.pointer = Button("images/arrow.png", SPRITE_SCALING_BUTTON)
+        self.pointer = Button(IMG_POINTER, SPRITE_SCALING_BUTTON)
         self.pointer.center_y = self.start_button.center_y
         self.pointer.center_x = self.start_button.center_x - 100
 

@@ -105,7 +105,7 @@ class Mixin:
                 picture = self.source[self.background_index]
                 NN_command = COMMAND + [picture]
 
-                with open("NNData/"+text_file, "wb") as out:
+                with open(self.NNDir+text_file, "wb") as out:
                     subprocess.Popen(NN_command, stdout=out)
 
             #Get NN data and add fires

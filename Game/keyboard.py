@@ -3,8 +3,8 @@ import glob
 
 class Mixin:
     def keyboard_setup(self):
-        
-        arcade.set_background_color(arcade.color.AMAZON)
+
+        arcade.set_background_color(arcade.color.RED)
         #String taking input
         self.name = []
 
@@ -59,35 +59,26 @@ class Mixin:
                     x = 0
                     y = -100
 
-
                 self.key_sprite = Key(filename, SPRITE_SCALING_KEY)
                 self.key_sprite.center_x = 50 + x
                 self.key_sprite.center_y = 200 + y
                 self.key_sprite.character = filename[29]
-
 
                 count += 1
 
                 x+=50
                 self.key_list.append(self.key_sprite)
 
-
+    #Draws onscreen keyboard
     def keyboard_on_draw(self):
-
         arcade.start_render()
 
         #Print question:
-        arcade.draw_text("Enter player name?",50,500,arcade.color.BLACK,20)
+        arcade.draw_text("Enter player name:",50,500,arcade.color.BLACK,20)
 
         #Prints input text
         arcade.draw_text(''.join(self.name),350,350, arcade.color.BLACK, 40)
 
-        
-        
-        # Call draw() on all your sprite lists below
+        # Call draw() on all keyboard keys
         self.pointer_list.draw()
         self.key_list.draw()
-
-
-
-

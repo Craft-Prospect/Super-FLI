@@ -19,7 +19,7 @@ class Mixin:
                 self.check = 1
                 time.sleep(0.2)
 
-                #if statements to ensure pointer always on the keyboard // Replace with case statement?
+                #if statements to ensure pointer always on the keyboard
             if self.pointer_sprite._position[0] >500:
                 self.pointer_sprite._position[0] = 50
 

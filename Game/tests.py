@@ -116,6 +116,7 @@ class TestEventsCPU(unittest.TestCase):
     def test_tracking_player_below_right(self):
         game.STATE = game.GAME_PAGE
         window = init()
+        #Don't allow clouds to interfere
         window.clouds_limit = 0
         window.clouds_list = arcade.SpriteList()
 
@@ -199,15 +200,16 @@ class TestPlayerEvents(unittest.TestCase):
 
     #buttons are a image holder. Ensure updating them does nothing
     def test_button_does_nothing(self):
-        game.STATE = game.START_PAGE
+        game.STATE = game.MENU_PAGE
         window = init()
-        window.start_page_setup()
+        window.menu_setup()
 
         window.buttons[0].update()
 
-        self.assertEqual(window.current_state,game.START_PAGE)
+        self.assertEqual(window.current_state,game.MENU_PAGE)
 
         finish()
+
 #Test PLayer and Satellite Deaths
 class TestDeaths(unittest.TestCase):
 
@@ -288,39 +290,39 @@ class TestDeaths(unittest.TestCase):
 class TestMenuSystem(unittest.TestCase):
 
     def test_demo_launchs_on_click(self):
-        game.STATE = game.START_PAGE
+        game.STATE = game.MENU_PAGE
         window = init([])
-        window.start_page_setup()
-        window.draw_start_page()
+        window.menu_setup()
+        window.draw_menu()
         window.on_mouse_press(0.0,0.0,1,0)
         self.assertEqual(window.current_state, game.INS0)
         finish()
 
     def test_demo_skips_on_click(self):
-        game.STATE = game.START_PAGE
+        game.STATE = game.MENU_PAGE
         window = init([])
-        window.start_page_setup()
-        window.draw_start_page()
+        window.menu_setup()
+        window.draw_menu()
         window.on_mouse_press(0.0,0.0,1,0)
         window.on_mouse_press(0.0,0.0,1,0)
         self.assertEqual(window.current_state, game.GAME_PAGE)
         finish()
 
     def test_button_changes_state(self):
-        game.STATE = game.START_PAGE
+        game.STATE = game.MENU_PAGE
         window = init([])
-        window.start_page_setup()
-        window.draw_start_page()
+        window.menu_setup()
+        window.draw_menu()
         window.on_key_press(arcade.key.SPACE, 0)
         window.on_mouse_press(0.0,0.0,1,0)
         self.assertEqual(window.current_state, game.INSTRUCT1)
         finish()
 
     def test_game_menu_rolls(self):
-        game.STATE = game.START_PAGE
+        game.STATE = game.MENU_PAGE
         window = init([])
-        window.start_page_setup()
-        window.draw_start_page()
+        window.menu_setup()
+        window.draw_menu()
         for i in range(len(window.buttons)):
             window.on_key_press(arcade.key.SPACE,0)
         self.assertEqual(window.selected,window.start_button)
@@ -329,28 +331,28 @@ class TestMenuSystem(unittest.TestCase):
 
 class TestHelpers(unittest.TestCase):
     def test_get_numer(self):
-        self.assertEqual(helper.get_number("£100"),"100")
+        self.assertEqual(helper.get_number(game.SYMBOL + "100"),"100")
 
-    def test_add_high_score(self):
+    def test_add_highscore(self):
         clear_scores()
-        helper.add_high_score("Test1", 100)
-        helper.add_high_score("Test2", 500)
-        helper.add_high_score("Test", 200)
+        helper.add_highscore("Test1", 100)
+        helper.add_highscore("Test2", 500)
+        helper.add_highscore("Test", 200)
 
         with open('scores.txt', 'r') as f:
             lines = f.readlines()
-            self.assertEqual(lines[0].strip(), "Test2 : £500")
-            self.assertEqual(lines[1].strip(), "Test : £200")
-            self.assertEqual(lines[2].strip(), "Test1 : £100")
+            self.assertEqual(lines[0].strip(), "Test2 : "+ game.SYMBOL + "500")
+            self.assertEqual(lines[1].strip(), "Test : "+ game.SYMBOL + "200")
+            self.assertEqual(lines[2].strip(), "Test1 : "+ game.SYMBOL + "100")
 
     def test_empty_name_high_score(self):
         clear_scores()
-        helper.add_high_score("","100")
+        helper.add_highscore("","100")
         self.assertEqual(os.stat("scores.txt").st_size, 0)
 
     def test_empty_score_high_score(self):
         clear_scores()
-        helper.add_high_score("Test",None)
+        helper.add_highscore("Test",None)
         self.assertEqual(os.stat("scores.txt").st_size, 0)
 
 class TestLevelingUp(unittest.TestCase):
@@ -527,13 +529,6 @@ class TestOnscreenKeyboard(unittest.TestCase):
         window.keyboard_setup()
         window.on_key_press(arcade.key.ENTER,0)
         self.assertEqual(window.current_state,game.HIGH_SCORE_PAGE)
-
-    
-        
-
-
-
-    
 
 #Helper Functions
 

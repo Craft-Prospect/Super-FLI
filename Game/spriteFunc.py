@@ -67,4 +67,4 @@ class Mixin:
             if not self.Test:
                 sound.play()
             fire.kill()
-            sprite.score += 100
+            sprite.score += SCOREINC

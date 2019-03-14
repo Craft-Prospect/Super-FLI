@@ -86,8 +86,8 @@ STARTY = 50
 #Variables used for joystick movement(may need changing if different joystick used)
 DEAD_ZONE = 0.02
 
-#Symbol for score value
-SYMBOL = "£"
+SYMBOL = "£" #Symbol for score value
+SCOREINC = 100 #(How much the score inscreases by)
 
 #Text for about page (for align and fitting inside box, each line shouldn't be more than 46 characters long)
 ABOUT_TEXT = [

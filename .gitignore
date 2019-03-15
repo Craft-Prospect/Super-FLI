@@ -21,3 +21,5 @@ Game/coords.txt
 #Neural Network files
 Game/NNData/*
 Game/predictions.jpg
+yolo_tiny/darknet
+yolo_tiny/obj/*

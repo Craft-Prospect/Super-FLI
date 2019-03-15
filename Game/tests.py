@@ -207,7 +207,6 @@ class TestPlayerEvents(unittest.TestCase):
         window.buttons[0].update()
 
         self.assertEqual(window.current_state,game.MENU_PAGE)
-
         finish()
 
 #Test PLayer and Satellite Deaths
@@ -284,6 +283,17 @@ class TestDeaths(unittest.TestCase):
 
         self.assertEqual(window.round_health(window.player_sprite), 0)
 
+        finish()
+
+    def test_Player_can_skip_on_death(self):
+        game.STATE = game.GAME_PAGE
+        window = init(clouds = [("cloud",(game.CPU_START_X,game.CPU_START_Y)), ("cloud", (game.PLAYER_START_X,game.PLAYER_START_Y))])
+        window.player_sprite.health = 0
+        window.update(1)
+
+        window.change_state()
+
+        self.assertEqual(window.current_state, game.ENTER_NAME)
         finish()
 
 #Test menu selection screen works
@@ -373,7 +383,6 @@ class TestLevelingUp(unittest.TestCase):
 
         self.assertEqual(window.level, 2)
         finish()
-
 
     def test_level_up_odd(self):
         game.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
@@ -482,6 +491,37 @@ class TestSpriteMovementHandling(unittest.TestCase):
 
         finish()
 
+    def test_CPU_avoids_cloud_near_border_left_above(self):
+        game.STATE = game.GAME_PAGE
+        window = init(clouds = [("cloud", (0,0))])
+        window.cpu_sprite.center_x = 30
+        window.cpu_sprite.center_y = 30
+        window.clouds_list[0].center_x = window.cpu_sprite.center_x + 10
+        window.clouds_list[0].center_y = window.cpu_sprite.center_y - 10
+
+        window.cloud_damages(window.cpu_sprite)
+        window.cpu_sprite.cpu_update(window.player_sprite)
+        self.assertEqual(window.cpu_sprite.avoid, ["left", "up"])
+        self.assertEqual(window.cpu_sprite.center_x, 30 +2*game.CPU_SPEED)
+        self.assertEqual(window.cpu_sprite.center_y, 30 +2*game.CPU_SPEED)
+
+        finish()
+
+    def test_CPU_avoids_cloud_near_border_right_down(self):
+        game.STATE = game.GAME_PAGE
+        window = init(clouds = [("cloud", (0,0))])
+        window.cpu_sprite.center_x = game.SCREEN_WIDTH-30
+        window.cpu_sprite.center_y = game.SCREEN_HEIGHT-30
+        window.clouds_list[0].center_x = window.cpu_sprite.center_x - 10
+        window.clouds_list[0].center_y = window.cpu_sprite.center_y + 10
+
+        window.cloud_damages(window.cpu_sprite)
+        window.cpu_sprite.cpu_update(window.player_sprite)
+        self.assertEqual(window.cpu_sprite.avoid, ["right", "down"])
+        self.assertEqual(window.cpu_sprite.center_x,  game.SCREEN_WIDTH-30 -2*game.CPU_SPEED)
+        self.assertEqual(window.cpu_sprite.center_y, game.SCREEN_HEIGHT-30 -2*game.CPU_SPEED)
+
+        finish()
 class TestDemoVideo(unittest.TestCase):
     def test_helper_counting(self):
         window = init()
@@ -538,9 +578,9 @@ class TestOnscreenKeyboard(unittest.TestCase):
 
 #Set up game
 def init(clouds=[],fire=[],source=["images/LVL1/background1.png","images/LVL1/background1.png"]):
-    #pygame.init()  #Uncomment for code coverage tests
-    #pygame.mixer.init() #Uncomment for code coverage tests
-    window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True) #Change true to false for code coverage tests
+    pygame.init()  #Uncomment for code coverage tests
+    pygame.mixer.init() #Uncomment for code coverage tests
+    window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,False) #Change true to false for code coverage tests
     window.source = source
     window.NNDir = "TestDir/"
     window.clouds_limit = 0

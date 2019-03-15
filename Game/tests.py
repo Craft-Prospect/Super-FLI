@@ -698,9 +698,9 @@ class TestOnscreenKeyboard(unittest.TestCase):
 
 #Set up game
 def init(clouds=[],fire=[],source=["images/LVL1/background1.png","images/LVL1/background1.png"]):
-    pygame.init()  #Uncomment for code coverage tests
-    pygame.mixer.init() #Uncomment for code coverage tests
-    window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,False) #Change true to false for code coverage tests
+    #pygame.init()  #Uncomment for code coverage tests
+    #pygame.mixer.init() #Uncomment for code coverage tests
+    window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True) #Change true to false for code coverage tests
     window.source = source
     window.NNDir = "TestDir/"
     window.clouds_limit = 0

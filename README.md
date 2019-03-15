@@ -161,7 +161,7 @@ make
 
 We need to download the requirements on the server too. Don't worry you can do this by using the provided *requierments.txt* file.
 ```
-cd dissertation/
+cd ..
 pip3 install -r requirements.txt
 ```
 

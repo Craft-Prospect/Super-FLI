@@ -88,7 +88,6 @@ sudo pip3.6 install arcade==1.3.7
 
 Our final requierment is Python's library pygame. which is installed with the following commands.
 ```
-cd ~
 sudo apt-get install python3-dev python3-numpy libsdl-dev libsdl-image1.2-dev \
 libsdl-mixer1.2-dev libsdl-ttf2.0-dev libsmpeg-dev libportmidi-dev \
 libavformat-dev libswscale-dev libjpeg-dev libfreetype6-dev
@@ -103,6 +102,7 @@ sudo python3.6 setup.py install
 
 It's time to clone our repository!
 ```
+cd ~
 git clone "http://stgit.dcs.gla.ac.uk/tp3-2018-ese3/dissertation"
 ```
 

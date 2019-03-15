@@ -4,6 +4,7 @@ import pygame
 import unittest
 import helper
 import os
+import time
 
 #Test the game generates sprites
 class TestSetupMethods(unittest.TestCase):
@@ -694,10 +695,27 @@ class TestOnscreenKeyboard(unittest.TestCase):
         self.assertEqual(window.name,['t'])
         finish()
 
+
+class TestNN(unittest.TestCase):
+
+    def test_NN(self):
+
+        window = init()
+        if not window.Test:
+            open("TestDir/background2-fire.txt", "w").close()
+
+            window.current_state = game.GAME_PAGE
+            window.game_setup()
+            time.sleep(3) #Allow NN to work
+            line = ""
+            with open("TestDir/background2-fire.txt") as f:
+                line = f.readlines()[-1].strip()
+
+            self.assertEqual(line, "(125,487)")
 #Helper Functions
 
 #Set up game
-def init(clouds=[],fire=[],source=["images/LVL1/background1.png","images/LVL1/background1.png"]):
+def init(clouds=[],fire=[],source=["images/LVL1/background2.png","images/LVL1/background2.png","images/LVL1/background2.png"]):
     #pygame.init()  #Uncomment for code coverage tests
     #pygame.mixer.init() #Uncomment for code coverage tests
     window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True) #Change true to false for code coverage tests

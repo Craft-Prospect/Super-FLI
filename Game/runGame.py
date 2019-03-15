@@ -99,7 +99,7 @@ class Mixin:
         arcade.draw_text((lvl), SCREEN_WIDTH//2-10, SCREEN_HEIGHT-20, arcade.color.WHITE, 14)
 
         if not self.player_sprite.active:
-            arcade.draw_text(("Press"+ BUTTON1 + "to end game"), SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2, arcade.color.BLIZZARD_BLUE,20) 
+            arcade.draw_text(("Press"+ BUTTON1 + "to end game"), SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2, arcade.color.BLIZZARD_BLUE,20)
     #Round sprite's help to stop negative scores appearing (weird glitch wer eplayer dies with -0.1 health)
     def round_health(self,sprite):
         # Player Health
@@ -141,11 +141,20 @@ class Mixin:
         self.final_background_even = False
 
 
-        #Run NN on secondbackground(first background after level display )while the game is booting up
-        picture = self.source[1]
-        NN_command = COMMAND + [picture]
-        if self.background_index == 1 and not self.Test:
-            with open("NNData/background2-fire.txt", "wb") as out:
-                #Run Neural Network locally
+        self.runNN() #see spriteFunc.py
+
+
+    def runNN(self):
+        #look one image further ahead and run it through the network
+        text_file = 'background%d-fire.txt' % (self.background_index+1)
+
+        #if image exits and not running heedless tests, run Neural Network
+        if self.background_index < len(self.source) and not self.Test:
+            picture = self.source[self.background_index]
+            NN_command = COMMAND + [picture]
+
+            with open(self.NNDir+text_file, "wb") as out:
                 subprocess.Popen(NN_command, stdout=out)
-        self.add_new_data() #see spriteFunc.py
+
+        #Get NN data and add fires
+        self.add_new_data()

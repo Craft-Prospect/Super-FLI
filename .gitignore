@@ -17,6 +17,7 @@ __pycache__/
 Game/scores.txt
 Game/htmlcov
 Game/coords.txt
+Game/coverage.txt
 
 #Neural Network files
 Game/NNData/*

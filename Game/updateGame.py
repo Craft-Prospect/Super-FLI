@@ -97,19 +97,7 @@ class Mixin:
                     self.final_background_odd = True
 
 
-            #look one image further ahead and run it through the network
-            text_file = 'background%d-fire.txt' % (self.background_index+1)
-
-            #if image exits and not running heedless tests, run Neural Network
-            if self.background_index < len(self.source) and not self.Test:
-                picture = self.source[self.background_index]
-                NN_command = COMMAND + [picture]
-
-                with open(self.NNDir+text_file, "wb") as out:
-                    subprocess.Popen(NN_command, stdout=out)
-
-            #Get NN data and add fires
-            self.add_new_data()
+            self.runNN()
 
 
     #Check if sprite damaged by cloud

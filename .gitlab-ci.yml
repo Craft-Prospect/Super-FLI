@@ -2,8 +2,8 @@ image: blang/latex
 Test:
   stage: test
   script:
-    - cd Game
     - pip3 install -r requirements.txt
+    - cd Game
     - xvfb-run -a python3 tests.py
 
 

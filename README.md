@@ -179,7 +179,7 @@ COMMAND = ['ssh', 'hostname@remote_IP_address', 'cd', 'PWD_File_Path', ';', './d
 /home/andrew/finished_code/dissertation/yolo_tiny
 ```
 
-That's you all setup. To run the game see the section below.
+That's you all setup. To run the game, see the section below. If you want to add a new background remember and add the same file into the *images/* folder in yolo_tiny. 
 
 
 
@@ -192,7 +192,7 @@ cd Game
 python3.6 run.py
 ```
 
-The window will automatically pop up if your using a joystick make sure its plugged in before running the game.
+The window will automatically pop up if you're using a joystick make sure its plugged in before running the game.
 
 
 Good Luck!

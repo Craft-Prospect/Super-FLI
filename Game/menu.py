@@ -65,8 +65,8 @@ class Mixin:
         arcade.draw_text(("Instructions"),SCREEN_WIDTH//2-55 , ((SCREEN_HEIGHT//2-55)), arcade.color.WHITE, 15)
         arcade.draw_text(("About"),SCREEN_WIDTH//2-25 , ((SCREEN_HEIGHT//2-155)), arcade.color.WHITE, 15)
         arcade.draw_text(("Feedback"),SCREEN_WIDTH//2-45 , ((SCREEN_HEIGHT//2-255)), arcade.color.WHITE, 15)
-        arcade.draw_text((BUTTON1 + ": Enter"),50,100,arcade.color.CG_BLUE , 15)
-        arcade.draw_text((BUTTON2 + ": Next"),50,75,arcade.color.RED, 15)
+        arcade.draw_text((self.BUTTON1 + ": Enter"),50,100,arcade.color.CG_BLUE , 15)
+        arcade.draw_text((self.BUTTON2 + ": Next"),50,75,arcade.color.RED, 15)
     #Draw about section
     def draw_about(self):
         page_texture = self.textures[3]

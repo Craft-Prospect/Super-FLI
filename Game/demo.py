@@ -51,8 +51,8 @@ class Mixin:
     #Draw instruction on screen
     def draw_ins(self,text):
         arcade.draw_text((text),SCREEN_WIDTH//2-450,SCREEN_HEIGHT//2-100,arcade.color.ORANGE, 15)
-        arcade.draw_text(("Click" + BUTTON2 + "to get skip current instruction"),SCREEN_WIDTH-450,SCREEN_HEIGHT-60,arcade.color.ORANGE, 15)
-        arcade.draw_text(("Click" + BUTTON1 + "to start"),SCREEN_WIDTH-350,SCREEN_HEIGHT-80,arcade.color.ORANGE, 15)
+        arcade.draw_text(("Click" + self.BUTTON2 + "to get skip current instruction"),SCREEN_WIDTH-500,SCREEN_HEIGHT-60,arcade.color.ORANGE, 15)
+        arcade.draw_text(("Click" + self.BUTTON1 + "to start"),SCREEN_WIDTH-350,SCREEN_HEIGHT-120,arcade.color.ORANGE, 15)
     #Draw various instructions, dependant on what the state is
     def draw_ins_state(self):
             if self.current_state == INS0:
@@ -68,7 +68,7 @@ class Mixin:
                 self.draw_ins("Clouds will drain your power. \nIf you have no power left, your satellite will disapear")
 
             elif self.current_state == INS7:
-                self.draw_ins("Capture a fire by pressing the" + BUTTON2 + "button\n Your score will increase by " + SYMBOL +"100")
+                self.draw_ins("Capture a fire by pressing the" + self.BUTTON2 + "button\n Your score will increase by " + SYMBOL +"100")
 
             elif self.current_state == INS9:
-                self.draw_ins("Press" + BUTTON1 + "to to start!")
+                self.draw_ins("Press" + self.BUTTON1 + "to to start!")

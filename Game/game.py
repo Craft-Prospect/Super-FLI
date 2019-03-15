@@ -121,9 +121,12 @@ class MyGame(drawing.Mixin, keypress.Mixin, stateChange.Mixin, spriteFunc.Mixin,
             self.joystick.on_joybutton_press = self.on_joybutton_press
             self.joystick.on_joybutton_release = self.on_joybutton_release
             self.joystick.on_joyhat_motion = self.on_joyhat_motion
-
+            self.BUTTON1 = JOYBUTTON1
+            self.BUTTON2 = JOYBUTTON2
         else:
             self.joystick = None
+            self.BUTTON1 = KEYBUTTON1
+            self.BUTTON2 = KEYBUTTON2
 
         #If not running headless display test (on Continous Intergrator), load sounds for pygame to play later(see level.py and spriteFunc.py)
         if not self.Test:

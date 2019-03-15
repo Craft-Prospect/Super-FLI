@@ -10,13 +10,13 @@ class Mixin:
         self.player_list = arcade.SpriteList()
 
         # Set up the player
-        self.player_sprite = Satellite("images/satellite.png", SPRITE_SCALING_PLAYER)
+        self.player_sprite = Satellite(IMG_PLAYER, SPRITE_SCALING_PLAYER)
         self.player_sprite.center_x = STARTX
         self.player_sprite.center_y = STARTY
         self.player_list.append(self.player_sprite)
 
         #Set up CPU
-        self.cpu_sprite= Satellite("images/cpu.png", SPRITE_SCALING_PLAYER)
+        self.cpu_sprite= Satellite(IMG_CPU, SPRITE_SCALING_PLAYER)
         self.cpu_sprite.center_x = CPU_START_X
         self.cpu_sprite.center_y = CPU_START_Y
         self.cpu_list.append(self.cpu_sprite)
@@ -25,9 +25,12 @@ class Mixin:
         self.add_sprite("cloud",(300,50))
 
         #Set up background
-        self.background = arcade.load_texture("images/fire.jpg")
+        self.background = arcade.load_texture(IMG_DEMO)
 
+        #For counting when the next instruction shoul be displayed
         self.update_count = 0
+
+        self.level = "Demo"
 
     def draw_demo(self):
 
@@ -43,25 +46,28 @@ class Mixin:
         self.cpu_list.draw()
         self.clouds_list.draw()
 
-        # Put the text on the screen.
-        # Player Score
-        score_player= f"Player Score: £{self.player_sprite.score}"
-        arcade.draw_text(score_player, 10, 20, arcade.color.WHITE, 14)
+        self.draw_game_text() #Defined in runGame.py
 
-        #CPU Score
-        score_cpu= f"CPU Money: £{self.cpu_sprite.score}"
-        arcade.draw_text(score_cpu, SCREEN_WIDTH-200, 20, arcade.color.RED, 14)
+    #Draw instruction on screen
+    def draw_ins(self,text):
+        arcade.draw_text((text),SCREEN_WIDTH//2-450,SCREEN_HEIGHT//2-100,arcade.color.ORANGE, 15)
 
-        player_health = round(self.player_sprite.health,1)
+    #Draw various instructions, dependant on what the state is
+    def draw_ins_state(self):
+            if self.current_state == INS0:
+                self.draw_ins("You will be controlling the blue satellite. \nThe neural network will be controlling the red satellite.")
 
-        #Display player health on the screen
-        health_player= f"Player Power: {player_health}"
-        arcade.draw_text((health_player), 10, 50, arcade.color.WHITE, 14)
+            elif self.current_state == INS1:
+                self.draw_ins("The aim of the game is collect the most money. \nCapture fires to collect money")
 
-        cpu_health = round(self.cpu_sprite.health, 1)
+            elif self.current_state == INS2:
+                self.draw_ins("The Neural Network will detect fires\n It will add a sprite to help you capture the fires")
 
-        #Display cpu health on the screen
-        health_cpu= f"CPU Power: {cpu_health}"
-        arcade.draw_text(health_cpu, SCREEN_WIDTH-200, 50, arcade.color.RED, 14)
+            elif self.current_state == INS4:
+                self.draw_ins("Clouds will drain your power. \nIf you have no power left, your satellite will disapear")
 
-        arcade.draw_text(("Click [] to skip instruction \n Click {} to start Game"),SCREEN_WIDTH//2-50,50,arcade.color.ORANGE, 15)
+            elif self.current_state == INS7:
+                self.draw_ins("Capture a fire by pressing the [] button\n Your score will increase by " + SYMBOL +"100")
+
+            elif self.current_state == INS9:
+                self.draw_ins("Press {} to start!")

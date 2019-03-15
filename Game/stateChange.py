@@ -8,8 +8,8 @@ class Mixin:
         self.change_state()
 
     def change_state(self):
-        if self.current_state == START_PAGE:
-            #Change state depending on button selected
+        if self.current_state == MENU_PAGE:
+            #Change state depending on menu button selected
             if self.selected == self.inst_button:
                 self.current_state = INSTRUCT1
             elif self.selected == self.start_button:
@@ -18,6 +18,8 @@ class Mixin:
                 self.current_state = INS0
             elif self.selected == self.about_button:
                 self.current_state = ABOUT
+            elif self.selected == self.feedback_button:
+                self.current_state = FEEDBACK_PAGE
 
         elif self.current_state == INSTRUCT1:
             self.current_state = INSTRUCT2
@@ -27,6 +29,10 @@ class Mixin:
                 self.draw_demo()
                 self.current_state = INS0
 
+        elif self.current_state == ABOUT:
+            self.menu_setup()
+            self.current_state = MENU_PAGE
+
         elif self.current_state == END_PAGE:
             self.current_state = ENTER_NAME
             self.keyboard_setup()
@@ -35,15 +41,9 @@ class Mixin:
             self.current_state = FEEDBACK_PAGE
 
         elif self.current_state == FEEDBACK_PAGE:
-            self.start_page_setup()
-            self.current_state = START_PAGE
+            self.menu_setup()
+            self.current_state = MENU_PAGE
 
         elif self.current_state >= 10:
-            global PLAYER_START_X
-            PLAYER_START_X = self.player_sprite.center_x
-
-            global PLAYER_START_Y
-            PLAYER_START_Y = self.player_sprite.center_y
-
             self.game_setup()
             self.current_state = GAME_PAGE

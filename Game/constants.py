@@ -125,3 +125,10 @@ SND_CPU = "Music/sounds/beep.wav"
 SND_MENU = "Music/music/menu.mp3"
 SND_GAME = "Music/music/main.mp3"
 SND_END =  "Music/music/end.mp3"
+
+BUTTON2 = "<red>"
+BUTTON1 = "<blue>"
+
+#For keyboard
+#BUTTON2 = "<spacebar>"
+#BUTTON = "<click>"

@@ -130,7 +130,6 @@ class TestEventsCPU(unittest.TestCase):
         self.assertEqual((round((window.cpu_sprite.center_x)+ window.cpu_sprite.center_y)), (window.player_sprite.center_x + window.player_sprite.center_y))
         finish()
 
-
     #Keeping the cloud stationary, check to see if the cloud damages it
     def test_cloudDamage(self):
         game.STATE = game.GAME_PAGE
@@ -177,13 +176,32 @@ class TestPlayerEvents(unittest.TestCase):
         window = init()
         window.draw_game()
 
-        for i in range(100):
+        for i in range(10):
                 window.update(1)
                 window.on_key_press(arcade.key.UP,0)
                 window.on_key_press(arcade.key.RIGHT, 0)
 
-        self.assertNotEqual(window.player_sprite.center_x, game.PLAYER_START_X)
-        self.assertNotEqual(window.player_sprite.center_y, game.PLAYER_START_Y)
+        window.on_key_press(arcade.key.DOWN,0)
+        window.on_key_press(arcade.key.LEFT, 0)
+
+        self.assertEqual(window.player_sprite.center_x, game.PLAYER_START_X+9*window.player_sprite.speed)
+        self.assertEqual(window.player_sprite.center_y, game.PLAYER_START_Y+9*window.player_sprite.speed)
+        finish()
+
+    def test_release_stop_movement(self):
+        window = init()
+        window.current_state = game.INS9
+
+        window.change_state()
+
+        window.player_sprite.change_x = 1
+        window.player_sprite.change_y = 1
+
+        window.on_key_release(arcade.key.UP, 0)
+        window.on_key_release(arcade.key.RIGHT, 0)
+
+        self.assertEqual(window.player_sprite.change_x, 0)
+        self.assertEqual(window.player_sprite.change_y,0)
         finish()
 
 
@@ -207,7 +225,6 @@ class TestPlayerEvents(unittest.TestCase):
         window.buttons[0].update()
 
         self.assertEqual(window.current_state,game.MENU_PAGE)
-
         finish()
 
 #Test PLayer and Satellite Deaths
@@ -286,6 +303,17 @@ class TestDeaths(unittest.TestCase):
 
         finish()
 
+    def test_Player_can_skip_on_death(self):
+        game.STATE = game.GAME_PAGE
+        window = init(clouds = [("cloud",(game.CPU_START_X,game.CPU_START_Y)), ("cloud", (game.PLAYER_START_X,game.PLAYER_START_Y))])
+        window.player_sprite.health = 0
+        window.update(1)
+
+        window.change_state()
+
+        self.assertEqual(window.current_state, game.ENTER_NAME)
+        finish()
+
 #Test menu selection screen works
 class TestMenuSystem(unittest.TestCase):
 
@@ -308,17 +336,16 @@ class TestMenuSystem(unittest.TestCase):
         self.assertEqual(window.current_state, game.GAME_PAGE)
         finish()
 
-    def test_button_changes_state(self):
+    def test_button_changes_state_down(self):
         game.STATE = game.MENU_PAGE
         window = init([])
         window.menu_setup()
         window.draw_menu()
         window.on_key_press(arcade.key.SPACE, 0)
-        window.on_mouse_press(0.0,0.0,1,0)
-        self.assertEqual(window.current_state, game.INSTRUCT1)
+        self.assertEqual(window.selected, window.inst_button)
         finish()
 
-    def test_game_menu_rolls(self):
+    def test_game_menu_rolls_down(self):
         game.STATE = game.MENU_PAGE
         window = init([])
         window.menu_setup()
@@ -328,6 +355,14 @@ class TestMenuSystem(unittest.TestCase):
         self.assertEqual(window.selected,window.start_button)
         finish()
 
+    def test_game_menu_rolls_up(self):
+        game.STATE = game.MENU_PAGE
+        window = init([])
+        window.menu_setup()
+        window.draw_menu()
+        window.on_key_press(arcade.key.BACKSPACE,0)
+        self.assertEqual(window.selected,window.feedback_button)
+        finish()
 
 class TestHelpers(unittest.TestCase):
     def test_get_numer(self):
@@ -357,7 +392,6 @@ class TestHelpers(unittest.TestCase):
 
 class TestLevelingUp(unittest.TestCase):
     def test_level_up_even(self):
-        game.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
         window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
         window.current_state = game.GAME_PAGE
         window.NNDir = 'TestDir/'
@@ -374,9 +408,7 @@ class TestLevelingUp(unittest.TestCase):
         self.assertEqual(window.level, 2)
         finish()
 
-
     def test_level_up_odd(self):
-        game.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
         window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
         window.current_state = game.GAME_PAGE
         window.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
@@ -396,7 +428,6 @@ class TestLevelingUp(unittest.TestCase):
         finish()
 
     def test_game_over_lvl(self):
-        game.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
         window = game.MyGame(game.SCREEN_WIDTH, game.SCREEN_HEIGHT,True)
         window.current_state = game.GAME_PAGE
         window.SOURCE = [["images/LVL1/background2.png","images/LVL1/background2.png"],["images/LVL1/background3.png","images/LVL1/background3.png"]]
@@ -407,6 +438,17 @@ class TestLevelingUp(unittest.TestCase):
 
         self.assertEqual(window.current_state, game.END_PAGE)
         finish()
+
+    def test_cpu_revives(self):
+        window = init()
+        window.current_state = game.GAME_PAGE
+        window.game_setup()
+        window.cpu_sprite.kill()
+
+        window.level_up()
+
+        self.assertTrue(window.cpu_sprite.active)
+
 
 class TestSpriteMovementHandling(unittest.TestCase):
 
@@ -482,6 +524,91 @@ class TestSpriteMovementHandling(unittest.TestCase):
 
         finish()
 
+    def test_CPU_avoids_cloud_near_border_left_above_bottom(self):
+        game.STATE = game.GAME_PAGE
+        window = init(clouds = [("cloud", (0,0))])
+        window.cpu_sprite.center_x = 30
+        window.cpu_sprite.center_y = 30
+        window.clouds_list[0].center_x = window.cpu_sprite.center_x + 10
+        window.clouds_list[0].center_y = window.cpu_sprite.center_y - 10
+
+        window.cloud_damages(window.cpu_sprite)
+        window.cpu_sprite.cpu_update(window.player_sprite)
+        self.assertEqual(window.cpu_sprite.avoid, ["left", "up"])
+        self.assertEqual(window.cpu_sprite.center_x, 30 +2*game.CPU_SPEED)
+        self.assertEqual(window.cpu_sprite.center_y, 30 +2*game.CPU_SPEED)
+
+        finish()
+
+    def test_CPU_avoids_cloud_near_border_left_above_top(self):
+        game.STATE = game.GAME_PAGE
+        window = init(clouds = [("cloud", (0,0))])
+        window.cpu_sprite.center_x = 30
+        window.cpu_sprite.center_y = game.SCREEN_HEIGHT -30
+        window.clouds_list[0].center_x = window.cpu_sprite.center_x + 10
+        window.clouds_list[0].center_y = window.cpu_sprite.center_y - 10
+
+        window.cloud_damages(window.cpu_sprite)
+        window.cpu_sprite.cpu_update(window.player_sprite)
+        self.assertEqual(window.cpu_sprite.avoid, ["left", "up"])
+        self.assertEqual(window.cpu_sprite.center_x, 30 +2*game.CPU_SPEED)
+        self.assertEqual(window.cpu_sprite.center_y, game.SCREEN_HEIGHT-30 -2*game.CPU_SPEED)
+
+        finish()
+
+    def test_CPU_avoids_cloud_near_border_right_down_top(self):
+        game.STATE = game.GAME_PAGE
+        window = init(clouds = [("cloud", (0,0))])
+        window.cpu_sprite.center_x = game.SCREEN_WIDTH-30
+        window.cpu_sprite.center_y = game.SCREEN_HEIGHT-30
+        window.clouds_list[0].center_x = window.cpu_sprite.center_x - 10
+        window.clouds_list[0].center_y = window.cpu_sprite.center_y + 10
+
+        window.cloud_damages(window.cpu_sprite)
+        window.cpu_sprite.cpu_update(window.player_sprite)
+        self.assertEqual(window.cpu_sprite.avoid, ["right", "down"])
+        self.assertEqual(window.cpu_sprite.center_x,  game.SCREEN_WIDTH-30 -2*game.CPU_SPEED)
+        self.assertEqual(window.cpu_sprite.center_y, game.SCREEN_HEIGHT-30 -2*game.CPU_SPEED)
+
+        finish()
+
+
+    def test_CPU_avoids_cloud_near_border_right_down_bottom(self):
+        game.STATE = game.GAME_PAGE
+        window = init(clouds = [("cloud", (0,0))])
+        window.cpu_sprite.center_x = game.SCREEN_WIDTH-30
+        window.cpu_sprite.center_y = 30
+        window.clouds_list[0].center_x = window.cpu_sprite.center_x - 10
+        window.clouds_list[0].center_y = window.cpu_sprite.center_y + 10
+
+        window.cloud_damages(window.cpu_sprite)
+        window.cpu_sprite.cpu_update(window.player_sprite)
+        self.assertEqual(window.cpu_sprite.avoid, ["right", "down"])
+        self.assertEqual(window.cpu_sprite.center_x,  game.SCREEN_WIDTH-30 -2*game.CPU_SPEED)
+        self.assertEqual(window.cpu_sprite.center_y, 30+2*game.CPU_SPEED)
+
+        finish()
+
+    def test_CPU_goes_straight_when_trapped(self):
+        game.STATE = game.GAME_PAGE
+        window = init(clouds = [("cloud", (0,0)), ("cloud", (0,1))])
+
+        window.cpu_sprite.center_x = 300
+        window.cpu_sprite.center_y = 300
+        window.clouds_list[0].center_x = window.cpu_sprite.center_x - 3*game.CPU_SPEED
+        window.clouds_list[0].center_y = window.cpu_sprite.top - 1
+        window.clouds_list[1].center_x = window.cpu_sprite.center_x + 3*game.CPU_SPEED
+        window.clouds_list[1].top = window.cpu_sprite.bottom - 1
+
+        window.cloud_damages(window.cpu_sprite)
+        window.cpu_sprite.cpu_update(window.player_sprite)
+        window.cloud_damages(window.cpu_sprite)
+        window.cpu_sprite.cpu_update(window.player_sprite)
+
+
+        self.assertEqual(window.cpu_sprite.center_x, 300+ 4*window.cpu_sprite.speed)
+        finish()
+
 class TestDemoVideo(unittest.TestCase):
     def test_helper_counting(self):
         window = init()
@@ -492,6 +619,26 @@ class TestDemoVideo(unittest.TestCase):
         self.assertEqual(window.current_state,4)
         finish()
 
+    def test_skipping_work(self):
+        window = init()
+        window.demo_setup()
+        window.current_state = game.INS0
+        window.update(1)
+        window.on_key_press(arcade.key.SPACE, 0)
+
+        self.assertEqual(window.current_state,game.INS1)
+        finish()
+
+    def test_skipping_final(self):
+        window = init()
+        window.demo_setup()
+
+        window.current_state = game.INS9
+        window.update(1)
+        window.on_key_press(arcade.key.SPACE, 0)
+
+        self.assertEqual(window.current_state, game.GAME_PAGE)
+        finish()
 
 class TestOnscreenKeyboard(unittest.TestCase):
     def test_input(self):
@@ -546,7 +693,7 @@ class TestOnscreenKeyboard(unittest.TestCase):
         window.on_key_press(arcade.key.BACKSPACE,0)
         self.assertEqual(window.name,['t'])
         finish()
-        
+
 #Helper Functions
 
 #Set up game

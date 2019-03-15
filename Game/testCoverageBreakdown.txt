@@ -1,0 +1,67 @@
+Name                                                                                    Stmts   Miss  Cover   Missing
+---------------------------------------------------------------------------------------------------------------------
+constants.py                                                                               76      0   100%
+demo.py                                                                                    45     15    67%   53-55, 58-74
+drawing.py                                                                                 28     25    11%   6-42
+game.py                                                                                    88      7    91%   119-123, 149-150
+helper.py                                                                                  16      0   100%
+highscore.py                                                                               18     14    22%   6-22, 26-31
+instructions.py                                                                            11      8    27%   9-20
+keyboard.py                                                                                51      6    88%   74-85
+keypress.py                                                                                95     31    67%   54-66, 76, 80, 117-143, 158, 161
+levels.py                                                                                  18      0    100%   
+menu.py                                                                                    51      7    86%   72-82
+runGame.py                                                                                 87      4    94%   68-72
+splash.py                                                                                  10      2    80%   14-15
+spriteFunc.py                                                                              40      0   100%
+sprites.py                                                                                 86      0   100%   
+stateChange.py                                                                             41     16    61%   14, 19-22, 25, 28-30, 33-34, 42-43, 46, 49-50
+tests.py                                                                                  560      0   100%
+updateGame.py                                                                              85     12    86%   21, 50-59, 105-109
+updateIns.py                                                                               36     20    44%   12-15, 20-23, 27-36, 40-41, 45-47, 51-53
+updateKeyboard.py                                                                          36     32    11%   6-56
+---------------------------------------------------------------------------------------------------------------------
+TOTAL                                                                                   57578  28721    50%
+
+
+Notes:
+While the result is only 50%, all remaining executed statements are trivial. See below for explainations 
+
+demo.py 53-55 --- Refers to arcade.draw_text method (arcade provides no way to test this)
+        58-74 --- Refers to a series of one line simple if/elif statements
+
+drawing.py 6-42 --- Refers to trivial one line if/elif statements
+
+game.py 119-123 --- Refers to joystick (arcade doesn't allow joystick to be simulated)
+        149-150 --- ""     ""   ""         ""   ""      ""     ""     "" ""   ""
+
+highscore.py 6-22 --- Uses arcade.draw_text method(can't test) & simple file read
+             26-31 --- ""        ""           ""      ""    "" 
+
+instructions.py 9-20 --- Uses arcade.draw_text method (arcade provides no way to test this)
+
+keyboard.py 74-85 --- Uses arcade.draw_text method (arcade provides no way to test this)
+
+keypress.py 54-66 ---  Refers to joystick (arcade doesn't allow joystick to be simulated)
+            76 --- Trivial if/return statement
+            80 --- Trivial  if/return statement
+            117-143 --- Refers to joystick (arcade doesn't allow joystick to be simulated)
+            157 --- Trivial function needed so arcade doesn't throw joystick errors
+            161 ---  ""        ""      ""   ""    ""   ""       ""     ""      ""
+
+menu.py 72-82 --- Uses arcade.draw_text method (arcade provides no way to test this)
+
+runGame.py 68-72 --- Uses arcade.draw_text method (arcade provides no way to test this)
+
+splash.py 14-15 --- Uses arcade.draw_text method (arcade provides no way to test this)
+
+stateChange.py 14, 19-22, 25, 28-30, 33-34, 42-43, 46, 49-50 --- Trivial if/elif statements
+
+updateGame.py 21 --- Refers to joystick (arcade doesn't allow joystick to be simulated)
+              50-59 ---  "" ""   ""        ""    ""       ""    ""     "" ""  ""
+              105-109 --- Neural Network (too time consuming to test)
+              
+updateIns.py 12-15, 20-23, 27-36, 40-41, 45-47, 51-53 --- trivial if/elif statements
+
+updateKeyboard.py --- 6-56 --- Refers to joystick (arcade doesn't allow joystick to be simulated)
+ 

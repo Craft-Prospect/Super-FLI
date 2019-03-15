@@ -3,7 +3,7 @@
 
 **Overview:**
 
-An arcade game where darknet's tiny-yolo convolutional neural network competes against the user to detect and destroy fires while dodging clouds to avoid losing health and orbiting the Earth. This Game can run on any Linux based operating system including the Raspberry Pi with joy stick and button peripherals or just your keyboard! All details are described below.
+An arcade game where darknet's tiny-yolo convolutional neural network competes against the user to detect and destroy fires while dodging clouds to avoid losing health and orbiting the Earth. This Game can run on any Linux based operating system including the Raspberry Pi with joystick and button peripherals or just your keyboard! All details are described below.
 
 
 **Developers**
@@ -18,14 +18,14 @@ Team Project 3, Group ESE3 - 2018/19.
 
 ***How to install***
 
-*Note:*  We have two different installation guides below. The first if your using a laptop or PC with a Linux based operating system and the second for the Raspberry Pi 3.
+*Note:*  We have two different installation guides below. The first if you're using a laptop or PC with a Linux based operating system and the second for the Raspberry Pi 3.
 
 
 
 
 **Laptop or PC**
 
-*Requierments*
+*Requirements*
 
 first, we need python3.6, to check if you already have it just use the following command.
 
@@ -33,14 +33,9 @@ first, we need python3.6, to check if you already have it just use the following
 python3.6 --version
 ```
 
-If you dont, no need to worry just run the following.
+If you don't, no need to worry just run the following.
 ```
 sudo apt-get install python3.6
-```
-
-To run our network you need opencv. To do get this just run the following.
-```
-sudo apt-get install python-opencv
 ```
 
 Now it's time to clone our project!
@@ -55,6 +50,11 @@ cd dissertation/
 pip3 install -r requirements.txt
 ```
 
+Finally, you need to make the neural network. Don't worry about the warnings, this is normal. Darknets network includes all versions of the YOLO network and we are only using one.
+```
+cd yolo_tiny/
+make
+```
 Now your good to go! Just jump down to the *how to run* section at the bottom to finish setup.
 
 
@@ -62,7 +62,7 @@ Now your good to go! Just jump down to the *how to run* section at the bottom to
 
 **Raspberry Pi**
 
-*Requierments*
+*Requirements*
 
 Our neural networks FPS (frames per second) on the raspberry pi was too slow for proper real-time detection. Therefore we outsource our neural processes to any computer system you have nearby over ethernet or even wirelessly. The following instructions show you how to set this up using an ethernet cable. To do this we need to enable SSH by inserting an empty file named "ssh" onto the boot partition of your Pi's SD card using another computer.
 
@@ -79,8 +79,9 @@ make -j4
 sudo make altinstall
 ```
 
-Next we need to install Python's arcade library
+Next, we need to install Python's arcade library
 ```
+cd ~
 sudo apt install -y python3-dev python3-pip libjpeg-dev zlib1g-dev python-gst-1.0
 sudo pip3.6 install arcade==1.3.7
 ```
@@ -151,9 +152,11 @@ ssh remote_username@server_ip_address
 
 All going well you should not be prompted for a password!
 
-Now you have to download a copy of the neural network on the remote server. To get a copy just clone our repository again on the server with the following command.
+Now you have to download a copy of the neural network on the remote server. To get a copy just clone our repository again on the server with the following command. You have to make the network as well, to do this use the following commands. Don't worry about the warnings, this is normal. Darknet includes all versions of YOLO network and we are only using one.
 ```
 git clone "http://stgit.dcs.gla.ac.uk/tp3-2018-ese3/dissertation/"
+cd dissertation/yolo_tiny/
+make
 ```
 
 We need to download the requirements on the server too. Don't worry you can do this by using the provided *requierments.txt* file.
@@ -162,12 +165,7 @@ cd dissertation/
 pip3 install -r requirements.txt
 ```
 
-To run our network you need opencv on the server. To do this just run the following.
-```
-sudo apt-get install python-opencv
-```
-
-Okay, you're nearly there, you just have to change a variable in your *constants.py* file located in **Game/** on the Pi. First, you need to uncomment the second COMMAND variable, don't worry about commenting out the other variable labelled COMMAND as it will be overwritten. You also need to uncomment the second RASP varible again dont worry about commenting the line above it.
+Okay, you're nearly there, you just have to change a variable in your *constants.py* file located in **Game/** on the Pi. First, you need to uncomment the second COMMAND variable, don't worry about commenting out the other variable labelled COMMAND as it will be overwritten. You also need to uncomment the second RASP variable again don't worry about commenting the line above it.
 
 Lastly, you need to edit the command you have just uncommented. Type in your hostname and IP_address of the server and add them into the second element of the list. Finally, on the server navigate into the yolo_tiny folder on the terminal and enter the command "pwd". Copy and paste the full output into the fourth element labelled "PWD_File_Path" in the example command.
 
@@ -181,14 +179,14 @@ COMMAND = ['ssh', 'hostname@remote_IP_address', 'cd', 'PWD_File_Path', ';', './d
 /home/andrew/finished_code/dissertation/yolo_tiny
 ```
 
-That's you all set up. To run the game see the section bellow.
+That's you all setup. To run the game see the section below.
 
 
 
 
 **How to run**
 
-Inside the cloned reposistory, run the following commands
+Inside the cloned repository, run the following commands
 ```
 cd Game
 python3.6 run.py

@@ -449,6 +449,7 @@ class TestLevelingUp(unittest.TestCase):
         window.level_up()
 
         self.assertTrue(window.cpu_sprite.active)
+        finish()
 
 
 class TestSpriteMovementHandling(unittest.TestCase):
@@ -712,6 +713,7 @@ class TestNN(unittest.TestCase):
                 line = f.readlines()[-1].strip()
 
             self.assertEqual(line, "(125,487)")
+            finish()
 #Helper Functions
 
 #Set up game

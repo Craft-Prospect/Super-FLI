@@ -66,10 +66,10 @@ class Mixin:
     def draw_game_over(self):
 
         output = "Game Over"
-        arcade.draw_text(output, 240, 400, arcade.color.WHITE, 54)
+        arcade.draw_text(output, SCREEN_WIDTH//2-150, SCREEN_HEIGHT//2, arcade.color.WHITE, 54)
 
         output = "Press" + self.BUTTON1 + "to restart"
-        arcade.draw_text(output, 310, 300, arcade.color.WHITE, 24)
+        arcade.draw_text(output, SCREEN_WIDTH//2-130, SCREEN_HEIGHT//2-100, arcade.color.WHITE, 24)
 
     #Draw all text displayed during game
     def draw_game_text(self):
@@ -98,7 +98,7 @@ class Mixin:
         lvl= f"Level: {self.level}"
         arcade.draw_text((lvl), SCREEN_WIDTH//2-10, SCREEN_HEIGHT-20, arcade.color.WHITE, 14)
 
-        if not self.player_sprite.active:
+        if not self.player_sprite.active and self.current_state == GAME_PAGE:
             arcade.draw_text(("Press"+ self.BUTTON1 + "to end game"), SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2, arcade.color.BLIZZARD_BLUE,20)
     #Round sprite's help to stop negative scores appearing (weird glitch wer eplayer dies with -0.1 health)
     def round_health(self,sprite):
